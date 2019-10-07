@@ -51,6 +51,10 @@ The controlled used at the moment is an Arduino
 
 #### Option 1 - RoboteQ FBL2360
 
+**Product Information**
+
+Member of the FBL23xx family of medium power dual channel, BLDC motor controllers.
+
 - [Product page](https://www.roboteq.com/index.php/component/virtuemart/403/fbl2360b-detail?Itemid=971)
 - [Datasheet](https://www.roboteq.com/index.php/docman/motor-controllers-documents-and-files/documentation/datasheets/fbl23xx-datasheet/203-fbl23xx-datasheet/file)
 
@@ -100,9 +104,58 @@ Firstly, the controllers can store and run up to 1,500 lines of MicroBasic sourc
 - [Example of MicroBasic for a RoboteQ controller](https://github.com/gsisko/RoboteQ-Microbasic-Examples/blob/master/Motion%20Control/Motion_Control_in_CLOSED_LOOP_COUNT_POSITION.mbs)
 - [Advanced Brushed and Brushless Digital Motor Controllers User Manual](https://www.roboteq.com/index.php/docman/motor-controllers-documents-and-files/documentation/user-manual/272-roboteq-controllers-user-manual-v17/file)
 
-*NOTE: This controller is not compatible with the ROS RoboteQ driver.*
+*NOTE: This controller is not compatible with the ROS RoboteQ driver.* See this link for information on which RoboteQ controllers are compatible with the ROS driver: [github repo](https://github.com/g/roboteq)
 
+#### Option 2 - RoboteQ SBL1360A
 
+**Product Information**
 
-https://github.com/g/roboteq
+Member of the SBL13xx family of low power and compact size brushless DC motor controllers
 
+- [Product page](https://www.roboteq.com/index.php/compoent/virtuemart/429/sbl1360-277-detail?Itemid=971)
+- [Datasheet](https://www.roboteq.com/index.php/docman/motor-controllers-documents-and-files/documentation/datasheets/sbl13xx-datasheet/61-sbl13xx-datasheet/file)
+
+**Electrical Specs**
+
+|Parameter                      | Value               |
+|-------------------------------|---------------------|
+| Max Voltage                   | 60V                 |
+| # Channels                    | 1                   |
+| Max current / channel         | 30A                 |
+| Continuous current/ channel   | 20A                 |
+| ON resistance                 | 20 mOhms            |
+| Max power dissipation         | 1200 W              |
+| Control loop frequency        | 1000 Hz             |
+| Regenerative braking          | Yes                 |
+| RC controllable               | Yes                 |
+| Other supported communication | Analog, RS232, USB, CANbus |
+
+**Mechanical Specs**
+
+| Parameter     | Value                |
+|---------------|----------------------|
+| Weight        | 60g                  |
+| Dimensions    | 70mm x 70mm x 27mm   |
+
+**Pricing and Availability**
+
+- US$ 275
+- Readily available
+
+**Feasibily Analysis and Intended Implementation**
+
+Given that the controller has two channels and can be daisy chained together. From the product page:
+>The SBL1360A accepts commands received from an RC radio, Analog Joystick, wireless modem, or microcomputer. Using CAN bus, up to 127 controllers can be networked on a single twisted pair cable. Numerous safety features are incorporated into the controller to ensure reliable and safe operation.
+
+In this case, a driver for each motor is required.
+
+The price is in the medium range, but the functionality is extensive.
+
+**Analysis of Custom Motion Capabilities**
+
+Just like the other controllers from RoboteQ, the functionality and visibility of the system can be customized.
+
+From the product page:
+> The controller's operation can be extensively automated and customized using Basic Language scripts. The controller can be configured, monitored and tuned in realtime using a Roboteq's free PC utility. The controller can also be reprogrammed in the field with the latest features by downloading new operating software from Roboteq.
+
+Unlike the FB23xx family of controllers, the SBL13xx family is compatible with the ROS driver. See link here: [github repo](https://github.com/g/roboteq).
