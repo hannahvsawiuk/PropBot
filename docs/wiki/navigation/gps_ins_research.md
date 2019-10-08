@@ -9,6 +9,7 @@
   - It is important to note that an INS is subject to drifts, so navigation based on stand-alone INS suffer a rapid degradation of position over time -**(GPS or GNSS)/INS:** The benefits of using GPS with an INS are that the INS may be calibrated by the GPS signals and that the INS can provide position and angle updates at a quicker rate than GPS. For high dynamic vehicles, such as missiles and aircraft, INS fills in the gaps between GPS positions. Additionally, GPS may lose its signal and the INS can continue to compute the position and angle during the period of lost GPS signal. The two systems are complementary and are often employed together.
 - **RTK Positioning:** Satellite navigation technique used to enhance the precision of position data derived form satellite-based position data. It uses measurements of the phase of the signal's carrier wave in addition to the information content of the signal and relies on a single reference station or interpolated virtual station to provide real-time corrections, providing up to centimetre-level accuracy. (`Due to the nature of the robot's application, high-accuracy location will be required, so we should try to source an RTK GPS`)
 - **AHRS:** Measurement system for determining roll-pitch-yaw angle changes, accelerations, and heading (for aerospace in particular) (`We just need heading, so this is not as important for us.`)
+- **Untethered Dead-Reckoning:**UDR (Untethered Dead Reckoning) refers to the fusion of GNSS data with inertial sensor data. It is an easy-to-use and competitive solution that enables high positioning performance in locations where GNSS signals are poor or unavailable.
 
 ## Ground Robot Navigation
 
@@ -27,9 +28,9 @@
     <th>Cost</th>
     <th>Sensors</th>
     <th>GPS</th>
-    <th>Position Accuracy</th>
-    <th>Heading Accuracy</th>
-    <th>Roll/Pitch Accuracy</th>
+    <th>Position Accuracy (m)</th>
+    <th>Heading Accuracy (deg)</th>
+    <th>Roll/Pitch Accuracy (deg)</th>
     <th>Notes</th>
     <th>IMU Frequency (Hz)</th>
     <th>Navigation Frequency (Hz)</th>
@@ -37,22 +38,76 @@
     <th>Power Consumption</th>
     <th>Communication</th>
     <th>PPS</th>
-
-
-
   </tr>
 </thead>
 <tbody>
   <tr>
-    <th>Vector</th>
-    <td>Colu1</td>
-    <td>Column 2</td>
-    <td>Column 3</td>
+    <th>ZED-F9K</th>
+    <td>uBlox</td>
+    <td>-</td>
+    <td>GNSS + IMU</td>
+    <td>Multi-band dead reckoning, RTK</td>
+    <td>~0.1</td>
+    <td>-</td>
+    <td>-</td>
+    <td>Would need to package somehow, or ask about packaging</td>
+    <td>IMU Frequency (Hz)</td>
+    <td>-</td>
+    <td>30</td>
+    <td>2.76V - 3.6V</td>
+    <td>2 UART, 1 SPI, 1 DDC</td>
+    <td>PPS</td>
   </tr>
   <tr>
-    <td>Custom Table Content</td>
-    <td>Column 4</td>
-    <td>Column 5</td>
+    <th>NEO-M8U</th>
+    <td>ublox</td>
+    <td>20 USD</td>
+    <td>Sensors</td>
+    <td>72-channel u-blox M8 engine </td>
+    <td>3</td>
+    <td>1</td>
+    <td>Roll/Pitch Accuracy</td>
+    <td>Notes</td>
+    <td>100</td>
+    <td>30</td>
+    <td>2</td>
+    <td>Power Consumption</td>
+    <td>Communication</td>
+    <td>Yes, 30 ns accuracy</td>
+  </tr>
+  <tr>
+    <th>VN-200</th>
+    <td>VectorNav</td>
+    <td>~3000USD, Need Quote</td>
+    <td>GPS + IMU</td>
+    <td>50-channel u-blox GPS receiver</td>
+    <td>-</td>
+    <td>0.3</td>
+    <td>0.1</td>
+    <td>agricultural robots, already in rugged casing, advanced Kalman filtering algorithms for position, velocity, and attitude</td>
+    <td>800</td>
+    <td>500</td>
+    <td>-</td>
+    <td>80 mA @ 5 V</td>
+    <td>1 UART, 1 SPI</td>
+    <td>Yes, need to double check</td>
+  </tr>
+  <tr>
+    <th>VN-300</th>
+    <td>VectorNav</td>
+    <td>~5000USD, need to check</td>
+    <td>Dual Antenna GNSS + IMU</td>
+    <td>Two onboard high-sensitivity 72-channel, L1, GNSS receivers, RTK</td>
+    <td>-</td>
+    <td>0.3 (GPS-Compass)</td>
+    <td>0.1</td>
+    <td>advanced Kalman filtering algorithms for position, velocity, and attitude</td>
+    <td>800</td>
+    <td>400</td>
+    <td>-</td>
+    <td>250 mA @ 5 V</td>
+    <td>1 UART, 1 SPI</td>
+    <td>Yes, need to check</td>
   </tr>
 </tbody>
 </table>
@@ -65,3 +120,4 @@
 - http://www.terrisgps.com/gnss-gps-differences-explained/
 - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5621051/
 - https://en.wikipedia.org/wiki/Attitude_Heading_Reference_System
+- https://www.u-blox.com/de/udr-untethered-dead-reckoning
