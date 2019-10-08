@@ -7,26 +7,28 @@ https://en.wikipedia.org/wiki/Intel_RealSense#Intel_RealSense_D400_Product_Famil
 We have the top end Realsense in terms of imaging, the D435:
 
 **Depth Sensor**
+
 | Parameter         | Value           |
 |        ---        |       ---       |
 | Resolution        | 1280 x 720      |
 | Video Resolution  | 720p            |
 | Video Framerate   | 90 fps          |
 | Shutter           | Global          |
-| Pixel Size        | 3 micron        |
 | FOV               | 85.2 deg Horz   |
 |                   | 58 deg Vert     |
+| Pixel Size        | 3 micron        |
 
 **RGB Sensor**
+
 | Parameter         | Value           |
 |        ---        |       ---       |
 | Resolution        | 1920 x 1080     |
 | Video Resolution  | 1080p           |
 | Video Framerate   | 30 fps          |
 | Shutter           | Global          |
-| Pixel Size        | 3 micron        |
 | FOV               | 69.4 deg Horz   |
 |                   | 42.5 deg Vert   |
+| Pixel Size        | 3 micron        |
 
 There's only the D435i which is "better" but only because it IMU built-in to the camera.
 
