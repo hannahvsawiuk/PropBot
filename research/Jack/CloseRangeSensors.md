@@ -13,13 +13,13 @@ Sparkfun has a excellent comparison site: https://www.sparkfun.com/distance_sens
 
 ## Summary Table
 
-| Sensor | Sensor Type | Cost | Max Range | Accuracy | Arc | Waterproof |
-|  ---   |     ---     |  --- |    ---    | ---      | --- |    ---     |
-|Sharp GP2| Infrared | $12-18 | 80-550cm | ? | Thin | No |
-|VL53L1X| Laser | $13-16 | 200-400cm | 4cm | Very Thin | No |
-|tinyLiDAR| Laser | $33 | 200cm | 3% | Very Thin | No |
-|HC-SR04| Ultrasonic | $3 | 500cm | 0.3cm | Small | No |
-|MaxSonar| UltraSonic | $35-90 | 5m-7.6m | 1cm | Small | Some Models |
+| Sensor   | Sensor Type | Cost   | Max Range | Accuracy | Arc       | Waterproof  |
+|  ---     |     ---     |  ---   |    ---    | ---      | ---       |    ---      |
+|Sharp GP2 | Infrared    | $12-18 | 80-550cm  | ?        | Thin      | No          |
+|VL53L1X   | Laser       | $13-16 | 200-400cm | 4cm      | Very Thin | No          |
+|tinyLiDAR | Laser       | $33    | 200cm     | 3%       | Very Thin | No          |
+|HC-SR04   | Ultrasonic  | $3     | 500cm     | 0.3cm    | Small     | No          |
+|MaxSonar  | UltraSonic  | $35-90 | 5m-7.6m   | 1cm      | Small     | Some Models |
 
 
 ## Infrared

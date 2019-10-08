@@ -2,31 +2,34 @@
 
 ## Intel Realsense
 https://www.intelrealsense.com/compare-depth-cameras/
+
 https://en.wikipedia.org/wiki/Intel_RealSense#Intel_RealSense_D400_Product_Family
 
 We have the top end Realsense in terms of imaging, the D435:
 
 **Depth Sensor**
+
 | Parameter         | Value           |
 |        ---        |       ---       |
 | Resolution        | 1280 x 720      |
 | Video Resolution  | 720p            |
 | Video Framerate   | 90 fps          |
 | Shutter           | Global          |
-| Pixel Size        | 3 micron        |
 | FOV               | 85.2 deg Horz   |
 |                   | 58 deg Vert     |
+| Pixel Size        | 3 micron        |
 
 **RGB Sensor**
+
 | Parameter         | Value           |
 |        ---        |       ---       |
 | Resolution        | 1920 x 1080     |
 | Video Resolution  | 1080p           |
 | Video Framerate   | 30 fps          |
 | Shutter           | Global          |
-| Pixel Size        | 3 micron        |
 | FOV               | 69.4 deg Horz   |
 |                   | 42.5 deg Vert   |
+| Pixel Size        | 3 micron        |
 
 There's only the D435i which is "better" but only because it IMU built-in to the camera.
 
@@ -42,6 +45,7 @@ That's probably not worthwhile since the image quality will be quite low anyways
 ### Digital Cameras
 
 https://devtalk.nvidia.com/default/topic/919172/csi-2-cameras-tested-with-tegra-tx1
+
 http://on-demand.gputechconf.com/gtc/2016/webinar/getting-started-jetpack-camera-api.pdf
 
 Looking through some Jetson related tutorials and discussions and it looks like the way to go is to buy a camera with a Video4Linux driver.
@@ -89,8 +93,9 @@ While the Nano's 4 USB 3 ports is nice, it has half the GPU power compared to th
 
 #### Cameras
 
-Nvidia's official partner/recommendation list: https://developer.nvidia.com/embedded/faq#jetson-cameras
-elinux compatibility list (Modules verified by Jetson users): https://elinux.org/Jetson/Cameras
+[Nvidia's official partner/recommendation list](https://developer.nvidia.com/embedded/faq#jetson-cameras)
+
+[elinux compatibility list (Modules verified by Jetson users)](https://elinux.org/Jetson/Cameras)
 
 A couple of the more interesting modules were chosen for this comparison. The only restriction is that the module is from
 an official Nvidia partner claiming TX-1 compatibility or appears on elinux as a module tested to work with the TX-1.
@@ -102,6 +107,7 @@ The main problem with this camera module is that its uncertain if we can detach 
 the camera is unusable since it will be stuck to the board making it impossible to waterproof.
 
 **Cost**
+
 Free
 
 **Sensor Specifications**
@@ -119,7 +125,7 @@ Free
 
 **Lens Specifications**
 
-Can't find :( https://devtalk.nvidia.com/default/topic/1031939/can-anybody-give-me-a-copy-of-ov5693s-datasheet-/
+[Can't find :(](https://devtalk.nvidia.com/default/topic/1031939/can-anybody-give-me-a-copy-of-ov5693s-datasheet-/)
 
 ##### Leopard Imaging, Sony IMX185
 https://leopardimaging.com/product/li-jetson-kit-imx185-x/
@@ -130,6 +136,7 @@ The modules can come with one of two lens mount types: CS or S (M12).
 Modules are bare PCBs attached to the expansion board via a decent length cable.
 
 **Cost**
+
 The price ranges from $379 USD (Buy 1) down to $270 USD (Buy 6) per module.
 
 **Sensor Specifications**
@@ -180,6 +187,7 @@ The sensor (Bare PCB) might be stuck to the adapter board. (Can't see in images)
 Annoyingly enough the datasheet is locked behind a registration.
 
 **Cost**
+
 The one module and board cost $179 USD
 
 **Sensor Specifications**
@@ -196,6 +204,7 @@ The one module and board cost $179 USD
 | Has Lens          | Yes             |
 
 **Lens Specifications**
+
 Cannot access datasheet
 
 ##### D3 Engineering, Rugged Sony IMX390-953
@@ -212,6 +221,7 @@ The 192 degree lens is probably a non-starter since the FOV is insane which will
 huge distortion.
 
 **Cost**
+
 $449 USD
 
 **Sensor Specifications**
@@ -255,6 +265,7 @@ USB2 Cameras - A 1.3MP may be a good option if it is cheap, unfortunately
                prices are not mentioned on Flir's site.
 
 **Cost**
+
 $545 USD and it doesn't come with a lens...
 
 **Sensor Specifications**
@@ -283,9 +294,11 @@ Uses CCD sensors instead of CMOS, and comes in a nice somewhat large metal casin
 Can use C, CS or M12 Lenses sold separately....
 
 **Cost**
+
 This model costs $1650 USD from Edmund Optics. Oof.
 
 **Sensor Specifications**
+
 Sony ICX274
 
 | Parameter         | Value           |
