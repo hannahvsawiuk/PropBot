@@ -10,7 +10,7 @@ The broadband Frequency Modulated Continuous Wave (FMCW) radar has become the do
 
 In an FMCW radar, both transmitter and receiver operate continuously; the transmitter deploys a sinusoidal carrier with a frequency that increases then decreases periodically over time- a sequence known as a chirp.
 
-![FMCW Radar](../images/fmcw-radar.jpg)
+![FMCW Radar](../images/fmcw-radar.png)
 
 ## Sources
 
