@@ -43,8 +43,8 @@
 <tbody>
   <tr>
     <th>ZED-F9K</th>
-    <td>uBlox</td>
-    <td>-</td>
+    <td>ublox</td>
+    <td>Need Quote</td>
     <td>GNSS + IMU</td>
     <td>Multi-band dead reckoning, RTK</td>
     <td>~0.1</td>
@@ -56,7 +56,7 @@
     <td>30</td>
     <td>2.76V - 3.6V</td>
     <td>2 UART, 1 SPI, 1 DDC</td>
-    <td>PPS</td>
+    <td>-</td>
   </tr>
   <tr>
     <th>NEO-M8U</th>
@@ -78,7 +78,7 @@
   <tr>
     <th>VN-200</th>
     <td>VectorNav</td>
-    <td>~3000USD, Need Quote</td>
+    <td>2900USD</td>
     <td>GPS + IMU</td>
     <td>50-channel u-blox GPS receiver</td>
     <td>-</td>
@@ -95,7 +95,7 @@
   <tr>
     <th>VN-300</th>
     <td>VectorNav</td>
-    <td>~5000USD, need to check</td>
+    <td>5000USD</td>
     <td>Dual Antenna GNSS + IMU</td>
     <td>Two onboard high-sensitivity 72-channel, L1, GNSS receivers, RTK</td>
     <td>-</td>
@@ -108,6 +108,57 @@
     <td>250 mA @ 5 V</td>
     <td>1 UART, 1 SPI</td>
     <td>Yes, need to check</td>
+  </tr>
+  <tr>
+    <th>SPAN CPT7</th>
+    <td>Novatel</td>
+    <td>Need Quote</td>
+    <td>GNSS + IMU</td>
+    <td>555 channel GNSS</td>
+    <td>0.01 (with RTK), otherwise 0.4-2.5</td>
+    <td>0.05- 0.08</td>
+    <td>0.007 - 0.035</td>
+    <td>Dead-reckoning, in ruggedized casing</td>
+    <td>300</td>
+    <td>20</td>
+    <td>20</td>
+    <td>7W, 9-32VDC</td>
+    <td>1 RS-232, 1 RS-422, 1 Ethernet, 1 USB, 1 CAN</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>Duro Inertial Ruggedized Receiver</th>
+    <td>SwiftNav</td>
+    <td>3995 USD</td>
+    <td>Sensors</td>
+    <td>GPS</td>
+    <td>0.75</td>
+    <td>0.8</td>
+    <td>0.2</td>
+    <td>Smooth dead-reckoning, in ruggedized casing, velocity accuracy is 0.06m/s, used by clearpath</td>
+    <td>IMU Frequency (Hz)</td>
+    <td>10</td>
+    <td>10</td>
+    <td>5W</td>
+    <td>2 RS232, Ethernet, 1 CAN with selectable termination resistor, power outputs</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <th>BD992-INS Receiver</th>
+    <td>Trimble</td>
+    <td>Need quote</td>
+    <td>GNSS + IMU</td>
+    <td>336 Channel Maxwell 7 chip</td>
+    <td>0.05-1</td>
+    <td>0.09</td>
+    <td>0.10</td>
+    <td>Baud rates up to 460,800, need to package</td>
+    <td>100</td>
+    <td>-</td>
+    <td>100</td>
+    <td>Power Consumption</td>
+    <td>3 RS-232, 1 CAN, 1 USB, 1 Ethernet</td>
+    <td>PPS</td>
   </tr>
 </tbody>
 </table>
