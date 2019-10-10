@@ -63,5 +63,41 @@
 - Single frame pipeline and consecutive frame analysis
 - Consecutive frame analysis used for visual odometry, 3D positioning (from multi-camera information)
 
+## A Modeling Framework for Software Architecture Specification
+
+![](../images/Component-Based%20Architecture.png)
+
+## An Extensible Software Architecture for Composing Motion and Task Planners
+
+![](../images/PRACYS%20Nodes.png)
+
+## Development of Autonomous Car – Part I: Distributed System Architecture and Development Process
+
+![](../images/Functional%20Components%20of%20an%20Autonomous%20Driving%20System.png)
+
+#### Centralized System Architecture
+
+- Most functional components of the autonomous driving system are implemented into a single computing unit
+- Has many weaknesses
+  - High computational ability because all of the devices, including 
+
+## Intelligent Robotic Car for Autonomous Navigation: Platform and System Architecture
+
+#### Software Architecture
+
+- Benefits of Using ROS:
+  - Allows for modular software design
+  - Work with the international community
+  - Allows software to be executed in a distributed system, thus balancing the computational requirements at different processing elements and PCs
+  - Can easily use Gazebo for simulations
+
+![](../images/CARINA%20System%20Architecture.png)
+
+- (`Using this type of architecture would allow us to substitute rudimentary algorithms and progress gradually without changing the software interfaces. Ex. We could initially use geofencing for large obstacles and campus pathways for obstacle detection and lane detection`)
+
 ### Sources
 - *TIGRE - An autonomous ground robot for outdoor exploration*
+- *A Modeling Framework for Software Architecture Specification*
+- *An Extensible Software Architecture for Composing Motion and Task Planners*
+- *Development of Autonomous Car Part I: Distributed System Architecture and Development Process*
+- *Intelligent Robotic Car for Autonomous Navigation: Platform and System Architecture*
