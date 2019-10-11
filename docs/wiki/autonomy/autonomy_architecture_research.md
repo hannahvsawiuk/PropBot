@@ -95,9 +95,16 @@
 
 - (`Using this type of architecture would allow us to substitute rudimentary algorithms and progress gradually without changing the software interfaces. Ex. We could initially use geofencing for large obstacles and campus pathways for obstacle detection and lane detection`)
 
+## A Framework for Automated Driving System Testable Cases and Scenarios
+
+#### International Autonomous Mode Functional Architecture Flow Diagram
+
+![](../images/International%20Autonomous%20Mode%20Functional%20Architecture%20Flow%20Diagram.png)
+
 ### Sources
 - *TIGRE - An autonomous ground robot for outdoor exploration*
 - *A Modeling Framework for Software Architecture Specification*
 - *An Extensible Software Architecture for Composing Motion and Task Planners*
 - *Development of Autonomous Car Part I: Distributed System Architecture and Development Process*
 - *Intelligent Robotic Car for Autonomous Navigation: Platform and System Architecture*
+- *A Framework for Automated Driving System Testable Cases and Scenarios*
