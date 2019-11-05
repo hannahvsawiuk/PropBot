@@ -101,6 +101,9 @@
 
 ![](../images/International%20Autonomous%20Mode%20Functional%20Architecture%20Flow%20Diagram.png)
 
+#### Frequency of Loops
+![](../../../images/ADS%20Task%20Decomposition.png)
+
 ### Sources
 - *TIGRE - An autonomous ground robot for outdoor exploration*
 - *A Modeling Framework for Software Architecture Specification*
