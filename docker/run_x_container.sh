@@ -4,25 +4,29 @@ set -e
 
 image=${1:-propbot-ros-base}
 
+script_dir=$(dirname "$0")
+
+repo_dir=$(realpath "$script_dir/..")
+
 # Run container interactively
 run_args=(
-    -i -t
+    -i
+    -t
+    # Bind mount the repo into home
+    "--volume=$repo_dir:/home/$USER/PropBot:rw"
 )
 
 if [ "$(uname)" = Darwin ]; then
-    # MacOS Specific arguments
+    # MacOS specific display setup with X11 Quartz
     xhost + 127.0.0.1
     run_args+=(
+    # Pass through the display
     "--env=DISPLAY=host.docker.internal:0"
     )
 else
-    # Generic Linux arguments
+    # Generic Linux display setup
     run_args+=(
     "--env=DISPLAY"
-    #"--volume=/etc/group:/etc/group:ro"
-    #"--volume=/etc/passwd:/etc/passwd:ro"
-    #"--volume=/etc/shadow:/etc/shadow:ro"
-    #"--volume=/etc/sudoers.d:/etc/sudoers.d:ro"
     "--volume=/tmp/.X11-unix:/tmp/.X11-unix:rw"
     )
 fi
@@ -30,4 +34,3 @@ fi
 echo "Running image $image..."
 
 docker run "${run_args[@]}" "$image"
-
