@@ -6,7 +6,7 @@ image=${1:-propbot-ros-base}
 
 script_dir=$(dirname "$0")
 
-repo_dir=$(realpath "$script_dir/..")
+repo_dir=$(cd "$script_dir/.." && pwd)
 
 # Run container interactively
 run_args=(
