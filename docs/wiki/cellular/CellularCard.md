@@ -34,9 +34,10 @@ integrated into laptops rather than being sold on their own.
 
 Sierra Wireless seems to be the only OEM which directly sells to individuals.
 The EM7565 is a good choice as it supports all carriers and is very fast at 600Mbps down and 150 Mbps up.
-The module costs around $200 so its not a cheap purchase, but given the capabilities it seems worthwhile.
+The module costs around $300 so its not a cheap purchase, but given the capabilities it seems worthwhile.
 
 EM7565: https://ltefix.com/shop/modems/sierra-wireless-airprime-cards/sierra-wireless-em7565-cat-12-m-2-modem/
+https://www.digikey.ca/product-detail/en/sierra-wireless/EM7565_1103520/1645-1036-ND/7801743
 
 The module also needs a adapter to access the sim card.
 
