@@ -1,4 +1,4 @@
-#include "pinout.h"
+#include "wheel.h"
 
 void setup()
 {
@@ -8,26 +8,35 @@ void setup()
     pinMode(L_B_controlPin, OUTPUT);
     pinMode(R_B_controlPin, OUTPUT);
 
-    /*
-    * Fast PWM configuration:
-    *   - Clear OC0A on Compare Match, set OC0A at BOTTOM,(non-inverting mode)
-    *   - TOP = 0xFF (255)
-    *   - Output frequency =  clk_io/64 --> 16MHz/64 = ~976 Hz
-    */ 
 
-    // Timer1 Fast PWM setup
-    TCCR1A = (1 << COM1A1)  |  (1 << WGM11)     |   (1 << WGM10);
-    TCCR1B = (1 << CS11)    |  (1 << CS10); 
-    // Set duty cycle initially to 0%
-    OCR1A = 0;  // pin 9
-    OCR1B = 0;  // pin 10
+    if (SERIAL == true) {
+        // code for setting up serial comms
+    } else {
+        /*
+        * Fast PWM configuration:
+        *   - Clear OC0A on Compare Match, set OC0A at BOTTOM,(non-inverting mode)
+        *   - TOP = 0xFF (255)
+        *   - Output frequency =  clk_io/64 --> 16MHz/64 = ~976 Hz
+        */ 
+        // Timer3 Fast PWM setup
+        TCCR3A = (1 << COM3A1)  |  (1 << WGM31)     |   (1 << WGM30);
+        TCCR3B = (1 << CS31)    |  (1 << CS30); 
+        // Set duty cycle initially to 0%
+        OCR3A = 0;  
+        OCR3B = 0;
 
-    // Timer2 Fast PWM setup
-    TCCR2A = (1 << COM2A1)  |   (1 << WGM21)    |   (1 << WGM20);
-    TCCR2B = (1 << CS21)    |   (1 << CS20);         
-    // Set duty cycle initially to 0%
-    OCR2A = 0;  // pin 11
-    OCR2B = 0;  // pin 3
+        pinMode(, OUTPUT);
+        pinMode(, OUTPUT);  
+
+        // Timer4 Fast PWM setup
+        TCCR4A = (1 << COM4A1)  |   (1 << WGM41)    |   (1 << WGM40);
+        TCCR4B = (1 << CS41)    |   (1 << CS40);         
+        // Set duty cycle initially to 0%
+        OCR4A = 0;  
+        OCR4B = 0;  
+        pinMode(, OUTPUT);
+        pinMode(, OUTPUT);
+    }
 
 }
 
