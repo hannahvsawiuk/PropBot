@@ -5,12 +5,8 @@
   <arg name="simulation" default="$(optenv ROBOT_SIMULATION false)"/>
   <arg name="robot_namespace" default="$(optenv ROBOT_NAMESPACE robot)"/>
 
-  <arg name="config_extras"
-       default="$(eval optenv('PROPBOT_CONFIG_EXTRAS', find('propbot_control') + '/config/empty.yaml'))"/>
-
   <arg name="laser_enabled" default="$(optenv PROPBOT_LMS1XX_ENABLED false)"/>
   <arg name="kinect_enabled" default="$(optenv PROPBOT_KINECT_ENABLED false)"/>
-  <arg name="urdf_extras" default="$(optenv PROPBOT_URDF_EXTRAS)"/>
 
   <include file="$(find multimaster_launch)/launch/multimaster_robot.launch" if="$(arg multimaster)">
     <arg name="gazebo_interface" value="$(find propbot_control)/config/gazebo_interface.yaml" />
@@ -23,7 +19,6 @@
   <include file="$(find propbot_description)/launch/description.launch" >
     <arg name="laser_enabled" default="$(arg laser_enabled)"/>
     <arg name="kinect_enabled" default="$(arg kinect_enabled)"/>
-    <arg name="urdf_extras" default="$(arg urdf_extras)"/>
   </include>
 
   <!-- Load controller configuration -->
