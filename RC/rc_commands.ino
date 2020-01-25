@@ -1,39 +1,27 @@
-int rc_channel1 = 2;
-int rc_channel2 = 3;
-int rc_channel3 = 4;
-int rc_channel4 = 5;
-int switchA = 6;
-int switchB = 7;
+#include "rc_commands.h"
+#include "pinout.h"
 
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(rc_channel1, INPUT);
-  pinMode(rc_channel2, INPUT);
-  pinMode(rc_channel3, INPUT);
-  pinMode(rc_channel4, INPUT);
-  pinMode(switchA, INPUT);
-  pinMode(switchB, INPUT);  
-  Serial.begin(9600);
+fetch_rc_command() 
+{
+    sw_a       = pulseIn(RC_SWA_CHANNEL_PIN, HIGH);
+    sw_b       = pulseIn(RC_SWB_CHANNEL_PIN, HIGH);
+    rc_right   = pulseIn(RC_RIGHT_CHANNEL_PIN, HIGH);
+    rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN, HIGH);
+
+    if (SW_A)
+
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  int pwm1 = 0;
-  int pwm2 = 0;
-  int pwm3 = 0;
-  int pwm4 = 0;
-  int pwma = 0;
-  int pwmb = 0;
-  int swa = pulseIn(switchA, HIGH);
-   int swb = pulseIn(switchB, HIGH);
-    int rc1 = pulseIn(rc_channel1, HIGH);
-     int rc2 = pulseIn(rc_channel2, HIGH);
-      int rc3 = pulseIn(rc_channel3, HIGH);
-       int rc4 = pulseIn(rc_channel4, HIGH);
+bool stop (uint16_t switch_command)
+{
+    if (switch_command < RC_SWX_HIGH_MAX && switch_command > RC_SWX_HIGH_MIN) {
+        return true
+    } else if (switch_command < RC_SWX_LOW_)
+    {
+        
+    }
+}
 
-if(rc1==0){
-      Serial.println(" CH1 no signal");
-  }
   else if(rc1 > 1620){ //RIGHT right stick
       pwm1 = map(rc1, 1620, 1977, 0, 255); //map our speed to 0-255 range
     
