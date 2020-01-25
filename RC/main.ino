@@ -3,13 +3,6 @@
 
 volatile bool autonomy = false;
 
-// Initialize the RC channel inputs as volatile 16-bit ints (values > 255)
-volatile uint16_t sw_a       = 0;
-volatile uint16_t sw_b       = 0;
-volatile uint16_t rc_right   = 0;
-volatile uint16_t rc_left    = 0;
-
-
 void setup()
 {
     // Setup RC pins in input mode (input capture)
@@ -42,26 +35,24 @@ void setup()
         OCR4B = 0; 
 
         // Pin setup for all wheel motors
-        for (const auto i: wheel_index_t::All)
+        for (int i = 0; i < NUM_WHEELS; i++)
         {
             pinMode(wheel_to_pins[i].control,       OUTPUT);
             pinMode(wheel_to_pins[i].brake_release, OUTPUT);
             pinMode(wheel_to_pins[i].dir,           OUTPUT);
         }
     }
-
 }
 
 void loop()
 {
-    // Step 1: look for 
     if (mode == autonomy) {
         // code for comms with the autonomy computer
     } else {
-        
-
-
+        // update wheel commands
+        wheel_motor_command_t * wheel_motor_commands = fetch_rc_commands();
+        for (int i = 0; i < NUM_WHEELS; i++ ) {
+            wheel_set(i, (*wheel_motor_commands)[i]);
+        }
     }
-    
-
 }

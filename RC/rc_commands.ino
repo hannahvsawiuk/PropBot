@@ -1,122 +1,70 @@
 #include "rc_commands.h"
 #include "pinout.h"
+#include "wheel.h"
 
-fetch_rc_command() 
+// Initialize the RC channel inputs as volatile 16-bit ints (values > 255)
+volatile uint16_t sw_a       = 0;
+volatile uint16_t sw_b       = 0;
+volatile uint16_t rc_right   = 0;
+volatile uint16_t rc_left    = 0;
+
+/**
+ * @brief fetches RC commands and returns motor commands
+ * 
+ * @return returns pointer to a list of motor commands
+ */
+&wheel_motor_command_t[] fetch_rc_commands() 
 {
+    // Get commands
     sw_a       = pulseIn(RC_SWA_CHANNEL_PIN, HIGH);
     sw_b       = pulseIn(RC_SWB_CHANNEL_PIN, HIGH);
     rc_right   = pulseIn(RC_RIGHT_CHANNEL_PIN, HIGH);
     rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN, HIGH);
-
-    if (SW_A)
-
-}
-
-bool stop (uint16_t switch_command)
-{
-    if (switch_command < RC_SWX_HIGH_MAX && switch_command > RC_SWX_HIGH_MIN) {
-        return true
-    } else if (switch_command < RC_SWX_LOW_)
-    {
-        
-    }
-}
-
-  else if(rc1 > 1620){ //RIGHT right stick
-      pwm1 = map(rc1, 1620, 1977, 0, 255); //map our speed to 0-255 range
     
-      Serial.print(" CH1 right stick speed: ");
-      Serial.println(pwm1);
-  }
-  else if(rc1 < 1370){ //RIGHT left stick
-      pwm1 = map(rc1, 1370, 990, 0, 255); //map our speed to 0-255 range
-     
-      Serial.print(" CH1 left stick speed: ");
-      Serial.println(pwm1);
-  }else{
-      Serial.println(" CH1 stick centered");
-  }
+    // define temp variables
+    uint16_t right_duty = 0;
+    bool right_dir      = FORWARD;
+    uint16_t left_duty  = 0;
+    bool left_dir       = FORWARD; 
 
- if(rc2==0){
-      Serial.println(" CH2 no signal");
-  }
-  else if(rc2 > 1638){ //RIGHT up stick
-      pwm2 = map(rc2, 1638, 1971, 0, 255); //map our speed to 0-255 range
+    /* Check if stop asserted */
+    if (switch_command < RC_SWX_HIGH_MAX && switch_command > RC_SWX_HIGH_MIN) {
+        return all_brake;
+    }
+    /* Right side longitudinal wheel sets */
+    // Forward
+    if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
+        // map the duty from 0 to 1 given the min and max threshold values
+        right_duty = map(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1);
+    }
+    // Backward 
+    else if (rc_right < RC_RIGHT_SET_BW_MAX && rc_right > RC_RIGHT_SET_BW_MIN)
+    {
+        right_duty = 1 - map(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MIN, 0, 1);
+        right_dir = BACKWARD;
+    } 
 
-      Serial.print(" CH2 up stick speed: ");
-      Serial.println(pwm2);
-  }
-  else if(rc2 < 1310){ // RIGHT down stick
-      pwm2 = map(rc2, 1310, 987, 0, 255); //map our speed to 0-255 range
+    /* Left side longitudinal wheel sets */
+    // Forward
+    if (rc_left < RC_LEFT_SET_FW_MAX && rc_left > RC_LEFT_SET_FW_MIN) {
+        left_duty = map(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MIN, 0, 1);
+    }
+    // Backward 
+    else if (rc_left < RC_LEFT_SET_BW_MAX && rc_left > RC_LEFT_SET_BW_MIN)
+    {
+        left_duty = 1 - map(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1);
+        left_dir = BACKWARD;
+    }
 
-      Serial.print(" CH2 down stick speed: ");
-      Serial.println(pwm2);
-  }else{
-      Serial.println(" CH2 stick centered");
-  }
-  
- if(rc3==0){
-      Serial.println(" CH3 no signal");
-  }
-  else if(rc3 > 1632){ //LEFT up stick
-      pwm3 = map(rc3, 1632, 1972, 0, 255); //map our speed to 0-255 range
+    /* Define and fill wheel motor commands */
+    wheel_motor_command_t  wheel_motor_commands[4];
+    // right set
+    wheel_motor_commands[RF] = {.duty_cycle = right_duty, .brake_release = RELEASE_BRAKE, .dir = right_dir};
+    wheel_motor_commands[RB] = {.duty_cycle = right_duty, .brake_release = RELEASE_BRAKE, .dir = right_dir};
+    // left set
+    wheel_motor_commands[LF] = {.duty_cycle = left_duty, .brake_release = RELEASE_BRAKE, .dir = left_dir};
+    wheel_motor_commands[LB] = {.duty_cycle = left_duty, .brake_release = RELEASE_BRAKE, .dir = left_dir};
 
-      Serial.print(" CH3 up stick speed: ");
-      Serial.println(pwm3);
-  }
-  else if(rc3 < 1320){ // LEFT down stick
-      pwm3 = map(rc3, 1320, 1007, 0, 255); //map our speed to 0-255 range
-
-      Serial.print(" CH3 down stick speed: ");
-      Serial.println(pwm3);
-  }else{
-      Serial.println(" CH3 stick centered");
-  }
-  
-  if(rc4==0){
-      Serial.println(" CH4 no signal");
-  }
-  else if(rc4 > 1560){ //LEFT right stick
-      pwm4 = map(rc4, 1560, 1975, 0, 255); //map our speed to 0-255 range
-
-      Serial.print(" CH4 right stick speed: ");
-      Serial.println(pwm4);
-  }
-  else if(rc4 < 1380){ //LEFT left stick
-      pwm4 = map(rc4, 1380, 987, 0, 255); //map our speed to 0-255 range
-
-      Serial.print(" CH4 left stick speed: ");
-      Serial.println(pwm4);
-  }else{
-      Serial.println(" CH4 stick centered");
-
-  }
-
-//Programmable Switches
-if(swa > 1960){ //SWA = 1
-      pwma = 255; 
-      
-      Serial.print(" SWA = 1, pwma: ");
-      Serial.println(pwma);
-  }
-else{
-      pwma = 0; 
-      
-      Serial.print(" SWA = 0, pwma: ");
-      Serial.println(pwma);
-  }
-
- if(swb > 1960){ //SWB = 1
-      pwmb = 255; 
-      
-      Serial.print(" SWB = 1, pwmb: ");
-      Serial.println(pwmb);
-  }
-else{
-      pwmb = 0;
-      
-      Serial.print(" SWB = 0, pwmb: ");
-      Serial.println(pwmb);
-  }
-  delay(1000); 
+    /*  Return reference to the command set */
+    return &wheel_motor_commands
 }
