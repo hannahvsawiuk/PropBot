@@ -1,6 +1,4 @@
 #include "rc_commands.h"
-#include "pinout.h"
-#include "wheel.h"
 
 // Initialize the RC channel inputs as volatile 16-bit ints (values > 255)
 volatile uint16_t sw_a       = 0;
@@ -13,7 +11,7 @@ volatile uint16_t rc_left    = 0;
  * 
  * @return returns pointer to a list of motor commands
  */
-&wheel_motor_command_t[] fetch_rc_commands() 
+Array<wheel_motor_command_t, 4> fetch_rc_commands() 
 {
     // Get commands
     sw_a       = pulseIn(RC_SWA_CHANNEL_PIN, HIGH);
@@ -23,15 +21,19 @@ volatile uint16_t rc_left    = 0;
     
     // define temp variables
     uint16_t right_duty = 0;
-    bool right_dir      = FORWARD;
+    bool right_dir      = FORWARD;  // default direction
     uint16_t left_duty  = 0;
-    bool left_dir       = FORWARD; 
+    bool left_dir       = FORWARD;  // default direction
 
     /* Check if stop asserted */
-    if (switch_command < RC_SWX_HIGH_MAX && switch_command > RC_SWX_HIGH_MIN) {
+    if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
         return all_brake;
     }
-    /* Right side longitudinal wheel sets */
+    // /* Check if mode changed */
+    // if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
+    //     return None;
+    // }
+    /* Right side longitudinal wheel set */
     // Forward
     if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
         // map the duty from 0 to 1 given the min and max threshold values
@@ -43,8 +45,7 @@ volatile uint16_t rc_left    = 0;
         right_duty = 1 - map(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MIN, 0, 1);
         right_dir = BACKWARD;
     } 
-
-    /* Left side longitudinal wheel sets */
+    /* Left side longitudinal wheel set */
     // Forward
     if (rc_left < RC_LEFT_SET_FW_MAX && rc_left > RC_LEFT_SET_FW_MIN) {
         left_duty = map(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MIN, 0, 1);
@@ -57,7 +58,7 @@ volatile uint16_t rc_left    = 0;
     }
 
     /* Define and fill wheel motor commands */
-    wheel_motor_command_t  wheel_motor_commands[4];
+    Array<wheel_motor_command_t, 4> wheel_motor_commands {};
     // right set
     wheel_motor_commands[RF] = {.duty_cycle = right_duty, .brake_release = RELEASE_BRAKE, .dir = right_dir};
     wheel_motor_commands[RB] = {.duty_cycle = right_duty, .brake_release = RELEASE_BRAKE, .dir = right_dir};
@@ -66,5 +67,5 @@ volatile uint16_t rc_left    = 0;
     wheel_motor_commands[LB] = {.duty_cycle = left_duty, .brake_release = RELEASE_BRAKE, .dir = left_dir};
 
     /*  Return reference to the command set */
-    return &wheel_motor_commands
+    return wheel_motor_commands;
 }

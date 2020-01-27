@@ -1,5 +1,8 @@
 #include "wheel.h"
 #include "pinout.h"
+#include "rc_commands.h"
+#define DEBUG
+#include "debug.h"
 
 volatile bool autonomy = false;
 
@@ -10,6 +13,9 @@ void setup()
     pinMode(RC_LEFT_CHANNEL_PIN,    INPUT);
     pinMode(RC_SWA_CHANNEL_PIN,     INPUT);
     pinMode(RC_SWB_CHANNEL_PIN,     INPUT);
+        
+    // For debugging
+    Serial.begin(115200);
 
     if (SERIAL == true) {
         // code for setting up serial comms
@@ -46,13 +52,21 @@ void setup()
 
 void loop()
 {
-    if (mode == autonomy) {
+    if (autonomy) {
         // code for comms with the autonomy computer
     } else {
         // update wheel commands
-        wheel_motor_command_t * wheel_motor_commands = fetch_rc_commands();
+        auto wheel_motor_commands = fetch_rc_commands();
         for (int i = 0; i < NUM_WHEELS; i++ ) {
-            wheel_set(i, (*wheel_motor_commands)[i]);
+            uint16_t debug_duty = wheel_motor_commands[i].duty_cycle;
+            bool debug_brake = wheel_motor_commands[i].brake_release;
+            bool debug_dir = wheel_motor_commands[i].dir;
+            String debug_string = String("Wheel ") + i + String(": ") + \
+                           String("duty - ") + debug_duty + String("\t") + \
+                           String("brake - ") + (debug_brake == 0)? String("on") : String("off") + String("\t") + \
+                           String("dir - ") + (debug_dir == 1)? String("f") : String("b");
+            DEBUG_PRINT(debug_string);
+            //wheel_set(i, (*wheel_motor_commands)[i]);
         }
     }
 }

@@ -13,7 +13,7 @@
  * @param index: wheel index
  * @param command: wheel motion command 
  */
-wheel_set(wheel_index_t index, motor_command_t command);
+int wheel_set(wheel_index_t index, wheel_motor_command_t command)
 {
     /* Custom code for either CAN commands or PWM setting */
 
@@ -29,18 +29,18 @@ wheel_set(wheel_index_t index, motor_command_t command);
         // update the duty
         *(wheel_to_register[index]) = command.duty_cycle * TOP;
         // update the direction
-        digitalWrite(wheel_to_pins[index].dir, command.dir ? HIGH : LOW));
+        digitalWrite(wheel_to_pins[index].dir, command.dir ? HIGH : LOW);
         // re-enable interrupts
         sei();
     }
-    
+    return 0;
 }
 /**
  * @brief Send brake command to a wheel
  * 
  * @param index: wheel index
  */
-wheel_brake(wheel_index_t index) 
+int wheel_brake(wheel_index_t index) 
 {
     if (SERIAL == true) {
         // code for serial comms
@@ -54,6 +54,7 @@ wheel_brake(wheel_index_t index)
         // re-enable interrupts
         sei();
     }
+    return 0;
 }
 
 /**
@@ -61,7 +62,7 @@ wheel_brake(wheel_index_t index)
  * 
  * @param index: wheel index
  */
-wheel_coast(wheel_index_t index) 
+int wheel_coast(wheel_index_t index) 
 {
     if (SERIAL == true) {
         // code for serial comms
@@ -75,6 +76,7 @@ wheel_coast(wheel_index_t index)
         // re-enable interrupts
         sei();
     }
+    return 0;
 }
 
 /*

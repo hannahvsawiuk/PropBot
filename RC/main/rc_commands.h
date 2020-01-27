@@ -1,5 +1,8 @@
 #ifndef RC_COMMANDS_H
 #define RC_COMMANDS_H
+#include "pinout.h"
+#include "wheel.h"
+#include "util.h"
 
 /*  Define the max and min thresholds for the longitudinal wheel sets */
 // CH2 - right longitudinal wheel set
@@ -18,5 +21,8 @@
 #define RC_SWX_LOW_MIN              987
 #define RC_SWX_HIGH_MAX             1981
 #define RC_SWX_HIGH_MIN             1974
+
+/*  Function prototypes for rc commands */
+Array<wheel_motor_command_t, 4> fetch_rc_commands(); 
 
 #endif // !RC_COMMANDS_H

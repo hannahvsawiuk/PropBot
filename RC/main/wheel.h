@@ -1,8 +1,11 @@
 #ifndef Wheel_h
 #define Wheel_h
 
+#include <Arduino.h>
 #include "pinout.h"
+#include "util.h"
 
+#define NUM_WHEELS 4
 // Top value of the registers (configuration done in MAIN)
 #define TOP         255
 // Direction values
@@ -36,9 +39,9 @@ typedef enum
  * 
  */
 typedef struct wheel_pins_t {
-    uint8_t control,
-    uint8_t brake_release,
-    uint8_t dir
+    uint8_t control;
+    uint8_t brake_release;
+    uint8_t dir;
 };
 
 /**
@@ -53,19 +56,30 @@ typedef struct wheel_motor_command_t
 };
 /* default motor commands */
 // Brake: duty = 0, brake on
-wheel_motor_command_t * all_brake[] = {
-    {.duty_cycle = 0, .brake_release = BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = BRAKE, .dir = FORWARD}
-}
+const Array<wheel_motor_command_t, 4> all_brake = {{
+    {0, BRAKE, FORWARD},
+    {0, BRAKE, FORWARD},
+    {0, BRAKE, FORWARD},
+    {0, BRAKE, FORWARD}
+}};
 // Coast: duty = 0, brake released
-wheel_motor_command_t * all_coast[] = {
-    {.duty_cycle = 0, .brake_release = RELEASE_BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = RELEASE_BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = RELEASE_BRAKE, .dir = FORWARD},
-    {.duty_cycle = 0, .brake_release = RELEASE_BRAKE, .dir = FORWARD}
-}
+const Array<wheel_motor_command_t, 4> all_coast = {{
+    {0, RELEASE_BRAKE, FORWARD},
+    {0, RELEASE_BRAKE, FORWARD},
+    {0, RELEASE_BRAKE, FORWARD},
+    {0, RELEASE_BRAKE, FORWARD}
+}};
+
+/**
+ * @brief maps wheel index to a struct that defines the wheel pins (digital pin index)
+ * 
+ */
+const Array<wheel_pins_t, 4> wheel_to_pins = {{
+    {R_F_controlPin, R_F_brakeReleasePin, R_F_dirPin},
+    {L_F_controlPin, L_F_brakeReleasePin, L_F_dirPin},
+    {L_B_controlPin, L_B_brakeReleasePin, L_B_dirPin},   
+    {R_B_controlPin, R_B_brakeReleasePin, R_B_dirPin}
+}};
 
 /**
  * @brief mapping of wheel index to the output compare associated with PWM generation
@@ -79,20 +93,10 @@ uint16_t* wheel_to_register[4] = {
     &OCR4B      // RB: pin 16, digital 7 
 };
 
-/**
- * @brief maps wheel index to a struct that defines the wheel pins (digital pin index)
- * 
- */
-static wheel_pins_t wheel_to_pins[4] = {
-    {R_F_controlPin, R_F_brakeReleasePin, R_F_dirPin},
-    {L_F_controlPin, L_F_brakeReleasePin, L_F_dirPin},
-    {L_B_controlPin, L_B_brakeReleasePin, L_B_dirPin},   
-    {R_B_controlPin, R_B_brakeReleasePin, R_B_dirPin}
-};
 
 /*  Function prototypes for wheel motion functions */
-wheel_set(wheel_index_t index, wheel_motor_command_t command);
-wheel_brake(wheel_index_t index);
-wheel_coast(wheel_index_t index);
+int wheel_set(wheel_index_t index, wheel_motor_command_t * command);
+int wheel_brake(wheel_index_t index);
+int wheel_coast(wheel_index_t index);
 
 #endif // !Wheel_h
