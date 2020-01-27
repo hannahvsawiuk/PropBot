@@ -3,7 +3,6 @@
 
 #include <geometry_msgs/PointStamped.h>
 
-
 namespace propbot_mission {
 
 /**
@@ -24,7 +23,7 @@ class Waypoint {
 
  private:
   // Waypoint in map odom frame
-  const geometry_msgs::PointStamped map_waypoint_;
+  geometry_msgs::PointStamped map_waypoint_;
 };
 
 }  // namespace propbot_mission

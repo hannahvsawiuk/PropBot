@@ -30,8 +30,7 @@ add_library(propbot_mission
 )
 
 add_executable(send_mission 
-  src/send_mission.cc 
-
+  src/send_mission.cc
 )
 
 target_link_libraries(send_mission PUBLIC propbot_mission ${catkin_LIBRARIES})

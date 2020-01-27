@@ -22,14 +22,14 @@ class Mission {
   Mission(const std::string &mission_file);
 
   /* Mission accessor */
-  std::vector<Waypoint::Waypoint> mission() const { return mission_; };
+  std::vector<Waypoint> mission() const { return mission_; };
 
   /* Mission size accessor */
   unsigned int size() const { return size_; };
 
  private:
   // Mission waypoint vector
-  std::vector<Waypoint::Waypoint> mission_;
+  std::vector<Waypoint> mission_;
 
   // Size of mission
   unsigned int size_;

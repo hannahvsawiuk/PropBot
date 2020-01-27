@@ -1,4 +1,4 @@
-#include <propbot/mission/mission.h>
+#include <propbot_mission/mission.h>
 
 using namespace propbot_mission;
 
@@ -21,7 +21,7 @@ Mission::Mission(const std::string &mission_file) {
       file >> x;
       file >> y;
 
-      mission_.pushback(Waypoint(x, y));
+      mission_.push_back(Waypoint(x, y));
     }
     size_ = mission_.size();
     ROS_INFO("%.0f Map waypoints were read", size_);

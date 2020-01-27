@@ -17,7 +17,7 @@ Waypoint::Waypoint(const double x, const double y) {
   map_waypoint_.header.stamp = ros::Time(0);
   map_waypoint_.point.x = x;
   map_waypoint_.point.y = y;
-  map_waypoint_.point.z = z;
+  map_waypoint_.point.z = 0;
 }
 
 /**
@@ -29,6 +29,7 @@ Waypoint::Waypoint(const double x, const double y) {
  *
  */
 geometry_msgs::PointStamped Waypoint::map_waypoint() const {
-  map_waypoint = map_waypoint_;
+  geometry_msgs::PointStamped map_waypoint = map_waypoint_;
   map_waypoint.header.stamp = ros::Time(0);
+  return map_waypoint;
 }
