@@ -58,10 +58,13 @@ unsigned int MissionHandler::current_waypoint_number() const {
  * This function sends a goal based on the current waypoint to move base.
  *
  */
-void MissionHandler::SendGoal(void) const {
+void MissionHandler::SendGoal(void) {
   if (!action_client_) {
     ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
-    auto waypoint_cb = boost::bind(&MissionHandler::WaypointCallback, this);
+    auto waypoint_cb = [this](const actionlib::SimpleClientGoalState& state,
+                              const ResultConstPtr& result) {
+      this->WaypointCallback(state, result);
+    };
     action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
   } else {
     ROS_ERROR("Action client has not been started! Cannot send goal.");

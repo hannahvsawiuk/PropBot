@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include <actionlib/client/simple_action_client.h>
@@ -15,7 +16,7 @@ using MoveBaseClient =
     actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>;
 
 using ResultConstPtr = boost::shared_ptr<
-    const move_base_msgs::MoveBaseAction::_action_result_type>;
+    const move_base_msgs::MoveBaseAction::_action_result_type::_result_type>;
 
 /**
  * Mission handler class
@@ -50,7 +51,7 @@ class MissionHandler {
   unsigned int current_waypoint_index_;
 
   // Functions
-  void SendGoal(void) const;
+  void SendGoal(void);
   move_base_msgs::MoveBaseGoal CreateCurrentGoal(void) const;
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
                         const ResultConstPtr& result);
