@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <ros/ros.h>
+
 #include <propbot_mission/waypoint.h>
 
 namespace propbot_mission {
