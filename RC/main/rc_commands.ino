@@ -63,13 +63,18 @@ Array<wheel_motor_command_t, 4> fetch_rc_commands()
     }
 
     /* Define and fill wheel motor commands */
-    Array<wheel_motor_command_t, 4> wheel_motor_commands {};
-    // right set
-    wheel_motor_commands[RF] = {right_duty, RELEASE_BRAKE, right_dir};
-    wheel_motor_commands[RB] = {right_duty, RELEASE_BRAKE, right_dir};
-    // left set
-    wheel_motor_commands[LF] = {left_duty, RELEASE_BRAKE, left_dir};
-    wheel_motor_commands[LB] = {left_duty, RELEASE_BRAKE, left_dir};
+    Array<wheel_motor_command_t, 4> wheel_motor_commands = {{
+       {right_duty, RELEASE_BRAKE, right_dir},
+       {right_duty, RELEASE_BRAKE, right_dir},
+       {left_duty, RELEASE_BRAKE, left_dir},
+       {left_duty, RELEASE_BRAKE, left_dir}
+    }};
+    // // right set
+    // wheel_motor_commands[wheel_indices::RF] = {right_duty, RELEASE_BRAKE, right_dir};
+    // wheel_motor_commands[wheel_indices::RB] = {right_duty, RELEASE_BRAKE, right_dir};
+    // // left set
+    // wheel_motor_commands[wheel_indices::LF] = {left_duty, RELEASE_BRAKE, left_dir};
+    // wheel_motor_commands[wheel_indices::LB] = {left_duty, RELEASE_BRAKE, left_dir};
 
     /*  Return reference to the command set */
     return wheel_motor_commands;

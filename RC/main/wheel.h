@@ -6,36 +6,38 @@
 #include "util.h"
 
 /* Define Important Values */
-#define NUM_WHEELS 4
-#define TOP         255     // Top value of the registers (configuration done in MAIN)
+#define NUM_WHEELS      4
+#define TOP             0x03FF     // Top value of the registers (configuration done in MAIN)
 // Direction values
-#define FORWARD     true
-#define BACKWARD    false
-#define BRAKE       false
-#define RELEASE_BRAKE true
+#define FORWARD         true
+#define BACKWARD        false
+#define BRAKE           false
+#define RELEASE_BRAKE   true
 /**
  * @brief Wheel index mapping
  * 
  *   Front
  * 
- *  0-----1
+ *  3-----0
  * 
  *  Middle
  * 
- *  3-----2
+ *  2-----1
  *   
  *   Back
  */
-typedef enum 
+typedef enum wheel_index_t
 {
+    Start = -1,
     RF  = 0U,
-    LF  = 1U,
-    LB  = 2U,
-    RB  = 3U
-} wheel_index_t;
+    RB  = 1U,
+    LF  = 2U,
+    LB  = 3U,
+    End = 4U
+} wheel_indices;
 
 // Pseudo map bc Arduino does not support STL
-const Array<String, 4> wheel_index_name_map = {"RF", "LF", "LB", "RB"};
+const Array<String, 4> wheel_index_name_map = {"RF", "RB", "LF", "LB"};
 
 /**
  * @brief wheel motor pin struct
@@ -79,9 +81,9 @@ const Array<wheel_motor_command_t, 4> all_coast = {{
  */
 const Array<wheel_pins_t, 4> wheel_to_pins = {{
     {R_F_controlPin, R_F_brakeReleasePin, R_F_dirPin},
+    {R_B_controlPin, R_B_brakeReleasePin, R_B_dirPin},
     {L_F_controlPin, L_F_brakeReleasePin, L_F_dirPin},
-    {L_B_controlPin, L_B_brakeReleasePin, L_B_dirPin},   
-    {R_B_controlPin, R_B_brakeReleasePin, R_B_dirPin}
+    {L_B_controlPin, L_B_brakeReleasePin, L_B_dirPin}   
 }};
 
 /**
@@ -90,12 +92,11 @@ const Array<wheel_pins_t, 4> wheel_to_pins = {{
  * 
  */
 uint16_t* wheel_to_register[4] = {
-    &OCR3A,     // LF: pin 5, digital 5
     &OCR3B,     // RF: pin 6, digital 2
-    &OCR4A,     // LB: pin 15, digital 6
-    &OCR4B      // RB: pin 16, digital 7 
+    &OCR4B,     // RB: pin 16, digital 7 
+    &OCR3A,     // LF: pin 5, digital 5
+    &OCR4A      // LB: pin 15, digital 6
 };
-
 
 /*  Function prototypes for wheel motion functions */
 int wheel_set(wheel_index_t index, wheel_motor_command_t command);

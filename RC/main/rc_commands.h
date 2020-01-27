@@ -17,10 +17,10 @@
 #define RC_LEFT_SET_BW_MIN          1007
 /*  Define channels and thresholds for the switches */
 // CH5/6 - SWA/B
-#define RC_SWX_LOW_MAX              994
-#define RC_SWX_LOW_MIN              987
-#define RC_SWX_HIGH_MAX             1981
-#define RC_SWX_HIGH_MIN             1974
+#define RC_SWX_LOW_MAX              1000//994
+#define RC_SWX_LOW_MIN              950//987
+#define RC_SWX_HIGH_MAX             2000//1981
+#define RC_SWX_HIGH_MIN             1900//1974
 
 /*  Function prototypes for rc commands */
 Array<wheel_motor_command_t, 4> fetch_rc_commands(); 

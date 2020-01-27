@@ -27,8 +27,7 @@ int wheel_set(wheel_index_t index, wheel_motor_command_t command)
         // update the brake state
         digitalWrite(wheel_to_pins[index].brake_release, command.brake_release ? HIGH : LOW);
         // update the duty
-        *wheel_to_register[index] = command.duty_cycle * TOP;
-        Serial.println(command.duty_cycle * TOP);
+        *(wheel_to_register[index]) = command.duty_cycle * TOP;
         // update the direction
         digitalWrite(wheel_to_pins[index].dir, command.dir ? HIGH : LOW);
         // re-enable interrupts

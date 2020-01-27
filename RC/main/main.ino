@@ -15,6 +15,13 @@ void setup()
     pinMode(RC_SWA_CHANNEL_PIN,     INPUT);
     pinMode(RC_SWB_CHANNEL_PIN,     INPUT);
         
+    // Pin setup for all wheel motors
+    for (int i = 0; i < NUM_WHEELS; i++)
+    {
+        pinMode(wheel_to_pins[i].control,       OUTPUT);
+        pinMode(wheel_to_pins[i].brake_release, OUTPUT);
+        pinMode(wheel_to_pins[i].dir,           OUTPUT);
+    }
     // For debugging
     Serial.begin(9600);
 
@@ -23,31 +30,24 @@ void setup()
     } else {
         /*
         * Fast PWM configuration:
-        *   - Clear OC0A on Compare Match, set OC0A at BOTTOM,(non-inverting mode)
-        *   - TOP = 0xFF (255)
-        *   - Output frequency =  clk_io/64 --> 16MHz/64 = ~976 Hz
+        *   - Clear OC0A/B on Compare Match, set OC0A at BOTTOM,(non-inverting mode)
+        *   - TOP = 0x03FF (1023)
+        *   - Output frequency =  clk_io/64 --> 64 = ~976 Hz or 490??
         */ 
         // Timer3 Fast PWM setup
-        TCCR3A = (1 << COM3A1)  |  (1 << WGM31)     |   (1 << WGM30);
-        TCCR3B = (1 << CS31)    |  (1 << CS30); 
+        TCCR3A = (1 << COM3A1) | (1 << COM3B1) | (1 << WGM32) | (1 << WGM31) | (1 << WGM30);
+        TCCR3B = (1 << CS31) | (1 << CS30); 
         // Set duty cycle initially to 0%
         OCR3A = 0;  
         OCR3B = 0;
 
         // Timer4 Fast PWM setup
-        TCCR4A = (1 << COM4A1)  |   (1 << WGM41)    |   (1 << WGM40);
-        TCCR4B = (1 << CS41)    |   (1 << CS40);         
+        TCCR4A = (1 << COM4A1) | (1 << COM4B1) | (1 < WGM42) | (1 << WGM41) | (1 << WGM40);
+        TCCR4B = (1 << CS41) | (1 << CS40);         
         // Set duty cycle initially to 0%
         OCR4A = 0;  
         OCR4B = 0; 
 
-        // Pin setup for all wheel motors
-        for (int i = 0; i < NUM_WHEELS; i++)
-        {
-            pinMode(wheel_to_pins[i].control,       OUTPUT);
-            pinMode(wheel_to_pins[i].brake_release, OUTPUT);
-            pinMode(wheel_to_pins[i].dir,           OUTPUT);
-        }
     }
 }
 
@@ -59,7 +59,7 @@ void loop()
         // update wheel commands
         auto commands = fetch_rc_commands();
         String debug_str = String();
-        for (int i = 0; i < NUM_WHEELS; i++ ) {
+        for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
             debug_str += wheel_index_name_map[i] + String(": ") + \
                            String("duty - ") + commands[i].duty_cycle + String("\t") + \
                            String("brake - ") + ((commands[i].brake_release == 0)? String("on") : String("off")) + String("\t") + \
@@ -69,11 +69,11 @@ void loop()
         }
         Serial.println(debug_str);
 
-        // Serial.println(
-        //     String("Index: RF") + String(", Register duty: ") + *wheel_to_register[RF] + \
-        //     String("\nIndex: LF") + String(", Register duty: ") + *wheel_to_register[RF] + \
-        //     String("\nIndex: LB") + String(", Register duty: ") + *wheel_to_register[LB] + \
-        //     String("\nIndex: RB") + String(", Register duty: ") + *wheel_to_register[RB] + String("\n")
-        // );
+        Serial.println(
+            String("Index: RF") + String(", Register duty: ") + *wheel_to_register[RF] + \
+            String("\nIndex: RB") + String(", Register duty: ") + *wheel_to_register[RB] + \
+            String("\nIndex: LF") + String(", Register duty: ") + *wheel_to_register[RF] + \
+            String("\nIndex: LB") + String(", Register duty: ") + *wheel_to_register[LB] + String("\n")
+        );
     }
 }
