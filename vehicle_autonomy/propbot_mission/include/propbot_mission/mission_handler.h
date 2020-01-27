@@ -30,11 +30,12 @@ class MissionHandler {
   MissionHandler() = default;
   /* Mission handler constructor with a mission as an input */
   MissionHandler(const Mission& mission)
-      : mission_(mission), current_waypoint_index_(0){};
+      : mission_(mission), current_waypoint_index_(0), is_finished_(false){};
 
   // Mission commands
   void Start(void);
-  void Stop(void) const;
+  void Stop(void);
+  bool IsFinished(void) { return is_finished_;}
 
   // Accessors
   Waypoint current_waypoint(void) const;
@@ -49,6 +50,9 @@ class MissionHandler {
 
   // Index of current waypoint
   unsigned int current_waypoint_index_;
+
+  // Mission finished flag
+  bool is_finished_;
 
   // Functions
   void SendGoal(void);

@@ -29,12 +29,12 @@ add_library(propbot_mission
   src/mission_handler.cc
 )
 
-add_executable(send_mission 
-  src/send_mission.cc
+add_executable(execute_mission 
+  src/execute_mission.cc
 )
 
 target_link_libraries(propbot_mission PUBLIC ${catkin_LIBRARIES})
-target_link_libraries(send_mission PUBLIC propbot_mission ${catkin_LIBRARIES})
+target_link_libraries(execute_mission PUBLIC propbot_mission ${catkin_LIBRARIES})
 
 install(DIRECTORY  launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

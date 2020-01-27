@@ -10,6 +10,8 @@ using namespace propbot_mission;
  */
 
 void MissionHandler::Start(void) {
+  // Start mision
+  is_finished_ = false;
   // Declare an action client that communicates with move_base
   action_client_ = std::make_unique<MoveBaseClient>("/move_base", true);
 
@@ -17,6 +19,11 @@ void MissionHandler::Start(void) {
   ROS_INFO("Waiting for move_base action server to come up");
   if (!action_client_->waitForServer(ros::Duration(15.0))) {
     ROS_ERROR("Move_base action server did not come up!");
+    is_finished_ = true;
+  }
+  else {
+    // Send the first waypoint as a goal
+    SendGoal();
   }
 }
 
@@ -28,9 +35,10 @@ void MissionHandler::Start(void) {
  * is started again, it resumes from where it was stopped.
  *
  */
-void MissionHandler::Stop(void) const {
+void MissionHandler::Stop(void) {
   if (!action_client_) {
     action_client_->cancelAllGoals();
+    is_finished_ = true;
   } else {
     ROS_ERROR("Action client has not been started! Cannot stop mission.");
   }
@@ -114,8 +122,15 @@ void MissionHandler::WaypointCallback(
     const ResultConstPtr& result) {
   if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO("Robot has reached waypoint number %i", current_waypoint_number());
-    current_waypoint_index_++;
-    SendGoal();
+    if (current_waypoint_number() < mission_.size()) {
+      // Last waypoint has not been reached, send next waypoint
+      current_waypoint_index_++;
+      SendGoal();
+    } else {
+      // Last waypoint has been reached, set mission to finished
+      is_finished_  = true;
+      ROS_INFO("Mission is finished. ");
+    }
   } else {
     ROS_ERROR("Robot was unable to reach waypoint number %i",
               current_waypoint_number());

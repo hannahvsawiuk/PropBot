@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-
-  <node ns="/propbot_mission" pkg="propbot_mission" type="send_mission" name="send_mission" output="screen"/>
-	    <!-- <param name="/outdoor_waypoint_nav/coordinates_file" value="/waypoint_files/points_sim.txt" type="string" />	 -->
-	
-</launch>
