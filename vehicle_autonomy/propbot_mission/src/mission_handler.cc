@@ -15,7 +15,7 @@ void MissionHandler::Start(void) {
 
   // Wait for action server to come up
   ROS_INFO("Waiting for move_base action server to come up");
-  if (!action_client_.waitForServer(ros::Duration(15.0))) {
+  if (!action_client_->waitForServer(ros::Duration(15.0))) {
     ROS_ERROR("Move_base action server did not come up!");
   }
 }
@@ -30,8 +30,7 @@ void MissionHandler::Start(void) {
  */
 void MissionHandler::Stop(void) const {
   if (!action_client_) {
-    action_client_.cancelAllGoals();
-    action_client_.sendGoal(CreateCurrentGoal(), waypoint_cb);
+    action_client_->cancelAllGoals();
   } else {
     ROS_ERROR("Action client has not been started! Cannot stop mission.");
   }
@@ -63,7 +62,7 @@ void MissionHandler::SendGoal(void) const {
   if (!action_client_) {
     ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
     auto waypoint_cb = boost::bind(&MissionHandler::WaypointCallback, this);
-    action_client_.sendGoal(CreateCurrentGoal(), waypoint_cb);
+    action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
   } else {
     ROS_ERROR("Action client has not been started! Cannot send goal.");
   }
@@ -107,9 +106,10 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
  * @param result Result of move base action
  *
  */
-void MissionHandler::WaypointCallback(const actionlib::SimpleClientGoalState& state,
-                                 const actionlib::ResultConstPtr& result) {
-  if (state == actionlib::SimpleClientGoalState::SUCEEDED) {
+void MissionHandler::WaypointCallback(
+    const actionlib::SimpleClientGoalState& state,
+    const actionlib::ResultConstPtr& result) {
+  if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO("Robot has reached waypoint number %i", current_waypoint_number());
     current_waypoint_index_++;
     SendGoal();
