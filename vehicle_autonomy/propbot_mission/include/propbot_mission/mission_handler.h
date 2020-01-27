@@ -1,13 +1,10 @@
-#ifndef PROPBOT_MISSION_MISSION_
-#define PROPBOT_MISSION_MISSION_
+#pragma once
 
 #include <memory>
 
-// #include <ros/ros.h>
-// #include <ros/package.h>
+#include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
-#include <ros/console.h>
 
 #include <propbot_mission/mission.h>
 #include <propbot_mission/waypoint.h>
@@ -51,12 +48,9 @@ class MissionHandler {
 
   // Functions
   void SendGoal(void) const;
-  void CreateCurrentGoal(void) const;
-  void MissionHandler::WaypointCallback(
-      const actionlib::SimpleClientGoalState& state,
-      const actionlib::ResultConstPtr& result);
+  move_base_msgs::MoveBaseGoal CreateCurrentGoal(void) const;
+  void WaypointCallback(const actionlib::SimpleClientGoalState& state,
+                        const actionlib::ResultConstPtr& result);
 };
 
 }  // namespace propbot_mission
-
-#endif  // PROPBOT_MISSION_MISSION_

@@ -1,5 +1,4 @@
-#ifndef PROPBOT_MISSION_WAYPOINT_H_
-#define PROPBOT_WAYPOINT_H_
+#pragma once
 
 #include <geometry_msgs/PointStamped.h>
 
@@ -27,5 +26,3 @@ class Waypoint {
 };
 
 }  // namespace propbot_mission
-
-#endif  // PROPBOT_WAYPOINT_H_

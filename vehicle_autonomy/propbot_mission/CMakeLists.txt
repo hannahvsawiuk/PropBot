@@ -33,6 +33,7 @@ add_executable(send_mission
   src/send_mission.cc
 )
 
+target_link_libraries(propbot_mission PUBLIC ${catkin_LIBRARIES})
 target_link_libraries(send_mission PUBLIC propbot_mission ${catkin_LIBRARIES})
 
 install(DIRECTORY  launch

@@ -1,5 +1,4 @@
-#ifndef PROPBOT_MISSION_MISSION_
-#define PROPBOT_MISSION_MISSION_
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -36,5 +35,3 @@ class Mission {
 };
 
 }  // namespace propbot_mission
-
-#endif  // PROPBOT_MISSION_MISSION_

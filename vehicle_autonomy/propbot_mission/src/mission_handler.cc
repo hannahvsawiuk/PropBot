@@ -84,9 +84,9 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
 
   // Set x and y of current_goal
   current_goal.target_pose.pose.position.x =
-      current_waypoint().map_waypoint.point.x;
+      current_waypoint().map_waypoint().point.x;
   current_goal.target_pose.pose.position.y =
-      current_waypoint().map_waypoint.point.y;
+      current_waypoint().map_waypoint().point.y;
 
   // Set orientation of current goal to a 0 rotation angle around an axis
   // v(0,0,0)
