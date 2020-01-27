@@ -2,17 +2,20 @@
 
 #include <memory>
 
-#include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
+#include <ros/ros.h>
 
 #include <propbot_mission/mission.h>
 #include <propbot_mission/waypoint.h>
 
 namespace propbot_mission {
 
-typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>
-    MoveBaseClient;
+using MoveBaseClient =
+    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>;
+
+using ResultConstPtr = boost::shared_ptr<
+    const move_base_msgs::MoveBaseAction::_action_result_type>;
 
 /**
  * Mission handler class
@@ -50,7 +53,7 @@ class MissionHandler {
   void SendGoal(void) const;
   move_base_msgs::MoveBaseGoal CreateCurrentGoal(void) const;
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
-                        const actionlib::ResultConstPtr& result);
+                        const ResultConstPtr& result);
 };
 
 }  // namespace propbot_mission

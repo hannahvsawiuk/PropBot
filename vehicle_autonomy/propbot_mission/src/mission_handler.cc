@@ -108,7 +108,7 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
  */
 void MissionHandler::WaypointCallback(
     const actionlib::SimpleClientGoalState& state,
-    const actionlib::ResultConstPtr& result) {
+    const ResultConstPtr& result) {
   if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO("Robot has reached waypoint number %i", current_waypoint_number());
     current_waypoint_index_++;
