@@ -1,7 +1,8 @@
 #include "wheel.h"
 #include "pinout.h"
 #include "rc_commands.h"
-#define DEBUG
+#include <string.h>
+#define DEBUG_MODE
 #include "debug.h"
 
 volatile bool autonomy = false;
@@ -15,7 +16,7 @@ void setup()
     pinMode(RC_SWB_CHANNEL_PIN,     INPUT);
         
     // For debugging
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     if (SERIAL == true) {
         // code for setting up serial comms
@@ -56,17 +57,23 @@ void loop()
         // code for comms with the autonomy computer
     } else {
         // update wheel commands
-        auto wheel_motor_commands = fetch_rc_commands();
+        auto commands = fetch_rc_commands();
+        String debug_str = String();
         for (int i = 0; i < NUM_WHEELS; i++ ) {
-            uint16_t debug_duty = wheel_motor_commands[i].duty_cycle;
-            bool debug_brake = wheel_motor_commands[i].brake_release;
-            bool debug_dir = wheel_motor_commands[i].dir;
-            String debug_string = String("Wheel ") + i + String(": ") + \
-                           String("duty - ") + debug_duty + String("\t") + \
-                           String("brake - ") + (debug_brake == 0)? String("on") : String("off") + String("\t") + \
-                           String("dir - ") + (debug_dir == 1)? String("f") : String("b");
-            DEBUG_PRINT(debug_string);
-            //wheel_set(i, (*wheel_motor_commands)[i]);
+            debug_str += wheel_index_name_map[i] + String(": ") + \
+                           String("duty - ") + commands[i].duty_cycle + String("\t") + \
+                           String("brake - ") + ((commands[i].brake_release == 0)? String("on") : String("off")) + String("\t") + \
+                           String("dir - ") + ((commands[i].dir == 1)? String("fw") : String("bw")) + \
+                           String("\n");
+            wheel_set(i, commands[i]);
         }
+        Serial.println(debug_str);
+
+        // Serial.println(
+        //     String("Index: RF") + String(", Register duty: ") + *wheel_to_register[RF] + \
+        //     String("\nIndex: LF") + String(", Register duty: ") + *wheel_to_register[RF] + \
+        //     String("\nIndex: LB") + String(", Register duty: ") + *wheel_to_register[LB] + \
+        //     String("\nIndex: RB") + String(", Register duty: ") + *wheel_to_register[RB] + String("\n")
+        // );
     }
 }

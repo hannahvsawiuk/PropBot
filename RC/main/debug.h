@@ -8,15 +8,17 @@ To use, define DEBUG before including this file
 #ifndef DEBUGUTILS_H
 #define DEBUGUTILS_H
 
+#include <string.h>
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
-#ifdef DEBUG
+#ifdef DEBUG_MODE
 #include <Arduino.h>
 #define DEBUG_PRINT(str)                 \
     Serial.print(millis());              \
     Serial.print(": ");                  \
-    Serial.print(__PRETTY_FUNCTION__);   \
+    Serial.print(__FUNCTION__);   \
     Serial.print(' ');                   \
-    Serial.print(__FILE__);              \
+    Serial.print(__FILENAME__);              \
     Serial.print(':');                   \
     Serial.print(__LINE__);              \
     Serial.print(' ');                   \
@@ -24,9 +26,9 @@ To use, define DEBUG before including this file
 #define DEBUG_PRINTDEC(x)                \
     Serial.print(millis());              \
     Serial.print(": ");                  \
-    Serial.print(__PRETTY_FUNCTION__);   \
+    Serial.print(__FUNCTION__);   \
     Serial.print(' ');                   \
-    Serial.print(__FILE__);              \
+    Serial.print(__FILENAME__);              \
     Serial.print(':');                   \
     Serial.print(__LINE__);              \
     Serial.print(' ');                   \
@@ -34,9 +36,9 @@ To use, define DEBUG before including this file
 #define DEBUG_PRINT_DEC(str, x)          \
     Serial.print(millis());              \
     Serial.print(": ");                  \
-    Serial.print(__PRETTY_FUNCTION__);   \
+    Serial.print(__FUNCTION__);   \
     Serial.print(' ');                   \
-    Serial.print(__FILE__);              \
+    Serial.print(__FILENAME__);              \
     Serial.print(':');                   \
     Serial.print(__LINE__);              \
     Serial.print(' ');                   \

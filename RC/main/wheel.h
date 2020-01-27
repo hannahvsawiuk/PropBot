@@ -5,9 +5,9 @@
 #include "pinout.h"
 #include "util.h"
 
+/* Define Important Values */
 #define NUM_WHEELS 4
-// Top value of the registers (configuration done in MAIN)
-#define TOP         255
+#define TOP         255     // Top value of the registers (configuration done in MAIN)
 // Direction values
 #define FORWARD     true
 #define BACKWARD    false
@@ -34,6 +34,9 @@ typedef enum
     RB  = 3U
 } wheel_index_t;
 
+// Pseudo map bc Arduino does not support STL
+const Array<String, 4> wheel_index_name_map = {"RF", "LF", "LB", "RB"};
+
 /**
  * @brief wheel motor pin struct
  * 
@@ -50,24 +53,24 @@ typedef struct wheel_pins_t {
  */
 typedef struct wheel_motor_command_t
 {
-    uint16_t duty_cycle; // float from 0 to 1
+    float duty_cycle; // float from 0 to 1
     bool brake_release;
     bool dir;
 };
 /* default motor commands */
 // Brake: duty = 0, brake on
 const Array<wheel_motor_command_t, 4> all_brake = {{
-    {0, BRAKE, FORWARD},
-    {0, BRAKE, FORWARD},
-    {0, BRAKE, FORWARD},
-    {0, BRAKE, FORWARD}
+    {0.0, BRAKE, FORWARD},
+    {0.0, BRAKE, FORWARD},
+    {0.0, BRAKE, FORWARD},
+    {0.0, BRAKE, FORWARD}
 }};
 // Coast: duty = 0, brake released
 const Array<wheel_motor_command_t, 4> all_coast = {{
-    {0, RELEASE_BRAKE, FORWARD},
-    {0, RELEASE_BRAKE, FORWARD},
-    {0, RELEASE_BRAKE, FORWARD},
-    {0, RELEASE_BRAKE, FORWARD}
+    {0.0, RELEASE_BRAKE, FORWARD},
+    {0.0, RELEASE_BRAKE, FORWARD},
+    {0.0, RELEASE_BRAKE, FORWARD},
+    {0.0, RELEASE_BRAKE, FORWARD}
 }};
 
 /**
@@ -95,7 +98,7 @@ uint16_t* wheel_to_register[4] = {
 
 
 /*  Function prototypes for wheel motion functions */
-int wheel_set(wheel_index_t index, wheel_motor_command_t * command);
+int wheel_set(wheel_index_t index, wheel_motor_command_t command);
 int wheel_brake(wheel_index_t index);
 int wheel_coast(wheel_index_t index);
 
