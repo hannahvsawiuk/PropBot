@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+  <name>propbot_rviz</name>
+  <version>0.0.1</version>
+  <description>Rviz simulation for propbot</description>
+  
+  <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
+  <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
+  <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
+  <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
+  <maintainer email="jackguo380p@gmail.com">Jack Guo</maintainer>
+  
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roslaunch</build_depend>
+
+  <run_depend>propbot_description</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>rviz</run_depend>
+  <run_depend>rviz_imu_plugin</run_depend>
+
+  <export>
+  </export>
+</package>
