@@ -3,24 +3,19 @@
 #define DEBUG_MODE
 #include "debug.h"
 
-// Initialize the RC channel inputs as volatile 16-bit ints (values > 255)
-volatile uint16_t sw_a       = 0;
-volatile uint16_t sw_b       = 0;
-volatile uint16_t rc_right   = 0;
-volatile uint16_t rc_left    = 0;
 
 /**
  * @brief fetches RC commands and returns motor commands
  * 
- * @return returns pointer to a list of motor commands
+ * @return returns array of motor commands
  */
 Array<wheel_motor_command_t, 4> fetch_rc_commands() 
 {
     // Get commands
-    sw_a       = pulseIn(RC_SWA_CHANNEL_PIN, HIGH);
-    sw_b       = pulseIn(RC_SWB_CHANNEL_PIN, HIGH);
-    rc_right   = pulseIn(RC_RIGHT_CHANNEL_PIN, HIGH);
-    rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN, HIGH);
+    uint16_t sw_a       = pulseIn(RC_SWA_CHANNEL_PIN,   HIGH);
+    uint16_t sw_b       = pulseIn(RC_SWB_CHANNEL_PIN,   HIGH);
+    uint16_t rc_right   = pulseIn(RC_RIGHT_CHANNEL_PIN, HIGH);
+    uint16_t rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN,  HIGH);
     
     // define temp variables
     float right_duty    = 0.0;
@@ -28,16 +23,18 @@ Array<wheel_motor_command_t, 4> fetch_rc_commands()
     float left_duty     = 0.0;
     bool left_dir       = FORWARD;  // default direction
 
-    /* Check if stop asserted */
+    /* Switches */
+    // Check if stop asserted
     if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
         DEBUG_PRINT("All brake");
-        return all_brake;
+        return all_brake_command;
     }
-    /* Check if mode changed */
+    // Check if mode changed
     if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
         //return None;
         DEBUG_PRINT("Manual Mode")
     }
+
     /* Right side longitudinal wheel set */
     // Forward
     if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
@@ -69,13 +66,7 @@ Array<wheel_motor_command_t, 4> fetch_rc_commands()
        {left_duty, RELEASE_BRAKE, left_dir},
        {left_duty, RELEASE_BRAKE, left_dir}
     }};
-    // // right set
-    // wheel_motor_commands[wheel_indices::RF] = {right_duty, RELEASE_BRAKE, right_dir};
-    // wheel_motor_commands[wheel_indices::RB] = {right_duty, RELEASE_BRAKE, right_dir};
-    // // left set
-    // wheel_motor_commands[wheel_indices::LF] = {left_duty, RELEASE_BRAKE, left_dir};
-    // wheel_motor_commands[wheel_indices::LB] = {left_duty, RELEASE_BRAKE, left_dir};
-
+    
     /*  Return reference to the command set */
     return wheel_motor_commands;
 }

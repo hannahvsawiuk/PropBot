@@ -16,8 +16,7 @@ void setup()
     pinMode(RC_SWB_CHANNEL_PIN,     INPUT);
         
     // Pin setup for all wheel motors
-    for (int i = 0; i < NUM_WHEELS; i++)
-    {
+    for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
         pinMode(wheel_to_pins[i].control,       OUTPUT);
         pinMode(wheel_to_pins[i].brake_release, OUTPUT);
         pinMode(wheel_to_pins[i].dir,           OUTPUT);
@@ -30,9 +29,10 @@ void setup()
     } else {
         /*
         * Fast PWM configuration:
-        *   - Clear OC0A/B on Compare Match, set OC0A at BOTTOM,(non-inverting mode)
+        *   - Clear OCxA/B on Compare Match, set OCxA at BOTTOM,(non-inverting mode)
         *   - TOP = 0x03FF (1023)
-        *   - Output frequency =  clk_io/64 --> 64 = ~976 Hz or 490??
+        *   - Prescaler = 64
+        *   - Output frequency = clk_io(RTC)/64 --> 32.768kHz/64 = ~512Hz
         */ 
         // Timer3 Fast PWM setup
         TCCR3A = (1 << COM3A1) | (1 << COM3B1) | (1 << WGM32) | (1 << WGM31) | (1 << WGM30);
@@ -53,23 +53,22 @@ void setup()
 
 void loop()
 {
+    auto commands = all_brake_command;
     if (autonomy) {
         // code for comms with the autonomy computer
     } else {
-        // update wheel commands
-        auto commands = fetch_rc_commands();
-        String debug_str = String();
+        commands = fetch_rc_commands(); // update wheel commands
+        String debug_str = String();    // debug string
         for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+            wheel_set(i, commands[i]);
             debug_str += wheel_index_name_map[i] + String(": ") + \
                            String("duty - ") + commands[i].duty_cycle + String("\t") + \
                            String("brake - ") + ((commands[i].brake_release == 0)? String("on") : String("off")) + String("\t") + \
                            String("dir - ") + ((commands[i].dir == 1)? String("fw") : String("bw")) + \
                            String("\n");
-            wheel_set(i, commands[i]);
         }
-        Serial.println(debug_str);
-
-        Serial.println(
+        DEBUG_PRINT(debug_str);
+        DEBUG_PRINT(
             String("Index: RF") + String(", Register duty: ") + *wheel_to_register[RF] + \
             String("\nIndex: RB") + String(", Register duty: ") + *wheel_to_register[RB] + \
             String("\nIndex: LF") + String(", Register duty: ") + *wheel_to_register[RF] + \

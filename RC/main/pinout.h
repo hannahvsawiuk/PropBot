@@ -9,22 +9,22 @@
  * R/L_F/B_<pin_type>
  * 
  */
-#define R_F_controlPin          2  //(RF MP)
-#define R_F_brakeReleasePin     3  //(RF BP)
-#define R_F_dirPin              4  //(RF DP)
+#define RF_controlPin          2  //(RF MP)
+#define RF_brakeReleasePin     3  //(RF BP)
+#define RF_dirPin              4  //(RF DP)
 
+#define RB_controlPin          7  //(RB MP)
+#define RB_brakeReleasePin     12 //(RB BP)
+#define RB_dirPin              16 //(RB DP)
 
-#define L_F_controlPin          5  //(LF MP)
-#define L_F_brakeReleasePin     8  //(LF BP)
-#define L_F_dirPin              9  //(LF DP)
+#define LF_controlPin          5  //(LF MP)
+#define LF_brakeReleasePin     8  //(LF BP)
+#define LF_dirPin              9  //(LF DP)
 
-#define L_B_controlPin          6  //(LB MP)
-#define L_B_brakeReleasePin     10 //(LB BP)
-#define L_B_dirPin              11 //(LB DP)
+#define LB_controlPin          6  //(LB MP)
+#define LB_brakeReleasePin     10 //(LB BP)
+#define LB_dirPin              11 //(LB DP)
 
-#define R_B_controlPin          7  //(RB MP)
-#define R_B_brakeReleasePin     12 //(RB BP)
-#define R_B_dirPin              16 //(RB DP)
 
 /**
  * @brief Pin definitions for the RC receiver

@@ -13,6 +13,7 @@
 #define BACKWARD        false
 #define BRAKE           false
 #define RELEASE_BRAKE   true
+
 /**
  * @brief Wheel index mapping
  * 
@@ -36,7 +37,7 @@ typedef enum wheel_index_t
     End = 4U
 } wheel_indices;
 
-// Pseudo map bc Arduino does not support STL
+/* Pseudo map bc Arduino does not support STL */
 const Array<String, 4> wheel_index_name_map = {"RF", "RB", "LF", "LB"};
 
 /**
@@ -61,14 +62,14 @@ typedef struct wheel_motor_command_t
 };
 /* default motor commands */
 // Brake: duty = 0, brake on
-const Array<wheel_motor_command_t, 4> all_brake = {{
+const Array<wheel_motor_command_t, 4> all_brake_command = {{
     {0.0, BRAKE, FORWARD},
     {0.0, BRAKE, FORWARD},
     {0.0, BRAKE, FORWARD},
     {0.0, BRAKE, FORWARD}
 }};
 // Coast: duty = 0, brake released
-const Array<wheel_motor_command_t, 4> all_coast = {{
+const Array<wheel_motor_command_t, 4> all_coast_command = {{
     {0.0, RELEASE_BRAKE, FORWARD},
     {0.0, RELEASE_BRAKE, FORWARD},
     {0.0, RELEASE_BRAKE, FORWARD},
@@ -80,10 +81,10 @@ const Array<wheel_motor_command_t, 4> all_coast = {{
  * 
  */
 const Array<wheel_pins_t, 4> wheel_to_pins = {{
-    {R_F_controlPin, R_F_brakeReleasePin, R_F_dirPin},
-    {R_B_controlPin, R_B_brakeReleasePin, R_B_dirPin},
-    {L_F_controlPin, L_F_brakeReleasePin, L_F_dirPin},
-    {L_B_controlPin, L_B_brakeReleasePin, L_B_dirPin}   
+    {RF_controlPin, RF_brakeReleasePin, RF_dirPin},
+    {RB_controlPin, RB_brakeReleasePin, RB_dirPin},
+    {LF_controlPin, LF_brakeReleasePin, LF_dirPin},
+    {LB_controlPin, LB_brakeReleasePin, LB_dirPin}   
 }};
 
 /**
@@ -92,10 +93,10 @@ const Array<wheel_pins_t, 4> wheel_to_pins = {{
  * 
  */
 uint16_t* wheel_to_register[4] = {
-    &OCR3B,     // RF: pin 6, digital 2
-    &OCR4B,     // RB: pin 16, digital 7 
-    &OCR3A,     // LF: pin 5, digital 5
-    &OCR4A      // LB: pin 15, digital 6
+    &OCR3B,     // RF: digital pin 2, PE4
+    &OCR4B,     // RB: digital pin 7, PH4 
+    &OCR3A,     // LF: digital pin 5, PE3
+    &OCR4A      // LB: digital pin 6, PH3
 };
 
 /*  Function prototypes for wheel motion functions */
