@@ -14,7 +14,7 @@
 #define RC_LEFT_SET_FW_MAX          1972
 #define RC_LEFT_SET_FW_MIN          1632 
 #define RC_LEFT_SET_BW_MAX          1320
-#define RC_LEFT_SET_BW_MIN          1007
+#define RC_LEFT_SET_BW_MIN          997//1007
 /*  Define channels and thresholds for the switches */
 // CH5/6 - SWA/B
 #define RC_SWX_LOW_MAX              1000//994

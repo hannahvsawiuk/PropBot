@@ -47,7 +47,6 @@ void setup()
         // Set duty cycle initially to 0%
         OCR4A = 0;  
         OCR4B = 0; 
-
     }
 }
 
@@ -67,12 +66,6 @@ void loop()
                            String("dir - ") + ((commands[i].dir == 1)? String("fw") : String("bw")) + \
                            String("\n");
         }
-        DEBUG_PRINT(debug_str);
-        DEBUG_PRINT(
-            String("Index: RF") + String(", Register duty: ") + *wheel_to_register[RF] + \
-            String("\nIndex: RB") + String(", Register duty: ") + *wheel_to_register[RB] + \
-            String("\nIndex: LF") + String(", Register duty: ") + *wheel_to_register[RF] + \
-            String("\nIndex: LB") + String(", Register duty: ") + *wheel_to_register[LB] + String("\n")
-        );
+        Serial.println(debug_str);
     }
 }
