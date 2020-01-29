@@ -32,18 +32,18 @@ void setup()
         *   - Clear OCxA/B on Compare Match, set OCxA at BOTTOM,(non-inverting mode)
         *   - TOP = 0x03FF (1023)
         *   - Prescaler = 64
-        *   - Output frequency = clk_io(RTC)/64 --> 32.768kHz/64 = ~512Hz
+        *   - Output frequency = clk_io(RTC)/8 --> 970Hz-980Hz
         */ 
         // Timer3 Fast PWM setup
         TCCR3A = (1 << COM3A1) | (1 << COM3B1) | (1 << WGM32) | (1 << WGM31) | (1 << WGM30);
-        TCCR3B = (1 << CS31) | (1 << CS30); 
+        TCCR3B = (1 << CS31);
         // Set duty cycle initially to 0%
         OCR3A = 0;  
         OCR3B = 0;
 
         // Timer4 Fast PWM setup
         TCCR4A = (1 << COM4A1) | (1 << COM4B1) | (1 < WGM42) | (1 << WGM41) | (1 << WGM40);
-        TCCR4B = (1 << CS41) | (1 << CS40);         
+        TCCR4B = (1 << CS41);         
         // Set duty cycle initially to 0%
         OCR4A = 0;  
         OCR4B = 0; 
