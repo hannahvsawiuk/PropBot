@@ -94,9 +94,9 @@ const Array<wheel_pins_t, 4> wheel_to_pins = {{
  */
 uint16_t* wheel_to_register[4] = {
     &OCR3B,     // RF: digital pin 2, PE4
-    &OCR4B,     // RB: digital pin 7, PH4 
-    &OCR3A,     // LF: digital pin 5, PE3
-    &OCR4A      // LB: digital pin 6, PH3
+    &OCR3A,     // RB: digital pin 5, PE3
+    &OCR4A,     // LF: digital pin 6, PH3
+    &OCR4B      // LB: digital pin 7, PH4 
 };
 
 /*  Function prototypes for wheel motion functions */
