@@ -1,6 +1,6 @@
 #pragma once
 
-#include <functional>
+#include <atomic>
 #include <memory>
 
 #include <actionlib/client/simple_action_client.h>
@@ -52,7 +52,7 @@ class MissionHandler {
   unsigned int current_waypoint_index_;
 
   // Mission finished flag
-  bool is_finished_;
+  std::atomic<bool> is_finished_;
 
   // Functions
   void SendGoal(void);

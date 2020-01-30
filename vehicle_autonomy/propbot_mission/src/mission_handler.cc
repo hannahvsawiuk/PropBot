@@ -1,5 +1,11 @@
 #include <propbot_mission/mission_handler.h>
 
+#include <math.h>
+#include <chrono>
+#include <functional>
+
+#include <tf/tf.h>
+
 using namespace propbot_mission;
 
 /**
@@ -14,17 +20,21 @@ void MissionHandler::Start(void) {
   is_finished_ = false;
   // Declare an action client that communicates with move_base
   action_client_ = std::make_unique<MoveBaseClient>("/move_base", true);
-
+  auto end =
+      std::chrono::high_resolution_clock::now() + std::chrono::seconds(60);
   // Wait for action server to come up
   ROS_INFO("Waiting for move_base action server to come up");
-  if (!action_client_->waitForServer(ros::Duration(15.0))) {
-    ROS_ERROR("Move_base action server did not come up!");
-    is_finished_ = true;
+
+  while (!action_client_->waitForServer(ros::Duration(15.0))) {
+    if (std::chrono::high_resolution_clock::now() >= end) {
+      ROS_ERROR("Move_base action server did not come up!");
+      is_finished_ = true;
+      return;
+    }
+    // is_finished_ = true;
   }
-  else {
-    // Send the first waypoint as a goal
-    SendGoal();
-  }
+  // Send the first waypoint as a goal
+  SendGoal();
 }
 
 /**
@@ -36,7 +46,7 @@ void MissionHandler::Start(void) {
  *
  */
 void MissionHandler::Stop(void) {
-  if (!action_client_) {
+  if (action_client_) {
     action_client_->cancelAllGoals();
     is_finished_ = true;
   } else {
@@ -67,7 +77,7 @@ unsigned int MissionHandler::current_waypoint_number() const {
  *
  */
 void MissionHandler::SendGoal(void) {
-  if (!action_client_) {
+  if (action_client_) {
     ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
     auto waypoint_cb = [this](const actionlib::SimpleClientGoalState& state,
                               const ResultConstPtr& result) {
@@ -99,9 +109,37 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
   current_goal.target_pose.pose.position.y =
       current_waypoint().map_waypoint().point.y;
 
-  // Set orientation of current goal to a 0 rotation angle around an axis
-  // v(0,0,0)
-  current_goal.target_pose.pose.orientation.w = 1.0;
+  if (current_waypoint_number() < mission_.size()) {
+    // Calculate goal orientation using current and next waypoint
+    auto current_map_waypoint = current_waypoint().map_waypoint();
+    auto next_map_waypoint =
+        mission_.mission()[current_waypoint_index_ + 1].map_waypoint();
+
+    // Find difference between x and y components of the waypoints
+    float delta_x = current_map_waypoint.point.x - next_map_waypoint.point.x;
+    float delta_y = current_map_waypoint.point.y - next_map_waypoint.point.y;
+
+    // Calculate the required yaw movement
+    float yaw = atan2(delta_y, delta_x);
+
+    // Calculate Euler rotation with pitch, roll = 0
+    tf::Matrix3x3 euler_ypr_rot;
+    euler_ypr_rot.setEulerYPR(yaw, 0, 0);
+
+    // Convert to Quarternion
+    tf::Quaternion quaternion_rot;
+    euler_ypr_rot.getRotation(quaternion_rot);
+
+    // Set goal orientation
+    current_goal.target_pose.pose.orientation.x = quaternion_rot.getX();
+    current_goal.target_pose.pose.orientation.y = quaternion_rot.getY();
+    current_goal.target_pose.pose.orientation.z = quaternion_rot.getZ();
+    current_goal.target_pose.pose.orientation.w = quaternion_rot.getW();
+  } else {
+    // Current waypoint is last waypoint, set orientation of current goal to a 0
+    // rotation angle around an axis v(0,0,0)
+    current_goal.target_pose.pose.orientation.w = 1.0;
+  }
 
   return current_goal;
 }
@@ -128,7 +166,7 @@ void MissionHandler::WaypointCallback(
       SendGoal();
     } else {
       // Last waypoint has been reached, set mission to finished
-      is_finished_  = true;
+      is_finished_ = true;
       ROS_INFO("Mission is finished. ");
     }
   } else {

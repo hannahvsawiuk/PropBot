@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="mission_file" default="/missions/test_mission_1.txt"/>
+
+  <node ns="/propbot_mission" pkg="propbot_mission" type="execute_mission" name="execute_mission" output="screen"/>
+	    <param name="/propbot_mission/mission_file" value="$(arg mission_file)" type="string"/>	
+	
+</launch>

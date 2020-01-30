@@ -17,9 +17,10 @@
   <build_depend>roslaunch</build_depend>
   
   <run_depend>propbot_description</run_depend>
-  <run_depend>propbot_control</run_depend>
   <run_depend>propbot_gazebo</run_depend>
+  <run_depend>propbot_rviz</run_depend>
   <run_depend>propbot_navigation</run_depend>
+  <run_depend>propbot_mission</run_depend>
 
   <export>
   </export>
