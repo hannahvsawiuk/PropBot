@@ -27,8 +27,9 @@
 //
 // *****************************************************************************
 
+#pragma once
 
-// C++ standard libraries
+
 #include <string>
 #include <vector>
 
