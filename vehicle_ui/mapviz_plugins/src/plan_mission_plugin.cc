@@ -27,7 +27,7 @@
 //
 // *****************************************************************************
 
-#include <mapviz_plugins/plan_route_plugin.h>
+#include <mapviz_plugins/plan_mission_plugin.h>
 
 // C++ standard libraries
 #include <cstdio>
@@ -54,7 +54,7 @@
 #include <marti_nav_msgs/PlanRoute.h>
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mapviz_plugins::PlanRoutePlugin, mapviz::MapvizPlugin)
+PLUGINLIB_EXPORT_CLASS(mapviz_plugins::PlanMissionPlugin, mapviz::MapvizPlugin)
 
 namespace mnm = marti_nav_msgs;
 namespace sru = swri_route_util;
@@ -62,7 +62,12 @@ namespace stu = swri_transform_util;
 
 using namespace mapviz_plugins;
 
-PlanRoutePlugin::PlanRoutePlugin()
+/**
+ * PlanMissionPlugin constructor
+ *
+ */
+
+PlanMissionPlugin::PlanMissionPlugin()
     : config_widget_(new QWidget()),
       map_canvas_(NULL),
       route_failed_(false),
@@ -82,68 +87,113 @@ PlanRoutePlugin::PlanRoutePlugin()
   p3.setColor(QPalette::Text, Qt::red);
   ui_.status->setPalette(p3);
 
+  // Connect UI button with their respective actions
   QObject::connect(ui_.clear, SIGNAL(clicked()), this, SLOT(Clear()));
-  QObject::connect(ui_.sendMission, SIGNAL(clicked()), this,
-                   SLOT(SendMission()));
+  QObject::connect(ui_.uploadMission, SIGNAL(clicked()), this,
+                   SLOT(UploadMission()));
 }
 
-PlanRoutePlugin::~PlanRoutePlugin() {
+
+/**
+ * PlanMissionPlugin destructor
+ *
+ */
+
+PlanMissionPlugin::~PlanMissionPlugin() {
   if (map_canvas_) {
     map_canvas_->removeEventFilter(this);
   }
 }
 
-// Description:
-// 1. publish waypoints to propbot handler topic
-// 2. subscribe to route planning topic to obtain route between waypoints
 
-void PlanRoutePlugin::SendMission() {
-  if (waypoints_.size() < 1) {
+/**
+ * UploadMission function
+ *
+ * This function publishes the mission waypoints to a ROS topic.
+ *
+ */
+
+void PlanMissionPlugin::UploadMission() {
+
+  // return if a single waypoint has not been set 
+  if (gps_waypoints_.size() < 1) {
     return;
   }
 
   mapviz_plugins::Mission mission;
 
+  // configure mission ROS message
   mission.header.frame_id = stu::_wgs84_frame;
   mission.header.stamp = ros::Time::now();
-  mission.waypoints = waypoints_;
+  mission.waypoints = gps_waypoints_;
 
-  mission_topic_ = ui_.waypoint_topic->text().toStdString();
+  // publish mission ROS message to user set topic
+  mission_topic_ = ui_.mission_topic->text().toStdString();
   if (!mission_topic_.empty()) {
     mission_pub_.shutdown();
-    mission_pub_ =
-        node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
+    mission_pub_ = node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
     mission_pub_.publish(mission);
-    ROS_INFO("Publishing to %s", mission_topic_.c_str());
+    ROS_INFO("Publishing GPS waypoints to %s", mission_topic_.c_str());
   } else {
-    PrintError("Waypoint Topic is empty");
+    PrintError("Mission Topic is empty");
   }
 }
 
-void PlanRoutePlugin::Clear() {
-  waypoints_.clear();
+/**
+ * Clear function
+ *
+ * This function clears mission waypoints from class variable and Mapviz GUI
+ *
+ */
+
+void PlanMissionPlugin::Clear() {
+  gps_waypoints_.clear();
   route_preview_ = sru::RoutePtr();
 }
 
-void PlanRoutePlugin::PrintError(const std::string& message) {
+
+/**
+ * PrintError function
+ *
+ * Prints ROS log level error message
+ *
+ */
+
+void PlanMissionPlugin::PrintError(const std::string& message) {
   PrintErrorHelper(ui_.status, message, 1.0);
 }
 
-void PlanRoutePlugin::PrintInfo(const std::string& message) {
+
+/**
+ * PrintInfo function
+ *
+ * Prints ROS log level info message
+ *
+ */
+
+void PlanMissionPlugin::PrintInfo(const std::string& message) {
   PrintInfoHelper(ui_.status, message, 1.0);
 }
 
-void PlanRoutePlugin::PrintWarning(const std::string& message) {
+
+/**
+ * PrintWarning function
+ *
+ * Prints ROS log level warning message
+ *
+ */
+
+void PlanMissionPlugin::PrintWarning(const std::string& message) {
   PrintWarningHelper(ui_.status, message, 1.0);
 }
 
-QWidget* PlanRoutePlugin::GetConfigWidget(QWidget* parent) {
+QWidget* PlanMissionPlugin::GetConfigWidget(QWidget* parent) {
   config_widget_->setParent(parent);
 
   return config_widget_;
 }
 
-bool PlanRoutePlugin::Initialize(QGLWidget* canvas) {
+bool PlanMissionPlugin::Initialize(QGLWidget* canvas) {
   map_canvas_ = static_cast<mapviz::MapCanvas*>(canvas);
   map_canvas_->installEventFilter(this);
 
@@ -151,7 +201,7 @@ bool PlanRoutePlugin::Initialize(QGLWidget* canvas) {
   return true;
 }
 
-bool PlanRoutePlugin::eventFilter(QObject* object, QEvent* event) {
+bool PlanMissionPlugin::eventFilter(QObject* object, QEvent* event) {
   switch (event->type()) {
     case QEvent::MouseButtonPress:
       return handleMousePress(static_cast<QMouseEvent*>(event));
@@ -164,7 +214,7 @@ bool PlanRoutePlugin::eventFilter(QObject* object, QEvent* event) {
   }
 }
 
-bool PlanRoutePlugin::handleMousePress(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
   selected_point_ = -1;
   int closest_point = 0;
   double closest_distance = std::numeric_limits<double>::max();
@@ -176,8 +226,8 @@ bool PlanRoutePlugin::handleMousePress(QMouseEvent* event) {
 #endif
   stu::Transform transform;
   if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
-    for (size_t i = 0; i < waypoints_.size(); i++) {
-      tf::Vector3 waypoint(waypoints_[i].position.x, waypoints_[i].position.y,
+    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+      tf::Vector3 waypoint(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y,
                            0.0);
       waypoint = transform * waypoint;
 
@@ -209,8 +259,7 @@ bool PlanRoutePlugin::handleMousePress(QMouseEvent* event) {
     }
   } else if (event->button() == Qt::RightButton) {
     if (closest_distance < 15) {
-      waypoints_.erase(waypoints_.begin() + closest_point);
-      // PlanRoute();
+      gps_waypoints_.erase(gps_waypoints_.begin() + closest_point);
       return true;
     }
   }
@@ -218,23 +267,22 @@ bool PlanRoutePlugin::handleMousePress(QMouseEvent* event) {
   return false;
 }
 
-bool PlanRoutePlugin::handleMouseRelease(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMouseRelease(QMouseEvent* event) {
 #if QT_VERSION >= 0x050000
   QPointF point = event->localPos();
 #else
   QPointF point = event->posF();
 #endif
   if (selected_point_ >= 0 &&
-      static_cast<size_t>(selected_point_) < waypoints_.size()) {
+      static_cast<size_t>(selected_point_) < gps_waypoints_.size()) {
     stu::Transform transform;
     if (tf_manager_->GetTransform(stu::_wgs84_frame, target_frame_,
                                   transform)) {
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
       position = transform * position;
-      waypoints_[selected_point_].position.x = position.x();
-      waypoints_[selected_point_].position.y = position.y();
-      // PlanRoute();
+      gps_waypoints_[selected_point_].position.x = position.x();
+      gps_waypoints_[selected_point_].position.y = position.y();
     }
 
     selected_point_ = -1;
@@ -259,8 +307,7 @@ bool PlanRoutePlugin::handleMouseRelease(QMouseEvent* event) {
         geometry_msgs::Pose pose;
         pose.position.x = position.x();
         pose.position.y = position.y();
-        waypoints_.push_back(pose);
-        // PlanRoute();
+        gps_waypoints_.push_back(pose);
       }
     }
   }
@@ -269,9 +316,9 @@ bool PlanRoutePlugin::handleMouseRelease(QMouseEvent* event) {
   return false;
 }
 
-bool PlanRoutePlugin::handleMouseMove(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMouseMove(QMouseEvent* event) {
   if (selected_point_ >= 0 &&
-      static_cast<size_t>(selected_point_) < waypoints_.size()) {
+      static_cast<size_t>(selected_point_) < gps_waypoints_.size()) {
 #if QT_VERSION >= 0x050000
     QPointF point = event->localPos();
 #else
@@ -283,9 +330,8 @@ bool PlanRoutePlugin::handleMouseMove(QMouseEvent* event) {
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
       position = transform * position;
-      waypoints_[selected_point_].position.y = position.y();
-      waypoints_[selected_point_].position.x = position.x();
-      // PlanRoute();
+      gps_waypoints_[selected_point_].position.y = position.y();
+      gps_waypoints_[selected_point_].position.x = position.x();
     }
 
     return true;
@@ -293,7 +339,7 @@ bool PlanRoutePlugin::handleMouseMove(QMouseEvent* event) {
   return false;
 }
 
-void PlanRoutePlugin::Draw(double x, double y, double scale) {
+void PlanMissionPlugin::Draw(double x, double y, double scale) {
   stu::Transform transform;
   if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
     if (!route_failed_) {
@@ -323,8 +369,8 @@ void PlanRoutePlugin::Draw(double x, double y, double scale) {
     glColor4f(0.0, 1.0, 1.0, 1.0);
     glBegin(GL_POINTS);
 
-    for (size_t i = 0; i < waypoints_.size(); i++) {
-      tf::Vector3 point(waypoints_[i].position.x, waypoints_[i].position.y, 0);
+    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+      tf::Vector3 point(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y, 0);
       point = transform * point;
       glVertex2d(point.x(), point.y());
     }
@@ -334,7 +380,7 @@ void PlanRoutePlugin::Draw(double x, double y, double scale) {
   }
 }
 
-void PlanRoutePlugin::Paint(QPainter* painter, double x, double y,
+void PlanMissionPlugin::Paint(QPainter* painter, double x, double y,
                             double scale) {
   painter->save();
   painter->resetTransform();
@@ -345,8 +391,8 @@ void PlanRoutePlugin::Paint(QPainter* painter, double x, double y,
 
   stu::Transform transform;
   if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
-    for (size_t i = 0; i < waypoints_.size(); i++) {
-      tf::Vector3 point(waypoints_[i].position.x, waypoints_[i].position.y, 0);
+    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+      tf::Vector3 point(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y, 0);
       point = transform * point;
       QPointF gl_point =
           map_canvas_->FixedFrameToMapGlCoord(QPointF(point.x(), point.y()));
@@ -361,7 +407,7 @@ void PlanRoutePlugin::Paint(QPainter* painter, double x, double y,
   painter->restore();
 }
 
-void PlanRoutePlugin::LoadConfig(const YAML::Node& node,
+void PlanMissionPlugin::LoadConfig(const YAML::Node& node,
                                  const std::string& path) {
   if (node["route_topic"]) {
     std::string route_topic;
@@ -374,29 +420,27 @@ void PlanRoutePlugin::LoadConfig(const YAML::Node& node,
     ui_.color->setColor(QColor(color.c_str()));fabsf64;
   }
 
-  if (node["waypoint_topic"]) {
-    std::string waypoint_topic;
-    node["waypoint_topic"] >> waypoint_topic;
-    ui_.waypoint_topic->setText(waypoint_topic.c_str());
+  if (node["mission_topic"]) {
+    std::string mission_topic;
+    node["mission_topic"] >> mission_topic;
+    ui_.mission_topic->setText(mission_topic.c_str());
   }
   if (node["start_from_vehicle"]) {
     bool start_from_vehicle;
     node["start_from_vehicle"] >> start_from_vehicle;
     ui_.start_from_vehicle->setChecked(start_from_vehicle);
   }
-
-  // PlanRoute();
 }
 
-void PlanRoutePlugin::SaveConfig(YAML::Emitter& emitter,
+void PlanMissionPlugin::SaveConfig(YAML::Emitter& emitter,
                                  const std::string& path) {
   emitter << YAML::Key << "route_topic" << YAML::Value << route_topic_;
 
   std::string color = ui_.color->color().name().toStdString();
   emitter << YAML::Key << "color" << YAML::Value << color;
 
-  std::string waypoint_topic = ui_.waypoint_topic->text().toStdString();
-  emitter << YAML::Key << "waypoint_topic" << YAML::Value << mission_topic_;
+  std::string mission_topic = ui_.mission_topic->text().toStdString();
+  emitter << YAML::Key << "mission_topic" << YAML::Value << mission_topic_;
 
   bool start_from_vehicle = ui_.start_from_vehicle->isChecked();
   emitter << YAML::Key << "start_from_vehicle" << YAML::Value

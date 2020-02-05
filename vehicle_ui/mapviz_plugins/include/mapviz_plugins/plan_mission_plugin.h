@@ -27,7 +27,6 @@
 //
 // *****************************************************************************
 
-#pragma once
 
 // C++ standard libraries
 #include <string>
@@ -48,18 +47,25 @@
 #include <geometry_msgs/Pose.h>
 #include <marti_nav_msgs/Route.h>
 
-#include "ui_plan_route_config.h"
+#include "ui_plan_mission_config.h"
 
 namespace mapviz_plugins
 {
-  class PlanRoutePlugin : public mapviz::MapvizPlugin
+
+/**
+ * PlanMissionPlugin
+ *
+ * This plugin class allows the user to set mission waypoints on the Mapviz GUI and upload them to the robot
+ *
+ */
+  class PlanMissionPlugin : public mapviz::MapvizPlugin
   {
     Q_OBJECT
 
    public:
 
-    PlanRoutePlugin();
-    virtual ~PlanRoutePlugin();
+    PlanMissionPlugin();
+    virtual ~PlanMissionPlugin();
 
     bool Initialize(QGLWidget* canvas);
     void Shutdown()
@@ -92,10 +98,10 @@ namespace mapviz_plugins
 
    protected Q_SLOTS:
     void Clear();
-    void SendMission();
+    void UploadMission();
 
    private:
-    Ui::plan_route_config ui_;
+    Ui::plan_mission_config ui_;
     QWidget* config_widget_;
     mapviz::MapCanvas* map_canvas_;
 
@@ -109,7 +115,7 @@ namespace mapviz_plugins
     bool route_failed_;
     swri_route_util::RoutePtr route_preview_;
 
-    std::vector<geometry_msgs::Pose> waypoints_;
+    std::vector<geometry_msgs::Pose> gps_waypoints_;
 
     int selected_point_;
     bool is_mouse_down_;

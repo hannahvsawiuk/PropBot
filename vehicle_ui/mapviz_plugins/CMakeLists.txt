@@ -2,19 +2,13 @@ cmake_minimum_required(VERSION 2.8.3)
 project(mapviz_plugins)
 
 set(DEPENDENCIES
-  cv_bridge
   mapviz
   marti_nav_msgs
-  # nav_msgs
-  # map_msgs
   pluginlib 
   roscpp 
   std_msgs 
-  swri_image_util
-  swri_math_util
   swri_route_util
   swri_transform_util
-  swri_yaml_util
   tf 
   geometry_msgs
 )
@@ -93,15 +87,15 @@ include_directories(SYSTEM
 )
 
 set(UI_FILES
-    ui/plan_route_config.ui
+    ui/plan_mission_config.ui
 )
 
 set(SRC_FILES
-    src/plan_route_plugin.cpp
+    src/plan_mission_plugin.cc
 )
 
 set(HEADER_FILES
-    include/${PROJECT_NAME}/plan_route_plugin.h
+    include/${PROJECT_NAME}/plan_mission_plugin.h
 )
     
 if("$ENV{ROS_DISTRO}" STRLESS "kinetic")
