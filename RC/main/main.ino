@@ -6,6 +6,7 @@
 #include "debug.h"
 
 volatile bool autonomy = false;
+volatile Array<wheel_motor_command_t, 4> commands = all_brake_command;
 
 void setup()
 {
@@ -52,7 +53,6 @@ void setup()
 
 void loop()
 {
-    auto commands = all_brake_command;
     if (autonomy) {
         // code for comms with the autonomy computer
     } else {

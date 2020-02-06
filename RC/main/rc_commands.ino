@@ -22,17 +22,18 @@ Array<wheel_motor_command_t, 4> fetch_rc_commands()
     bool right_dir      = FORWARD;  // default direction
     float left_duty     = 0.0;
     bool left_dir       = FORWARD;  // default direction
+    bool autonomy_mode  = false;
 
     /* Switches */
     // Check if stop asserted
     if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
         DEBUG_PRINT("All brake");
-        return all_brake_command;
+        return all_brake_command; // fix to also return mode
     }
     // Check if mode changed
     if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
-        //return None;
         DEBUG_PRINT("Manual Mode")
+        autonomy_mode = true;
     }
 
     /* Right side longitudinal wheel set */

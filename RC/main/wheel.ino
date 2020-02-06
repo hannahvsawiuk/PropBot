@@ -25,11 +25,11 @@ int wheel_set(wheel_index_t index, wheel_motor_command_t command)
         // disable interrupts
         cli();
         // update the brake state
-        digitalWrite(wheel_to_pins[index].brake_release, command.brake_release ? HIGH : LOW);
+        digitalWrite(wheel_to_pins[index].brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
         // update the duty
         *(wheel_to_register[index]) = command.duty_cycle * TOP;
         // update the direction
-        digitalWrite(wheel_to_pins[index].dir, command.dir ? HIGH : LOW);
+        digitalWrite(wheel_to_pins[index].dir, (command.dir == FORWARD) ? HIGH : LOW);
         // re-enable interrupts
         sei();
     }
