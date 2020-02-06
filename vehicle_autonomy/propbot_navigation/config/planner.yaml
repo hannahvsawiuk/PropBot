@@ -8,3 +8,5 @@ NavfnROS:
 DWAPlannerROS:
   yaw_goal_tolerance: 0.25
   xy_goal_tolerance: 0.2
+
+  holonomic_robot: false
