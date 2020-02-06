@@ -20,7 +20,7 @@ class Mission {
  public:
   /* Default constructor */
   Mission() = default;
-  Mission(const std::string &mission_file);
+  Mission(const std::string &mission_file, const std::string &utm_zone);
 
   /* Mission accessor */
   std::vector<Waypoint> mission() const { return mission_; };

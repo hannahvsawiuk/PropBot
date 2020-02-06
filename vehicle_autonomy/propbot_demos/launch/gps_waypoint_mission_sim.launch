@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!--- Run rviz -->
+  <!--- Run gazebo, rviz, mapping, and navigation stack-->
   <include file="$(find propbot_demos)/launch/nav_goal_sim.launch" />
+
+  <!--- Run localization stack-->
+  <include file="$(find propbot_localization)/launch/ekf_gps_tf.launch" />
 
   <!--- Run execute mission -->
   <include file="$(find propbot_mission)/launch/execute_mission.launch" />
