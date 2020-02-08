@@ -23,17 +23,14 @@ class Mission {
   Mission(const std::string &mission_file);
 
   /* Mission accessor */
-  std::vector<Waypoint> mission() const { return mission_; };
+  const std::vector<Waypoint>& mission() const { return mission_; };
 
-  /* Mission size accessor */
-  unsigned int size() const { return size_; };
+  /* Mission number of waypoints accessor */
+  unsigned int number_waypoints() const { return mission_.size(); };
 
  private:
   // Mission waypoint vector
   std::vector<Waypoint> mission_;
-
-  // Size of mission
-  unsigned int size_;
 };
 
 }  // namespace propbot_mission

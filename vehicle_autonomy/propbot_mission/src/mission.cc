@@ -23,8 +23,7 @@ Mission::Mission(const std::string &mission_file) {
 
       mission_.push_back(Waypoint(x, y));
     }
-    size_ = mission_.size();
-    ROS_INFO("%i Map waypoints were read", size_);
+    ROS_INFO("%lu Map waypoints were read", mission_.size());
     file.close();
   } else {
     ROS_ERROR("Unable to open waypoint file");

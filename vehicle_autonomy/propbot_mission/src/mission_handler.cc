@@ -1,5 +1,6 @@
 #include <propbot_mission/mission_handler.h>
 
+#include <assert.h>
 #include <chrono>
 #include <cmath>
 #include <functional>
@@ -40,17 +41,14 @@ void MissionHandler::Start() {
 /**
  * Pause mission function
  *
- * This function pauses the mission by cancelling all of the current goals in the action
- * server. However, it retains the current waypoint index, so when the mission
- * is started again, it resumes from where it was stopped.
+ * This function pauses the mission by cancelling all of the current goals in
+ * the action server. However, it retains the current waypoint index, so when
+ * the mission is started again, it resumes from where it was stopped.
  *
  */
 void MissionHandler::Pause() {
-  if (action_client_) {
-    action_client_->cancelAllGoals();
-  } else {
-    ROS_ERROR("Action client has not been started! Cannot pause mission.");
-  }
+  assert(action_client_);
+  action_client_->cancelAllGoals();
 }
 
 /**
@@ -61,12 +59,9 @@ void MissionHandler::Pause() {
  *
  */
 void MissionHandler::End() {
-  if (action_client_) {
-    action_client_->cancelAllGoals();
-    is_finished_ = true;
-  } else {
-    ROS_ERROR("Action client has not been started! Cannot stop mission.");
-  }
+  assert(action_client_);
+  action_client_->cancelAllGoals();
+  is_finished_ = true;
 }
 
 /**
@@ -92,16 +87,17 @@ unsigned int MissionHandler::current_waypoint_number() const {
  *
  */
 void MissionHandler::SendGoal() {
-  if (action_client_) {
-    ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
-    auto waypoint_cb = [this](const actionlib::SimpleClientGoalState& state,
-                              const ResultConstPtr& result) {
-      this->WaypointCallback(state, result);
-    };
-    action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
-  } else {
-    ROS_ERROR("Action client has not been started! Cannot send goal.");
-  }
+  assert(action_client_);
+  ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
+
+  // Create a lambda for the SimpleDoneCallback
+  // Note: A lambda was used because of compiler issues when using std::bind
+  // with WaypointCallback.
+  auto waypoint_cb = [this](const actionlib::SimpleClientGoalState& state,
+                            const ResultConstPtr& result) {
+    this->WaypointCallback(state, result);
+  };
+  action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
 }
 
 /**
@@ -119,9 +115,9 @@ void MissionHandler::SendGoal() {
  *
  */
 
-void MissionHandler::SetDesiredOrientation(const Waypoint& current_waypoint,
-                           const Waypoint& next_waypoint,
-                           move_base_msgs::MoveBaseGoal* current_goal) const {
+void MissionHandler::SetDesiredOrientation(
+    const Waypoint& current_waypoint, const Waypoint& next_waypoint,
+    move_base_msgs::MoveBaseGoal* current_goal) const {
   auto current_map_waypoint = current_waypoint.map_waypoint();
   auto next_map_waypoint = next_waypoint.map_waypoint();
 
@@ -161,15 +157,16 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal() const {
   current_goal.target_pose.header.frame_id = "odom";
   current_goal.target_pose.header.stamp = ros::Time::now();
 
+  Waypoint curr_waypoint = current_waypoint();
   // Set x and y of current_goal
   current_goal.target_pose.pose.position.x =
-      current_waypoint().map_waypoint().point.x;
+      curr_waypoint.map_waypoint().point.x;
   current_goal.target_pose.pose.position.y =
-      current_waypoint().map_waypoint().point.y;
+      curr_waypoint.map_waypoint().point.y;
 
-  if (current_waypoint_number() < mission_.size()) {
+  if (current_waypoint_number() < mission_.number_waypoints()) {
     // Calculate goal orientation using current and next waypoint
-    SetDesiredOrientation(current_waypoint(),
+    SetDesiredOrientation(curr_waypoint,
                           mission_.mission()[current_waypoint_index_ + 1],
                           &current_goal);
   } else {
@@ -197,7 +194,7 @@ void MissionHandler::WaypointCallback(
     const ResultConstPtr& result) {
   if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO("Robot has reached waypoint number %i", current_waypoint_number());
-    if (current_waypoint_number() < mission_.size()) {
+    if (current_waypoint_number() < mission_.number_waypoints()) {
       // Last waypoint has not been reached, send next waypoint
       current_waypoint_index_++;
       SendGoal();

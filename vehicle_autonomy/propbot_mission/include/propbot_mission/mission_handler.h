@@ -54,7 +54,7 @@ class MissionHandler {
   unsigned int current_waypoint_index_;
 
   // Mission finished flag
-  std::atomic<bool> is_finished_;
+  std::atomic_bool is_finished_;
 
   // Functions
   void SendGoal();
