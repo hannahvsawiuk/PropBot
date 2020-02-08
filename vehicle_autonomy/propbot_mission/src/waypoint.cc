@@ -42,22 +42,38 @@ Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
  *
  */
 geometry_msgs::PointStamped Waypoint::map_waypoint() {
-  geometry_msgs::PointStamped map_waypoint;
+  geometry_msgs::PointStamped odom_waypoint, map_waypoint;
   map_waypoint.header.stamp = ros::Time(0);
   tf::TransformListener transform_listener;
   ros::Time time = ros::Time::now();
   // Try to transform point for a maximum of 3 times
-  for (int i; i < 3; i++) {
+  bool odom_is_finished = false;
+  while (!odom_is_finished) {
     try {
-      utm_waypoint_.header.stamp = ros::Time::now();
       transform_listener.waitForTransform("odom", "utm", time,
                                           ros::Duration(3.0));
-      transform_listener.transformPoint("odom", utm_waypoint_, map_waypoint);
+      transform_listener.transformPoint("odom", utm_waypoint_, odom_waypoint);
+      utm_waypoint_.header.stamp = ros::Time::now();
+      odom_is_finished = true;
     } catch (tf::TransformException& exception) {
       ROS_WARN("%s", exception.what());
       ros::Duration(0.01).sleep();
     }
   }
 
+  bool map_is_finished = false;
+  while (!map_is_finished) {
+    try {
+      transform_listener.waitForTransform("map", "odom", time,
+                                          ros::Duration(3.0));
+      transform_listener.transformPoint("map", odom_waypoint, map_waypoint);
+      map_is_finished = true;
+    } catch (tf::TransformException& exception) {
+      ROS_WARN("%s", exception.what());
+      ros::Duration(0.01).sleep();
+    }
+  }
+  
+  ROS_INFO("Transformed map waypoint is %d , %d.", map_waypoint.point.x, map_waypoint.point.y);
   return map_waypoint;
 }
