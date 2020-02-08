@@ -1,7 +1,7 @@
 #include <propbot_mission/mission_handler.h>
 
-#include <math.h>
 #include <chrono>
+#include <cmath>
 #include <functional>
 
 #include <tf/tf.h>
@@ -15,7 +15,7 @@ using namespace propbot_mission;
  *
  */
 
-void MissionHandler::Start(void) {
+void MissionHandler::Start() {
   // Start mision
   is_finished_ = false;
   // Declare an action client that communicates with move_base
@@ -38,14 +38,29 @@ void MissionHandler::Start(void) {
 }
 
 /**
- * Stop mission function
+ * Pause mission function
  *
- * This function stops the mission by cancelling all of the goals in the action
+ * This function pauses the mission by cancelling all of the current goals in the action
  * server. However, it retains the current waypoint index, so when the mission
  * is started again, it resumes from where it was stopped.
  *
  */
-void MissionHandler::Stop(void) {
+void MissionHandler::Pause() {
+  if (action_client_) {
+    action_client_->cancelAllGoals();
+  } else {
+    ROS_ERROR("Action client has not been started! Cannot pause mission.");
+  }
+}
+
+/**
+ * Stop mission function
+ *
+ * This function stops the mission by cancelling all of the goals in the action
+ * server. It also sets the mission finished flag to true.
+ *
+ */
+void MissionHandler::End() {
   if (action_client_) {
     action_client_->cancelAllGoals();
     is_finished_ = true;
@@ -76,7 +91,7 @@ unsigned int MissionHandler::current_waypoint_number() const {
  * This function sends a goal based on the current waypoint to move base.
  *
  */
-void MissionHandler::SendGoal(void) {
+void MissionHandler::SendGoal() {
   if (action_client_) {
     ROS_INFO("Sending waypoint number %i...", current_waypoint_number());
     auto waypoint_cb = [this](const actionlib::SimpleClientGoalState& state,
@@ -90,12 +105,55 @@ void MissionHandler::SendGoal(void) {
 }
 
 /**
+ * Calculate desired orientation function.
+ *
+ * This function uses the current goal waypoint along with the next goal
+ * waypoint to calculate the orientation of the current waypoint. It calculates
+ * the desired current orientation such that the robot is pointing in the
+ * direction of the next waypoint.
+ *
+ * @param current_waypoint Current may waypoint to be used for orientation goal.
+ * @param next_waypoint Next waypoint to be used for orientation goal.
+ * @param current_goal Current MoveBaseGoal to fill in with desired orientation
+ * goal.
+ *
+ */
+
+void MissionHandler::SetDesiredOrientation(const Waypoint& current_waypoint,
+                           const Waypoint& next_waypoint,
+                           move_base_msgs::MoveBaseGoal* current_goal) const {
+  auto current_map_waypoint = current_waypoint.map_waypoint();
+  auto next_map_waypoint = next_waypoint.map_waypoint();
+
+  // Find difference between x and y components of the waypoints
+  float delta_x = current_map_waypoint.point.x - next_map_waypoint.point.x;
+  float delta_y = current_map_waypoint.point.y - next_map_waypoint.point.y;
+
+  // Calculate the required yaw movement
+  float yaw = atan2(delta_y, delta_x);
+
+  // Calculate Euler rotation with pitch, roll = 0
+  tf::Matrix3x3 euler_ypr_rot;
+  euler_ypr_rot.setEulerYPR(yaw, 0, 0);
+
+  // Convert to Quarternion
+  tf::Quaternion quaternion_rot;
+  euler_ypr_rot.getRotation(quaternion_rot);
+
+  // Set goal orientation
+  current_goal->target_pose.pose.orientation.x = quaternion_rot.getX();
+  current_goal->target_pose.pose.orientation.y = quaternion_rot.getY();
+  current_goal->target_pose.pose.orientation.z = quaternion_rot.getZ();
+  current_goal->target_pose.pose.orientation.w = quaternion_rot.getW();
+}
+
+/**
  * Create goal function
  *
  * This function creates a move base goal based on the current waypoint.
  *
  */
-move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
+move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal() const {
   // Declare a move base goal
   move_base_msgs::MoveBaseGoal current_goal;
 
@@ -111,30 +169,9 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(void) const {
 
   if (current_waypoint_number() < mission_.size()) {
     // Calculate goal orientation using current and next waypoint
-    auto current_map_waypoint = current_waypoint().map_waypoint();
-    auto next_map_waypoint =
-        mission_.mission()[current_waypoint_index_ + 1].map_waypoint();
-
-    // Find difference between x and y components of the waypoints
-    float delta_x = current_map_waypoint.point.x - next_map_waypoint.point.x;
-    float delta_y = current_map_waypoint.point.y - next_map_waypoint.point.y;
-
-    // Calculate the required yaw movement
-    float yaw = atan2(delta_y, delta_x);
-
-    // Calculate Euler rotation with pitch, roll = 0
-    tf::Matrix3x3 euler_ypr_rot;
-    euler_ypr_rot.setEulerYPR(yaw, 0, 0);
-
-    // Convert to Quarternion
-    tf::Quaternion quaternion_rot;
-    euler_ypr_rot.getRotation(quaternion_rot);
-
-    // Set goal orientation
-    current_goal.target_pose.pose.orientation.x = quaternion_rot.getX();
-    current_goal.target_pose.pose.orientation.y = quaternion_rot.getY();
-    current_goal.target_pose.pose.orientation.z = quaternion_rot.getZ();
-    current_goal.target_pose.pose.orientation.w = quaternion_rot.getW();
+    SetDesiredOrientation(current_waypoint(),
+                          mission_.mission()[current_waypoint_index_ + 1],
+                          &current_goal);
   } else {
     // Current waypoint is last waypoint, set orientation of current goal to a 0
     // rotation angle around an axis v(0,0,0)
@@ -173,6 +210,6 @@ void MissionHandler::WaypointCallback(
     ROS_ERROR("Robot was unable to reach waypoint number %i",
               current_waypoint_number());
     ROS_INFO("Stopping mission...");
-    Stop();
+    End();
   }
 }

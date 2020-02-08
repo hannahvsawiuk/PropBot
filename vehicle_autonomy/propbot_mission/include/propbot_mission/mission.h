@@ -18,8 +18,8 @@ namespace propbot_mission {
  */
 class Mission {
  public:
-  /* Default constructor */
-  Mission() = default;
+  /* Delete default constructor */
+  Mission() = delete;
   Mission(const std::string &mission_file);
 
   /* Mission accessor */

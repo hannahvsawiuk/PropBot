@@ -13,8 +13,8 @@ namespace propbot_mission {
  */
 class Waypoint {
  public:
-    /* Default constructor */
-  Waypoint() = default;
+    /* Delete default constructor */
+  Waypoint() = delete;
   Waypoint(const double x, const double y);
 
   

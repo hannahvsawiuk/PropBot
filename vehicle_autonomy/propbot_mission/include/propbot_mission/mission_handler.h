@@ -26,20 +26,22 @@ using ResultConstPtr = boost::shared_ptr<
  */
 class MissionHandler {
  public:
-  /* Default constructor */
-  MissionHandler() = default;
+  /* Delete default constructor */
+  MissionHandler() = delete;
   /* Mission handler constructor with a mission as an input */
   MissionHandler(const Mission& mission)
       : mission_(mission), current_waypoint_index_(0), is_finished_(false){};
 
   // Mission commands
-  void Start(void);
-  void Stop(void);
-  bool IsFinished(void) { return is_finished_;}
+  void Start();
+  void Pause();
+  void End();
+  /* Function that returns if the mission is finished */
+  bool IsFinished() const { return is_finished_; }
 
   // Accessors
-  Waypoint current_waypoint(void) const;
-  unsigned int current_waypoint_number(void) const;
+  Waypoint current_waypoint() const;
+  unsigned int current_waypoint_number() const;
 
  private:
   // Mission
@@ -55,8 +57,11 @@ class MissionHandler {
   std::atomic<bool> is_finished_;
 
   // Functions
-  void SendGoal(void);
-  move_base_msgs::MoveBaseGoal CreateCurrentGoal(void) const;
+  void SendGoal();
+  void SetDesiredOrientation(const Waypoint& current_waypoint,
+                             const Waypoint& next_waypoint,
+                             move_base_msgs::MoveBaseGoal* current_goal) const;
+  move_base_msgs::MoveBaseGoal CreateCurrentGoal() const;
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
                         const ResultConstPtr& result);
 };
