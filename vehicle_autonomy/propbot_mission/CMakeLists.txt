@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   roslib
   roslaunch
+  propbot_util
 )
 
 catkin_package()
@@ -35,6 +36,6 @@ add_executable(execute_mission
 target_link_libraries(propbot_mission PUBLIC ${catkin_LIBRARIES})
 target_link_libraries(execute_mission PUBLIC propbot_mission ${catkin_LIBRARIES})
 
-install(DIRECTORY  launch
+install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

@@ -3,11 +3,12 @@
 #include <ros/package.h>
 #include <ros/ros.h>
 
-#include <propbot_mission/mission.h>
-#include <propbot_mission/mission_handler.h>
+#include <propbot_mission/mission.hh>
+#include <propbot_mission/mission_handler.hh>
+#include <propbot_util/exception.hh>
 
 // Send mission node
-using namespace propbot_mission;
+using namespace propbot;
 
 int main(int argc, char** argv) {
   // Initiation node called send mission
@@ -19,18 +20,27 @@ int main(int argc, char** argv) {
   ros::param::get("/propbot_mission/mission_file", mission_file);
   mission_file = ros::package::getPath("propbot_mission") + mission_file;
   ROS_INFO("Reading mission from file '%s'...", mission_file.c_str());
-  Mission mission(mission_file);
 
   // Instantiate a mission handler
-  MissionHandler mission_handler(mission);
+  try {
+    Mission mission(mission_file);
+    MissionHandler mission_handler(mission);
+    // Start mission
+    mission_handler.Start();
 
-  // Start mission
-  mission_handler.Start();
+    while (!mission_handler.Finished()) {
+      // Wait for mission to finish
+    }
 
-  while (!mission_handler.IsFinished()) {
+    if (mission_handler.Failed()) {
+      ROS_ERROR("Mission failed!");
+    }
+
+    ROS_INFO("Mission ended. Killing node...");
+  } catch (Exception& e) {
+    ROS_ERROR("%s", e.what());
   }
 
-  ROS_INFO("Mission ended. Killing node...");
   ros::shutdown();
   return 0;
 }

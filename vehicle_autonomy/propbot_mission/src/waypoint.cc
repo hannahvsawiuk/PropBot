@@ -1,6 +1,6 @@
-#include <propbot_mission/waypoint.h>
+#include <propbot_mission/waypoint.hh>
 
-using namespace propbot_mission;
+using namespace propbot;
 
 /**
  * Waypoint constructor

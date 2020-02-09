@@ -1,6 +1,8 @@
-#include <propbot_mission/mission.h>
+#include <propbot_mission/mission.hh>
 
-using namespace propbot_mission;
+#include <propbot_util/exception.hh>
+
+using namespace propbot;
 
 /**
  * Mission constructor
@@ -26,6 +28,6 @@ Mission::Mission(const std::string &mission_file) {
     ROS_INFO("%lu Map waypoints were read", mission_.size());
     file.close();
   } else {
-    ROS_ERROR("Unable to open waypoint file");
+    throw Exception("Unable to open waypoint file");
   }
 }

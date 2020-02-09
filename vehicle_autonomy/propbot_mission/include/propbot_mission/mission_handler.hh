@@ -7,10 +7,10 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <ros/ros.h>
 
-#include <propbot_mission/mission.h>
-#include <propbot_mission/waypoint.h>
+#include <propbot_mission/mission.hh>
+#include <propbot_mission/waypoint.hh>
 
-namespace propbot_mission {
+namespace propbot {
 
 using MoveBaseClient =
     actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>;
@@ -30,14 +30,16 @@ class MissionHandler {
   MissionHandler() = delete;
   /* Mission handler constructor with a mission as an input */
   MissionHandler(const Mission& mission)
-      : mission_(mission), current_waypoint_index_(0), is_finished_(false){};
+      : mission_(mission), current_waypoint_index_(0), finished_(false), failed_(false){};
 
   // Mission commands
   void Start();
   void Pause();
   void End();
   /* Function that returns if the mission is finished */
-  bool IsFinished() const { return is_finished_; }
+  bool Finished() const { return finished_; }
+    /* Function that returns if the mission failed */
+  bool Failed() const { return finished_; }
 
   // Accessors
   Waypoint current_waypoint() const;
@@ -54,7 +56,8 @@ class MissionHandler {
   unsigned int current_waypoint_index_;
 
   // Mission finished flag
-  std::atomic_bool is_finished_;
+  std::atomic_bool finished_;
+  std::atomic_bool failed_;
 
   // Functions
   void SendGoal();
@@ -66,4 +69,4 @@ class MissionHandler {
                         const ResultConstPtr& result);
 };
 
-}  // namespace propbot_mission
+}  // namespace propbot

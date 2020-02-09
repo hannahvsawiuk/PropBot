@@ -2,7 +2,7 @@
 
 #include <geometry_msgs/PointStamped.h>
 
-namespace propbot_mission {
+namespace propbot {
 
 /**
  * Waypoint container
@@ -25,4 +25,4 @@ class Waypoint {
   geometry_msgs::PointStamped map_waypoint_;
 };
 
-}  // namespace propbot_mission
+}  // namespace propbot

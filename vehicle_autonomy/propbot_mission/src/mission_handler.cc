@@ -1,4 +1,4 @@
-#include <propbot_mission/mission_handler.h>
+#include <propbot_mission/mission_handler.hh>
 
 #include <assert.h>
 #include <chrono>
@@ -7,7 +7,9 @@
 
 #include <tf/tf.h>
 
-using namespace propbot_mission;
+#include <propbot_util/exception.hh>
+
+using namespace propbot;
 
 /**
  * Start mission function
@@ -18,7 +20,7 @@ using namespace propbot_mission;
 
 void MissionHandler::Start() {
   // Start mision
-  is_finished_ = false;
+  finished_ = false;
   // Declare an action client that communicates with move_base
   action_client_ = std::make_unique<MoveBaseClient>("/move_base", true);
   auto end =
@@ -28,11 +30,8 @@ void MissionHandler::Start() {
 
   while (!action_client_->waitForServer(ros::Duration(15.0))) {
     if (std::chrono::high_resolution_clock::now() >= end) {
-      ROS_ERROR("Move_base action server did not come up!");
-      is_finished_ = true;
-      return;
+      throw Exception("Move_base action server did not come up!");
     }
-    // is_finished_ = true;
   }
   // Send the first waypoint as a goal
   SendGoal();
@@ -61,7 +60,7 @@ void MissionHandler::Pause() {
 void MissionHandler::End() {
   assert(action_client_);
   action_client_->cancelAllGoals();
-  is_finished_ = true;
+  finished_ = true;
 }
 
 /**
@@ -200,13 +199,14 @@ void MissionHandler::WaypointCallback(
       SendGoal();
     } else {
       // Last waypoint has been reached, set mission to finished
-      is_finished_ = true;
+      finished_ = true;
       ROS_INFO("Mission is finished. ");
     }
   } else {
     ROS_ERROR("Robot was unable to reach waypoint number %i",
               current_waypoint_number());
     ROS_INFO("Stopping mission...");
+    failed_ = true;
     End();
   }
 }

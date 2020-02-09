@@ -6,9 +6,9 @@
 
 #include <ros/ros.h>
 
-#include <propbot_mission/waypoint.h>
+#include <propbot_mission/waypoint.hh>
 
-namespace propbot_mission {
+namespace propbot {
 
 /**
  * Mission container
@@ -33,4 +33,4 @@ class Mission {
   std::vector<Waypoint> mission_;
 };
 
-}  // namespace propbot_mission
+}  // namespace propbot
