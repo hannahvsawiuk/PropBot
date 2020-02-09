@@ -1,25 +1,21 @@
 <?xml version="1.0"?>
-<package>
-  <name>propbot_navigation</name>
-  <version>0.0.1</version>
-  <description>Navigation stack for propbot</description>
-  
+<package format="2">
+  <name>propbot_slam</name>
+  <version>0.0.0</version>
+  <description>Propbot SLAM Configuration</description>
+
   <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
   <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
   <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
   <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
   <maintainer email="jackguo380@gmail.com">Jack Guo</maintainer>
-  
+
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roslaunch</build_depend>
 
-  <run_depend>map_server</run_depend>
-  <run_depend>move_base</run_depend>
-  <run_depend>navfn</run_depend>
-  <run_depend>base_local_planner</run_depend>
-  <run_depend>dwa_local_planner</run_depend>
+  <exec_depend>cartographer_ros</exec_depend>
 
   <export>
   </export>

@@ -21,6 +21,7 @@
   <run_depend>propbot_rviz</run_depend>
   <run_depend>propbot_navigation</run_depend>
   <run_depend>propbot_mission</run_depend>
+  <run_depend>propbot_slam</run_depend>
 
   <export>
   </export>
