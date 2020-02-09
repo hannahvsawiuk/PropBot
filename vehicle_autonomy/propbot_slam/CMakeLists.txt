@@ -3,12 +3,7 @@ project(propbot_slam)
 
 find_package(catkin REQUIRED)
 
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES propbot_slam
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+catkin_package()
 
 install(
   DIRECTORY config launch

@@ -7,14 +7,10 @@
   <!--- Run rviz -->
   <include file="$(find propbot_rviz)/launch/view_robot.launch" />
 
-  <!--- Run gmapping -->
-  <!---<include file="$(find propbot_navigation)/launch/gmapping.launch" /> -->
-
-  <!--- Run Move Base -->
-  <include file="$(find propbot_navigation)/launch/move_base.launch" />
-
   <!--- Run cartographer -->
   <include file="$(find propbot_slam)/launch/cartographer.launch" />
 
+  <!--- Run Move Base -->
+  <include file="$(find propbot_navigation)/launch/move_base.launch" />
 
 </launch>
