@@ -8,6 +8,7 @@ project(propbot_util
     VERSION 1.0.0
     LANGUAGES CXX
 )
+find_package(catkin REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -30,17 +31,16 @@ target_include_directories(propbot_util
     $<INSTALL_INTERFACE:include>
 )
 
-install(EXPORT propbot_util DESTINATION lib/cmake
-    NAMESPACE propbot_util::
+catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES propbot_util
 )
 
-install(DIRECTORY include/ ${PROJECT_BINARY_DIR}/include/
-    DESTINATION include
+install(DIRECTORY include/propbot_util/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     PATTERN "*.in" EXCLUDE
 )
 
 install(TARGETS propbot_util
-    EXPORT propbot_util
-    DESTINATION lib
+    DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
-
