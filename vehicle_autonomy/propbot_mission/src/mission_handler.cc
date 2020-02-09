@@ -1,6 +1,6 @@
 #include <propbot_mission/mission_handler.hh>
 
-#include <assert.h>
+#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <functional>

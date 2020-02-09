@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     }
 
     ROS_INFO("Mission ended. Killing node...");
-  } catch (Exception& e) {
+  } catch (const Exception& e) {
     ROS_ERROR("%s", e.what());
   }
 
