@@ -19,14 +19,13 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
-  tracking_frame = "",
+  tracking_frame = "base_link",
   published_frame = "base_link",
   odom_frame = "odom",
-  provide_odom_frame = false,
-  publish_frame_projected_to_2d = false,
-  use_pose_extrapolator = true,
+  provide_odom_frame = true,
+  publish_frame_projected_to_2d = true,
   use_odometry = false,
-  use_nav_sat = true,
+  use_nav_sat = false,
   use_landmarks = false,
   num_laser_scans = 1,
   num_multi_echo_laser_scans = 0,
@@ -48,15 +47,15 @@ MAP_BUILDER.use_trajectory_builder_2d = true
 TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 10
 
 TRAJECTORY_BUILDER_2D.min_range = 0.3
---TRAJECTORY_BUILDER_2D.missing_data_ray_length = 2.
+TRAJECTORY_BUILDER_2D.missing_data_ray_length = 2.
 TRAJECTORY_BUILDER_2D.use_imu_data = true
---TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10
---TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 15
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10
+TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 15
 
---POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.angular_search_window = math.rad(15.)
---POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.linear_search_window = 3.
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.angular_search_window = math.rad(15.)
+POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.linear_search_window = 3.
 
---POSE_GRAPH.optimization_problem.huber_scale = 1e2
+POSE_GRAPH.optimization_problem.huber_scale = 1e2
 
 -----------------TUNE THESE PARAMETERS FOR LOW LATENCY-------------------------------
 
