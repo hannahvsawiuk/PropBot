@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(propbot_gui)
+project(propbot_mission_gui)
 
 find_package(catkin REQUIRED COMPONENTS)
 

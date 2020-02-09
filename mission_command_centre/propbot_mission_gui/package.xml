@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>propbot_gui</name>
+  <name>propbot_mission_gui</name>
   <version>0.0.1</version>
   <description>Waypoint GUI for propbot</description>
   

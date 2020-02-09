@@ -89,7 +89,7 @@ PlanMissionPlugin::PlanMissionPlugin()
 
   // Connect UI button with their respective actions
   QObject::connect(ui_.clear, SIGNAL(clicked()), this, SLOT(Clear()));
-  QObject::connect(ui_.uploadMission, SIGNAL(clicked()), this,
+  QObject::connect(ui_.upload_mission, SIGNAL(clicked()), this,
                    SLOT(UploadMission()));
 }
 
