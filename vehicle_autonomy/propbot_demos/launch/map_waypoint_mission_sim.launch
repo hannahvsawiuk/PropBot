@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!--- Run rviz -->
+  <include file="$(find propbot_demos)/launch/nav_goal_sim.launch" />
+
+  <!--- Run execute mission -->
+  <include file="$(find propbot_mission)/launch/execute_mission.launch" />
+
+</launch>
