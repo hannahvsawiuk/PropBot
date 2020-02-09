@@ -39,7 +39,7 @@ class MissionHandler {
   /* Function that returns if the mission is finished */
   bool Finished() const { return finished_; }
     /* Function that returns if the mission failed */
-  bool Failed() const { return finished_; }
+  bool Failed() const { return failed_; }
 
   // Accessors
   Waypoint current_waypoint() const;
