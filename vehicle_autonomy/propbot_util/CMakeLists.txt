@@ -8,9 +8,15 @@ project(propbot_util
     VERSION 1.0.0
     LANGUAGES CXX
 )
+
 find_package(catkin REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
+
+catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES propbot_util
+)
 
 add_library(propbot_util
     src/exception.cc
@@ -29,11 +35,6 @@ target_include_directories(propbot_util
     
     PUBLIC
     $<INSTALL_INTERFACE:include>
-)
-
-catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES propbot_util
 )
 
 install(DIRECTORY include/propbot_util/
