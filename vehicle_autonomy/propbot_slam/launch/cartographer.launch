@@ -4,8 +4,8 @@
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
           -configuration_directory
-              $(find husky_cartographer_navigation)/config
-          -configuration_basename husky.lua"
+              $(find propbot_slam)/config
+          -configuration_basename propbot.lua"
       output="screen">
     <remap from="imu" to="imu/data" />
     <remap from="odom" to="odometry/filtered" />
