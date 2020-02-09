@@ -1,0 +1,42 @@
+<package format="2">
+  <name>mapviz_plugins</name>
+  <version>1.2.0</version>
+  <description>
+
+    Common plugins for the Mapviz visualization tool
+
+  </description>
+  <author>Marc Alban</author>
+  <maintainer email="malban@swri.org">Marc Alban</maintainer>
+  <license>BSD</license>
+  <url>https://github.com/swri-robotics/mapviz</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>qt_qmake</buildtool_depend>
+
+  <build_depend>libqt_dev</build_depend>
+  <build_depend>libqt_opengl_dev</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <depend>mapviz</depend>
+  <depend>marti_common_msgs</depend>
+  <depend>marti_nav_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>swri_route_util</depend>
+  <depend>swri_transform_util</depend>
+  <depend>tf</depend>
+  
+  <exec_depend>libqt_core</exec_depend>
+  <exec_depend>libqt_opengl</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+
+  <export>
+    <mapviz plugin="${prefix}/mapviz_plugins.xml" />
+  </export>
+
+</package>
+
+
