@@ -1,0 +1,6 @@
+<library path="lib/libmapviz_plugins">
+  <class name="mapviz_plugins/plan_mission" type="mapviz_plugins::PlanMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Plan route mapviz plugin.</description>
+  </class>
+</library>
+
