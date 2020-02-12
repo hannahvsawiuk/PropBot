@@ -23,15 +23,15 @@ int wheel_set(wheel_index_t index, wheel_motor_command_t command)
         // code for serial comms
     } else {
         // disable interrupts
-        cli();
+        _disableInterrupts();
         // update the brake state
-        digitalWrite(wheel_to_pins[index].brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
+        _digitalWrite(wheel_to_pins[index].brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
         // update the duty
         *(wheel_to_register[index]) = command.duty_cycle * TOP;
         // update the direction
-        digitalWrite(wheel_to_pins[index].dir, (command.dir == FORWARD) ? HIGH : LOW);
+        _digitalWrite(wheel_to_pins[index].dir, (command.dir == FORWARD) ? HIGH : LOW);
         // re-enable interrupts
-        sei();
+        _enableInterrupts();
     }
     return 0;
 }
@@ -46,13 +46,13 @@ int wheel_brake(wheel_index_t index)
         // code for serial comms
     } else {
         // disable interrupts
-        cli();
+        _disableInterrupts();
         // apply braking
-        digitalWrite(wheel_to_pins[index].brake_release, LOW);
+        _digitalWrite(wheel_to_pins[index].brake_release, LOW);
         // set duty to 0
         *(wheel_to_register[index]) = 0;
         // re-enable interrupts
-        sei();
+        _enableInterrupts();
     }
     return 0;
 }
@@ -68,44 +68,65 @@ int wheel_coast(wheel_index_t index)
         // code for serial comms
     } else {
         // disable interrupts
-        cli();
+        _disableInterrupts();
         // release the brake
-        digitalWrite(wheel_to_pins[index].brake_release, HIGH);
+        _digitalWrite(wheel_to_pins[index].brake_release, HIGH);
         // set duty to 0
         *(wheel_to_register[index]) = 0;
         // re-enable interrupts
-        sei();
+        _enableInterrupts();
     }
     return 0;
 }
 
-/*
-class Wheel
-{
-private:
+
+// class Wheel
+// {
+// private:
+//     wheel_pins_t wheel_pins;
+//     uint16_t* control_register;
+// public:
+//     Wheel(wheel_pins_t pins, uint16_t* control_register);
+//     ~Wheel();
+//     setSpeed();
+//     getSpeed();
     
-public:
-    Wheel(wheel_index_t index);
-    ~Wheel();
-    set_speed();
-    get_speed();
+// };
+
+// Wheel::Wheel(wheel_pins_t wheel_pins, uint16_t* control_register)
+//     : wheel_pins{wheel_pins}
+//     , control_register{control_register}
+//     {}
+
+// Wheel::~Wheel() 
+// {
+//     delete control_register
+// }
+
+// Wheel::setSpeed(wheel_motor_command_t command)
+// {
+//     /* Custom code for either CAN commands or PWM setting */
+
+//     uint16_t duty_cycle = command.duty_cycle * TOP;
     
-};
+//     if (SERIAL == true) {
+//         // code for serial comms
+//     } else {
+//         // disable interrupts
+//         _disableInterrupts();
+//         // update the brake state
+//         _digitalWrite(wheel_pins.brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
+//         // update the duty
+//         *control_register = command.duty_cycle * TOP;
+//         // update the direction
+//         _digitalWrite(wheel_pins.dir, (command.dir == FORWARD) ? HIGH : LOW);
+//         // re-enable interrupts
+//         _enableInterrupts();
+//     }
+//     return 0;
+// }
+// }
 
-Wheel::Wheel(wheel_index_t index)
-{
-
-}
-
-Wheel::~Wheel()
-{
-}
-
-Wheel::set_speed(uint8_t pwm)
-{
-    
-}
-*/
 
 /**
  * @brief Construct a new Wheel::get_speed object

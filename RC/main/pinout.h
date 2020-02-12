@@ -29,9 +29,9 @@
  * @brief Pin definitions for the RC receiver
  * 
  */
-#define RC_RIGHT_CHANNEL_PIN    44
-#define RC_LEFT_CHANNEL_PIN     45
-#define RC_SWA_CHANNEL_PIN      46
-#define RC_SWB_CHANNEL_PIN      47
+#define RC_RIGHT_CHANNEL_PIN    1//44
+#define RC_LEFT_CHANNEL_PIN     2//45
+#define RC_SWA_CHANNEL_PIN      4//46
+#define RC_SWB_CHANNEL_PIN      9//47
 
 #endif // !PINOUT_H

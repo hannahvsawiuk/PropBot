@@ -92,12 +92,23 @@ const Array<wheel_pins_t, 4> wheel_to_pins = {{
  *        update the register value with the duty wrt to the TOP value to alter the duty
  * 
  */
-uint16_t* wheel_to_register[4] = {
-    &OCR3B,     // RF: digital pin 2, PE4
-    &OCR3A,     // RB: digital pin 5, PE3
-    &OCR4A,     // LF: digital pin 6, PH3
-    &OCR4B      // LB: digital pin 7, PH4 
-};
+
+
+#ifdef __AVR_ATmega328P__
+    uint8_t* wheel_to_register[4] = {
+        &OCR2A,     // #1, pin 11
+        &OCR2B,     // #2, pin 3
+        &OCR0A,     // #3, pin 6
+        &OCR0B      // #4, pin 5
+    };
+#else
+    uint16_t* wheel_to_register[4] = {
+        &OCR3B,     // RF: digital pin 2, PE4
+        &OCR3A,     // RB: digital pin 5, PE3
+        &OCR4A,     // LF: digital pin 6, PH3
+        &OCR4B      // LB: digital pin 7, PH4 
+    };
+#endif
 
 /*  Function prototypes for wheel motion functions */
 int wheel_set(wheel_index_t index, wheel_motor_command_t command);
