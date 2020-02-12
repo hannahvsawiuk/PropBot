@@ -4,14 +4,14 @@
   <!--- Run gazebo -->
   <include file="$(find propbot_gazebo)/launch/propbot_playpen.launch" />
 
+  <!--- Run state estimation -->
+  <include file="$(find propbot_state_estimation)/launch/odometry_ekf_filter.launch" />
+
   <!--- Run rviz -->
   <include file="$(find propbot_rviz)/launch/view_robot.launch" />
 
   <!--- Run SLAM -->
   <include file="$(find propbot_slam)/launch/cartographer.launch" />
-
-  <!--- Run state estimation -->
-  <!-- <include file="$(find propbot_state_estimation)/launch/odometry_ekf_filter.launch" /> -->
 
   <!--- Run Move Base -->
   <include file="$(find propbot_navigation)/launch/move_base.launch" />
