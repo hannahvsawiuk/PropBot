@@ -7,6 +7,9 @@
   <!--- Run state estimation -->
   <include file="$(find propbot_state_estimation)/launch/odometry_ekf_filter.launch" />
 
+   <!--- Run propbo SLAM navsat transform -->
+   <!-- <include file="$(find propbot_slam)/launch/navsat_transform.launch" /> -->
+
   <!--- Run rviz -->
   <include file="$(find propbot_rviz)/launch/view_robot.launch" />
 

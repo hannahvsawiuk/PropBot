@@ -50,9 +50,9 @@ geometry_msgs::PointStamped Waypoint::map_waypoint() const {
   bool odom_is_finished = false;
   while (!odom_is_finished) {
     try {
-      transform_listener.waitForTransform("odom", "utm", time,
+      transform_listener.waitForTransform("map", "utm", time,
                                           ros::Duration(3.0));
-      transform_listener.transformPoint("odom", utm_waypoint_, odom_waypoint);
+      transform_listener.transformPoint("map", utm_waypoint_, odom_waypoint);
       // utm_waypoint_.header.stamp = ros::Time::now();
       odom_is_finished = true;
     } catch (tf::TransformException& exception) {

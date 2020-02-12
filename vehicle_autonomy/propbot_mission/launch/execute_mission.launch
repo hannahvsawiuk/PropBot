@@ -1,19 +1,12 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 
 <launch>
 
-  <arg name="mission_file" default="/missions/test_mission_1.txt"/>
-  <arg name="utm_zone" default="32"/>
+  <arg name="mission_file" default="/missions/test_mission_1.txt" />
+  <arg name="utm_zone" default="32" />
 
-  <node ns="/propbot_mission" pkg="propbot_mission" type="execute_mission" name="execute_mission" output="screen"/>
-      <param name="/propbot_mission/mission_file" value="$(arg mission_file)" type="string"/>	
-      <param name="/propbot_mission/utm_zone" value="$(arg utm_zone)" type="string"/>	
-  
-      <!-- <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" output="log">
-        <!-- <remap from="odometry/filtered" to="odometry/filtered_map"/> -->
-        <remap from="gps/fix" to="/navsat/fix"/>
-        <remap from="imu/data" to="/imu/data"/> -->
-    <!-- </node> -->
-      
+  <node ns="/propbot_mission" pkg="propbot_mission" type="execute_mission" name="execute_mission" output="screen" />
+  <param name="/propbot_mission/mission_file" value="$(arg mission_file)" type="string" />
+  <param name="/propbot_mission/utm_zone" value="$(arg utm_zone)" type="string" />
 
 </launch>
