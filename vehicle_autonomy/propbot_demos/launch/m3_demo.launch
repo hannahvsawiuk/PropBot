@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!--- Run gazebo -->
+  <include file="$(find propbot_gazebo)/launch/propbot_ponderosa.launch" />
+
+  <!--- Run rviz -->
+  <include file="$(find propbot_rviz)/launch/view_robot.launch" />
+
+  <!--- Run cartographer -->
+  <include file="$(find propbot_slam)/launch/cartographer.launch" />
+
+  <!--- Run Move Base -->
+  <include file="$(find propbot_navigation)/launch/move_base.launch" />
+
+</launch>
