@@ -89,7 +89,7 @@
                 </geometry>
             </visual>
             <collision name="collision">
-              <pose>0 0 0.0000001  0 0 0</pose>
+              <pose>0 0 0.001  0 0 0</pose>
               <geometry>
                   <mesh>
                       <uri>file://ubc_ponderosa.dae</uri>
@@ -104,9 +104,9 @@
         <pose>0 0 0.001  0 0 0</pose>
         <link name="link">
             <pose>0 0 0.001  0 0 0</pose>
-            <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0 0 0 0 -0 0</acceleration>
-            <wrench>0 0 0.000000 0 -0 0</wrench>
+            <velocity>0 0 0  0 -0 0</velocity>
+            <acceleration>0 0 0  0 -0 0</acceleration>
+            <wrench>0 0 0  0 -0 0</wrench>
         </link>
       </model> 
     </state>
