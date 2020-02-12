@@ -19,7 +19,7 @@ class Waypoint {
   
   /* Gps waypoint accessor */
   std::pair<double, double> gps_waypoint() const { return gps_waypoint_; }
-  geometry_msgs::PointStamped map_waypoint();
+  geometry_msgs::PointStamped map_waypoint() const;
 
  private:
   // Waypoint in map odom frame

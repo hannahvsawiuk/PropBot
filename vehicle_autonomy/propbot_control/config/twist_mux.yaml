@@ -1,8 +1,4 @@
 topics:
-- name    : joy
-  topic   : joy_teleop/cmd_vel
-  timeout : 0.5
-  priority: 10
 - name    : interactive_marker
   topic   : twist_marker_server/cmd_vel
   timeout : 0.5

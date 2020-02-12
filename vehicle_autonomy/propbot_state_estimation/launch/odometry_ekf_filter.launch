@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <rosparam command="load" file="$(find propbot_state_estimation)/config/odometry_ekf_filter.yaml" />
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="odometry_ekf_filter" clear_params="true">
+    <remap from="odometry/filtered" to="odometry/filtered_odom" />
+  </node>
+</launch>

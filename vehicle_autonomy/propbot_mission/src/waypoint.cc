@@ -41,7 +41,7 @@ Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
  * @return map_waypoint map waypoint with correct timestamp
  *
  */
-geometry_msgs::PointStamped Waypoint::map_waypoint() {
+geometry_msgs::PointStamped Waypoint::map_waypoint() const {
   geometry_msgs::PointStamped odom_waypoint, map_waypoint;
   map_waypoint.header.stamp = ros::Time(0);
   tf::TransformListener transform_listener;
@@ -53,7 +53,7 @@ geometry_msgs::PointStamped Waypoint::map_waypoint() {
       transform_listener.waitForTransform("odom", "utm", time,
                                           ros::Duration(3.0));
       transform_listener.transformPoint("odom", utm_waypoint_, odom_waypoint);
-      utm_waypoint_.header.stamp = ros::Time::now();
+      // utm_waypoint_.header.stamp = ros::Time::now();
       odom_is_finished = true;
     } catch (tf::TransformException& exception) {
       ROS_WARN("%s", exception.what());
@@ -61,19 +61,19 @@ geometry_msgs::PointStamped Waypoint::map_waypoint() {
     }
   }
 
-  bool map_is_finished = false;
-  while (!map_is_finished) {
-    try {
-      transform_listener.waitForTransform("map", "odom", time,
-                                          ros::Duration(3.0));
-      transform_listener.transformPoint("map", odom_waypoint, map_waypoint);
-      map_is_finished = true;
-    } catch (tf::TransformException& exception) {
-      ROS_WARN("%s", exception.what());
-      ros::Duration(0.01).sleep();
-    }
-  }
+  // bool map_is_finished = false;
+  // while (!map_is_finished) {
+  //   try {
+  //     transform_listener.waitForTransform("map", "odom", time,
+  //                                         ros::Duration(3.0));
+  //     transform_listener.transformPoint("map", odom_waypoint, map_waypoint);
+  //     map_is_finished = true;
+  //   } catch (tf::TransformException& exception) {
+  //     ROS_WARN("%s", exception.what());
+  //     ros::Duration(0.01).sleep();
+  //   }
+  // }
   
-  ROS_INFO("Transformed map waypoint is %d , %d.", map_waypoint.point.x, map_waypoint.point.y);
-  return map_waypoint;
+  ROS_INFO("Transformed map waypoint is %f , %f.", odom_waypoint.point.x, odom_waypoint.point.y);
+  return odom_waypoint;
 }
