@@ -9,10 +9,11 @@
       <param name="/propbot_mission/mission_file" value="$(arg mission_file)" type="string"/>	
       <param name="/propbot_mission/utm_zone" value="$(arg utm_zone)" type="string"/>	
   
-      <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" output="log">
+      <!-- <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" output="log">
         <!-- <remap from="odometry/filtered" to="odometry/filtered_map"/> -->
         <remap from="gps/fix" to="/navsat/fix"/>
-        <remap from="imu/data" to="/imu/data"/>
-    </node>
+        <remap from="imu/data" to="/imu/data"/> -->
+    <!-- </node> -->
       
+
 </launch>

@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
 
   mission_file = ros::package::getPath("propbot_mission") + mission_file;
   ROS_INFO("Reading mission from file '%s'...", mission_file.c_str());
+  Mission mission(mission_file, utm_zone);
 
   // Instantiate a mission handler
   try {
