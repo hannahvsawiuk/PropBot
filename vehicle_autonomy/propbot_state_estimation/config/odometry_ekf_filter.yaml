@@ -7,7 +7,7 @@ publish_tf: false
 print_diagnostics: true
 two_d_mode: true
 
-pose0: propbot_slam/pose
+pose0: /propbot_slam/pose
 pose0_nodelay: true
 pose0_differential: false
 pose0_relative: false
