@@ -16,21 +16,7 @@ using namespace propbot;
  *
  */
 Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
-    : gps_waypoint_(gps_waypoint), utm_zone_(utm_zone) {
-  // Declare utm x and y variables
-  double utm_northing = 0, utm_easting = 0;
-
-  // Convert latitude and longitude to utm waypoints
-  RobotLocalization::NavsatConversions::LLtoUTM(
-      gps_waypoint_.first, gps_waypoint_.second, utm_northing, utm_easting,
-      utm_zone_);
-
-  utm_waypoint_.header.frame_id = "utm";
-  utm_waypoint_.header.stamp = ros::Time(0);
-  utm_waypoint_.point.x = utm_easting;
-  utm_waypoint_.point.y = utm_northing;
-  utm_waypoint_.point.z = 0;
-}
+    : gps_waypoint_(gps_waypoint), utm_zone_(utm_zone) {}
 
 /**
  * Map waypoint accessor
@@ -41,39 +27,43 @@ Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
  * @return map_waypoint map waypoint with correct timestamp
  *
  */
-geometry_msgs::PointStamped Waypoint::map_waypoint() const {
-  geometry_msgs::PointStamped odom_waypoint, map_waypoint;
-  map_waypoint.header.stamp = ros::Time(0);
+geometry_msgs::PointStamped Waypoint::TransformToFrame(
+    const std::string& frame_id) const {
+  geometry_msgs::PointStamped utm_waypoint, transformed_waypoint;
+
+  // Declare utm x and y variables
+  double utm_northing = 0, utm_easting = 0;
+  std::string utm_zone = utm_zone_;
+  // Convert latitude and longitude to utm waypoints
+  RobotLocalization::NavsatConversions::LLtoUTM(
+      gps_waypoint_.first, gps_waypoint_.second, utm_northing, utm_easting,
+      utm_zone);
+
+  utm_waypoint.header.frame_id = "utm";
+  utm_waypoint.header.stamp = ros::Time(0);
+  utm_waypoint.point.x = utm_easting;
+  utm_waypoint.point.y = utm_northing;
+  utm_waypoint.point.z = 0;
+
   tf::TransformListener transform_listener;
   ros::Time time = ros::Time::now();
-  // Try to transform point for a maximum of 3 times
-  bool odom_is_finished = false;
-  while (!odom_is_finished) {
+
+  bool transform_finished = false;
+  while (!transform_finished) {
     try {
+      utm_waypoint.header.stamp = ros::Time::now();
       transform_listener.waitForTransform("map", "utm", time,
                                           ros::Duration(3.0));
-      transform_listener.transformPoint("map", utm_waypoint_, odom_waypoint);
-      // utm_waypoint_.header.stamp = ros::Time::now();
-      odom_is_finished = true;
+      transform_listener.transformPoint("map", utm_waypoint,
+                                        transformed_waypoint);
+      transform_finished = true;
     } catch (tf::TransformException& exception) {
       ROS_WARN("%s", exception.what());
       ros::Duration(0.01).sleep();
     }
   }
 
-  // bool map_is_finished = false;
-  // while (!map_is_finished) {
-  //   try {
-  //     transform_listener.waitForTransform("map", "odom", time,
-  //                                         ros::Duration(3.0));
-  //     transform_listener.transformPoint("map", odom_waypoint, map_waypoint);
-  //     map_is_finished = true;
-  //   } catch (tf::TransformException& exception) {
-  //     ROS_WARN("%s", exception.what());
-  //     ros::Duration(0.01).sleep();
-  //   }
-  // }
-  
-  ROS_INFO("Transformed map waypoint is %f , %f.", odom_waypoint.point.x, odom_waypoint.point.y);
-  return odom_waypoint;
+  ROS_INFO("Map waypoint is %f , %f.", transformed_waypoint.point.x,
+           transformed_waypoint.point.y);
+  return transformed_waypoint;
 }

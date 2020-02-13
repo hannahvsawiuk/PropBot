@@ -30,7 +30,10 @@ class MissionHandler {
   MissionHandler() = delete;
   /* Mission handler constructor with a mission as an input */
   MissionHandler(const Mission& mission)
-      : mission_(mission), current_waypoint_index_(0), finished_(false), failed_(false){};
+      : mission_(mission),
+        current_waypoint_index_(0),
+        finished_(false),
+        failed_(false){};
 
   // Mission commands
   void Start();
@@ -38,8 +41,8 @@ class MissionHandler {
   void End();
   /* Function that returns if the mission is finished */
   bool Finished() const { return finished_; }
-    /* Function that returns if the mission failed */
-  bool Failed() const { return finished_; }
+  /* Function that returns if the mission failed */
+  bool Failed() const { return failed_; }
 
   // Accessors
   Waypoint current_waypoint() const;
@@ -54,17 +57,21 @@ class MissionHandler {
 
   // Index of current waypoint
   unsigned int current_waypoint_index_;
-
+  
   // Mission finished flag
   std::atomic_bool finished_;
   std::atomic_bool failed_;
 
   // Functions
   void SendGoal();
-  void SetDesiredOrientation(const Waypoint& current_waypoint,
-                             const Waypoint& next_waypoint,
-                             move_base_msgs::MoveBaseGoal* current_goal) const;
-  move_base_msgs::MoveBaseGoal CreateCurrentGoal() const;
+  void SetDesiredOrientation(
+      const geometry_msgs::PointStamped& current_map_waypoint,
+      const geometry_msgs::PointStamped& next_map_waypoint,
+      move_base_msgs::MoveBaseGoal* current_goal) const;
+  move_base_msgs::MoveBaseGoal CreateCurrentGoal(
+      const geometry_msgs::PointStamped& current_map_waypoint,
+      const geometry_msgs::PointStamped& next_map_waypoint) const;
+      
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
                         const ResultConstPtr& result);
 };

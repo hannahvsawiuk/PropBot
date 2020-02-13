@@ -96,7 +96,12 @@ void MissionHandler::SendGoal() {
                             const ResultConstPtr& result) {
     this->WaypointCallback(state, result);
   };
-  action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
+  auto current_map_waypoint = current_waypoint().TransformToFrame("map");
+  auto next_map_waypoint =
+      mission_.mission()[current_waypoint_index_ + 1].TransformToFrame("map");
+
+  action_client_->sendGoal(
+      CreateCurrentGoal(current_map_waypoint, next_map_waypoint), waypoint_cb);
 }
 
 /**
@@ -115,11 +120,9 @@ void MissionHandler::SendGoal() {
  */
 
 void MissionHandler::SetDesiredOrientation(
-    const Waypoint& current_waypoint, const Waypoint& next_waypoint,
+    const geometry_msgs::PointStamped& current_map_waypoint,
+    const geometry_msgs::PointStamped& next_map_waypoint,
     move_base_msgs::MoveBaseGoal* current_goal) const {
-  auto current_map_waypoint = current_waypoint.map_waypoint();
-  auto next_map_waypoint = next_waypoint.map_waypoint();
-
   // Find difference between x and y components of the waypoints
   float delta_x = current_map_waypoint.point.x - next_map_waypoint.point.x;
   float delta_y = current_map_waypoint.point.y - next_map_waypoint.point.y;
@@ -148,7 +151,9 @@ void MissionHandler::SetDesiredOrientation(
  * This function creates a move base goal based on the current waypoint.
  *
  */
-move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal() const {
+move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(
+    const geometry_msgs::PointStamped& current_map_waypoint,
+    const geometry_msgs::PointStamped& next_map_waypoint) const {
   // Declare a move base goal
   move_base_msgs::MoveBaseGoal current_goal;
 
@@ -158,15 +163,12 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal() const {
 
   Waypoint curr_waypoint = current_waypoint();
   // Set x and y of current_goal
-  current_goal.target_pose.pose.position.x =
-      curr_waypoint.map_waypoint().point.x;
-  current_goal.target_pose.pose.position.y =
-      curr_waypoint.map_waypoint().point.y;
+  current_goal.target_pose.pose.position.x = current_map_waypoint.point.x;
+  current_goal.target_pose.pose.position.y = current_map_waypoint.point.y;
 
   if (current_waypoint_number() < mission_.number_waypoints()) {
     // Calculate goal orientation using current and next waypoint
-    SetDesiredOrientation(curr_waypoint,
-                          mission_.mission()[current_waypoint_index_ + 1],
+    SetDesiredOrientation(current_map_waypoint, next_map_waypoint,
                           &current_goal);
   } else {
     // Current waypoint is last waypoint, set orientation of current goal to a 0
