@@ -11,7 +11,7 @@
 using namespace propbot;
 
 int main(int argc, char** argv) {
-  // Initiation node called send mission
+  // Initiation node called execute mission
   ros::init(argc, argv, "execute_mission");
   ros::NodeHandle node_handle;
 

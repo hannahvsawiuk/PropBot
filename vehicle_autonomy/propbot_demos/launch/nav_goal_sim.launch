@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <launch>
 
   <!--- Run gazebo -->
@@ -7,14 +7,11 @@
   <!--- Run state estimation -->
   <include file="$(find propbot_state_estimation)/launch/ekf_filters.launch" />
 
-   <!-- - Run propbot SLAM navsat transform -->
-   <include file="$(find propbot_slam)/launch/navsat_transform.launch" />
+  <!-- - Launch SLAM-->
+  <include file="$(find propbot_slam)/launch/slam.launch" />
 
   <!--- Run rviz -->
   <include file="$(find propbot_rviz)/launch/view_robot.launch" />
-
-  <!--- Run SLAM -->
-  <include file="$(find propbot_slam)/launch/cartographer.launch" />
 
   <!--- Run Move Base -->
   <include file="$(find propbot_navigation)/launch/move_base.launch" />

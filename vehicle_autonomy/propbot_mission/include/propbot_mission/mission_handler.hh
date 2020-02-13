@@ -57,7 +57,7 @@ class MissionHandler {
 
   // Index of current waypoint
   unsigned int current_waypoint_index_;
-  
+
   // Mission finished flag
   std::atomic_bool finished_;
   std::atomic_bool failed_;
@@ -68,10 +68,7 @@ class MissionHandler {
       const geometry_msgs::PointStamped& current_map_waypoint,
       const geometry_msgs::PointStamped& next_map_waypoint,
       move_base_msgs::MoveBaseGoal* current_goal) const;
-  move_base_msgs::MoveBaseGoal CreateCurrentGoal(
-      const geometry_msgs::PointStamped& current_map_waypoint,
-      const geometry_msgs::PointStamped& next_map_waypoint) const;
-      
+  move_base_msgs::MoveBaseGoal CreateCurrentGoal() const;
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
                         const ResultConstPtr& result);
 };

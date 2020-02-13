@@ -96,12 +96,8 @@ void MissionHandler::SendGoal() {
                             const ResultConstPtr& result) {
     this->WaypointCallback(state, result);
   };
-  auto current_map_waypoint = current_waypoint().TransformToFrame("map");
-  auto next_map_waypoint =
-      mission_.mission()[current_waypoint_index_ + 1].TransformToFrame("map");
 
-  action_client_->sendGoal(
-      CreateCurrentGoal(current_map_waypoint, next_map_waypoint), waypoint_cb);
+  action_client_->sendGoal(CreateCurrentGoal(), waypoint_cb);
 }
 
 /**
@@ -151,14 +147,15 @@ void MissionHandler::SetDesiredOrientation(
  * This function creates a move base goal based on the current waypoint.
  *
  */
-move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(
-    const geometry_msgs::PointStamped& current_map_waypoint,
-    const geometry_msgs::PointStamped& next_map_waypoint) const {
+move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal() const {
+  // Get current waypoint in map frame
+  auto current_map_waypoint = current_waypoint().TransformToFrame("map");
+
   // Declare a move base goal
   move_base_msgs::MoveBaseGoal current_goal;
 
   // Set current_goal frame
-  current_goal.target_pose.header.frame_id = "odom";
+  current_goal.target_pose.header.frame_id = "map";
   current_goal.target_pose.header.stamp = ros::Time::now();
 
   Waypoint curr_waypoint = current_waypoint();
@@ -167,6 +164,10 @@ move_base_msgs::MoveBaseGoal MissionHandler::CreateCurrentGoal(
   current_goal.target_pose.pose.position.y = current_map_waypoint.point.y;
 
   if (current_waypoint_number() < mission_.number_waypoints()) {
+    // Get next waypoint in map frame
+    auto next_map_waypoint =
+        mission_.mission()[current_waypoint_index_ + 1].TransformToFrame("map");
+
     // Calculate goal orientation using current and next waypoint
     SetDesiredOrientation(current_map_waypoint, next_map_waypoint,
                           &current_goal);
