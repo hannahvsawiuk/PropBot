@@ -1,14 +1,10 @@
 #include "mini_rc.h"
 
 DCMotor::DCMotor(uint8_t motor_index)
-// : motor_index{motor_index}
-// , pwm_register{wheel_to_register[motor_index]}
-// , bit_shift_vals{bit_shift_map[motor_index]}
+: motor_index(motor_index)
+, pwm_register{wheel_to_register[motor_index]}
+, bit_shift_vals{bit_shift_map[motor_index]}
 {
-    motor_index = motor_index;
-    pwm_register = wheel_to_register[motor_index];
-    bit_shift_vals = bit_shift_map[motor_index];
-    
     latch_tx(~_BV(bit_shift_vals.high) & ~_BV(bit_shift_vals.low));
 }
 
@@ -20,7 +16,7 @@ DCMotor::~DCMotor()
 void DCMotor::sendCommand(wheel_motor_command_t command)
 {
     uint8_t latch_state = 0;
-    
+
     // BRAKE condition
     if (command.brake_release != RELEASE_BRAKE) {   
         latch_state &= ~_BV(bit_shift_vals.high);    
@@ -51,7 +47,7 @@ void DCMotor::sendCommand(wheel_motor_command_t command)
     latch_tx(latch_state);
 
     // Step 2: set speed
-    &pwm_register = command.duty_cycle * MINI_TOP;
+    *pwm_register = command.duty_cycle * MINI_TOP;
 }
 
 void DCMotor::enable()

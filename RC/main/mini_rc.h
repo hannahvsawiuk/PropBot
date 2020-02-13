@@ -1,3 +1,6 @@
+#ifndef MINI_RC_H_
+#define MINI_RC_H_
+
 #include "wheel.h"
 
 // PWM output pins
@@ -7,9 +10,9 @@
 #define PWM4_MOTOR_PIN 5    //OC0B 
 
 // RC pins for the mini car
-#define MINI_RC_RIGHT_CHANNEL_PIN   1
-#define MINI_RC_LEFT_CHANNEL_PIN    2
-#define MINI_RC_SWA_CHANNEL_PIN     10
+#define MINI_RC_RIGHT_CHANNEL_PIN   0
+#define MINI_RC_LEFT_CHANNEL_PIN    1
+#define MINI_RC_SWA_CHANNEL_PIN     2
 #define MINI_RC_SWB_CHANNEL_PIN     13
 
 // Arduino pin names for interface to 74HCT595 latch
@@ -52,8 +55,10 @@ public:
 
 private:
     uint8_t motor_index;
-    uint16_t* pwm_register;
+    uint8_t* pwm_register;
     bit_shift_t bit_shift_vals;
     void enable();
     void latch_tx(uint8_t latch_state);
 };
+
+#endif // MINI_RC_H_

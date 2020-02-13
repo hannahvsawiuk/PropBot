@@ -6,10 +6,10 @@
 
 /*  Define the max and min thresholds for the longitudinal wheel sets */
 // CH2 - right longitudinal wheel set
-#define RC_RIGHT_SET_FW_MAX         1971
+#define RC_RIGHT_SET_FW_MAX         1985
 #define RC_RIGHT_SET_FW_MIN         1638
 #define RC_RIGHT_SET_BW_MAX         1310  
-#define RC_RIGHT_SET_BW_MIN         987
+#define RC_RIGHT_SET_BW_MIN         980
 // CH3 - left longitudinal wheel set
 #define RC_LEFT_SET_FW_MAX          1972
 #define RC_LEFT_SET_FW_MIN          1632 
@@ -23,6 +23,6 @@
 #define RC_SWX_HIGH_MIN             1900//1974
 
 /*  Function prototypes for rc commands */
-Array<wheel_motor_command_t, 4> fetch_rc_commands(); 
+Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(); 
 
 #endif // !RC_COMMANDS_H
