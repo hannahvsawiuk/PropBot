@@ -2,7 +2,7 @@
 <launch>
 
     <!--- Run rviz -->
-  <include file="$(find propbot_demos)/launch/nav_goal_sim.launch" />
+  <include file="$(find propbot_demos)/launch/playpen_sim.launch" />
 
   <!--- Run execute mission -->
   <include file="$(find propbot_mission)/launch/execute_mission.launch" />
