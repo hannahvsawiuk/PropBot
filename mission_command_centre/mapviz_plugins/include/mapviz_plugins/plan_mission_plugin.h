@@ -98,16 +98,23 @@ namespace mapviz_plugins
    protected Q_SLOTS:
     void Clear();
     void UploadMission();
+    void StartMissionCommand();
+    void PauseMissionCommand();
+    void ResumeMissionCommand();
+    void EndMissionCommand();
 
    private:
+    bool SendMissionCommand( uint8_t command_code );
     Ui::plan_mission_config ui_;
     QWidget* config_widget_;
     mapviz::MapCanvas* map_canvas_;
 
     std::string route_topic_;
     std::string mission_topic_;
+    std::string mission_command_topic_;
 
     ros::Publisher mission_pub_;
+    ros::Publisher mission_command_pub_;
     ros::Subscriber route_sub_;
     ros::Timer retry_timer_;
 

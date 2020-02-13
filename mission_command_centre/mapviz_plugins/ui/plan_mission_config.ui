@@ -35,7 +35,7 @@
    <item row="3" column="2">
     <widget class="QLineEdit" name="route_topic"/>
    </item>
-   <item row="11" column="2" colspan="2">
+   <item row="17" column="2" colspan="2">
     <widget class="QLabel" name="status">
      <property name="font">
       <font>
@@ -112,7 +112,7 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
+   <item row="17" column="0">
     <widget class="QLabel" name="label_2">
      <property name="font">
       <font>
@@ -157,6 +157,55 @@
      </property>
     </widget>
    </item>
+    <item row="12" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Mission Command Topic:</string>
+     </property>
+    </widget>
+   </item>
+    <item row="12" column="2">
+    <widget class="QLineEdit" name="mission_command_topic"/>
+   </item>
+
+   <item row="13" column="2">
+    <widget class="QPushButton" name="start_mission">
+     <property name="text">
+      <string>Start Mission</string>
+     </property>
+    </widget>
+   </item>
+
+   <item row="14" column="2">
+    <widget class="QPushButton" name="pause_mission">
+     <property name="text">
+      <string>Pause Mission</string>
+     </property>
+    </widget>
+   </item>
+
+   <item row="15" column="2">
+    <widget class="QPushButton" name="resume_mission">
+     <property name="text">
+      <string>Resume Mission</string>
+     </property>
+    </widget>
+   </item>
+
+
+   <item row="16" column="2">
+    <widget class="QPushButton" name="end_mission">
+     <property name="text">
+      <string>End Mission</string>
+     </property>
+    </widget>
+   </item>
+
   </layout>
  </widget>
  <customwidgets>
