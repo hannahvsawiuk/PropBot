@@ -130,7 +130,7 @@ PlanMissionPlugin::~PlanMissionPlugin() {
  */
 
 void PlanMissionPlugin::StartMissionCommand(){
-  uint8_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
   PrintInfo("Starting mission");
   if(SendMissionCommand( mission_command_code ))
   {
@@ -152,7 +152,7 @@ void PlanMissionPlugin::StartMissionCommand(){
  */
 
 void PlanMissionPlugin::PauseMissionCommand(){
-  uint8_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
   PrintInfo("Pausing mission");
   if(SendMissionCommand( mission_command_code ))
   {
@@ -174,7 +174,7 @@ void PlanMissionPlugin::PauseMissionCommand(){
  */
 
 void PlanMissionPlugin::ResumeMissionCommand(){
-  uint8_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
   PrintInfo("Resuming mission");
   if(SendMissionCommand( mission_command_code ))
   {
@@ -194,7 +194,7 @@ void PlanMissionPlugin::ResumeMissionCommand(){
  */
 
 void PlanMissionPlugin::EndMissionCommand(){
-  uint8_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
   PrintInfo("Ending mission");
   if(SendMissionCommand( mission_command_code ))
   {
@@ -208,7 +208,7 @@ void PlanMissionPlugin::EndMissionCommand(){
 
 
 
-bool PlanMissionPlugin::SendMissionCommand( uint8_t command_code ){
+bool PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
   mapviz_plugins::MissionCommand mission_command;
   mission_command.header.stamp = ros::Time::now();
   mission_command.command = command_code;

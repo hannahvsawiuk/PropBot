@@ -104,7 +104,7 @@ namespace mapviz_plugins
     void EndMissionCommand();
 
    private:
-    bool SendMissionCommand( uint8_t command_code );
+    bool SendMissionCommand( uint16_t command_code );
     Ui::plan_mission_config ui_;
     QWidget* config_widget_;
     mapviz::MapCanvas* map_canvas_;
