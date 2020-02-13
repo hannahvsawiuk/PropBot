@@ -227,7 +227,7 @@ bool PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
 
 
 void PlanMissionPlugin::UploadMission() {
-
+  PrintInfo("Uploading mission");
   // return if a single waypoint has not been set 
   if (gps_waypoints_.size() < 1) {
     return;
@@ -246,7 +246,7 @@ void PlanMissionPlugin::UploadMission() {
     mission_pub_.shutdown();
     mission_pub_ = node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
     mission_pub_.publish(mission);
-    PrintInfo("Uploading mission");
+    PrintInfo("Mission uploaded");
   } else {
     PrintError("Mission Topic is empty");
   }
