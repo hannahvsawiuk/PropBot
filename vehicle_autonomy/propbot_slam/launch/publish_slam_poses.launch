@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <!-- Run SLAM odom pose publisher -->
+
+  <node name="publish_slam_odom_pose" type="publish_slam_pose" pkg="propbot_slam" output="screen">
+    <rosparam>
+      frame_id: odom
+    </rosparam>
+  </node>
+
+  <!-- Run SLAM map pose publisher -->
+  <node name="publish_slam_map_pose" type="publish_slam_pose" pkg="propbot_slam" output="screen">
+    <rosparam>
+      frame_id: map
+    </rosparam>
+    <remap from="/slam/pose" to="/slam/map/pose" />
+  </node>
+
+</launch>
