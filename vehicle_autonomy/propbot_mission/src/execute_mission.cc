@@ -11,19 +11,22 @@
 using namespace propbot;
 
 int main(int argc, char** argv) {
-  // Initiation node called send mission
+  // Initiation node called execute mission
   ros::init(argc, argv, "execute_mission");
   ros::NodeHandle node_handle;
 
   // Store mission
-  std::string mission_file;
+  std::string mission_file, utm_zone;
   ros::param::get("/propbot_mission/mission_file", mission_file);
+  ros::param::get("/propbot_mission/utm_zone", utm_zone);
+
   mission_file = ros::package::getPath("propbot_mission") + mission_file;
   ROS_INFO("Reading mission from file '%s'...", mission_file.c_str());
+  Mission mission(mission_file, utm_zone);
 
   // Instantiate a mission handler
   try {
-    Mission mission(mission_file);
+    Mission mission(mission_file, utm_zone);
     MissionHandler mission_handler(mission);
     // Start mission
     mission_handler.Start();

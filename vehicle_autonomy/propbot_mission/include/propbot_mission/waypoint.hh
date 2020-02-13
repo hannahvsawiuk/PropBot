@@ -15,14 +15,19 @@ class Waypoint {
  public:
     /* Delete default constructor */
   Waypoint() = delete;
-  Waypoint(const double x, const double y);
-
+  Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone);
   
-  geometry_msgs::PointStamped map_waypoint() const;
+  /* Gps waypoint accessor */
+  std::pair<double, double> gps_waypoint() const { return gps_waypoint_; }
+  geometry_msgs::PointStamped TransformToFrame(const std::string& frame_id) const;
 
  private:
   // Waypoint in map odom frame
+  std::pair<double, double> gps_waypoint_;
   geometry_msgs::PointStamped map_waypoint_;
+
+  std::string utm_zone_;
+  bool map_waypoint_set_;
 };
 
 }  // namespace propbot
