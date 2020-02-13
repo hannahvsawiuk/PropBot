@@ -85,10 +85,10 @@ public:
   }
 
 protected:
-  void PrintError(const std::string &message) override;
-  void PrintInfo(const std::string &message) override;
-  void PrintWarning(const std::string &message) override;
-  bool eventFilter(QObject *object, QEvent *event) override;
+  void PrintError(const std::string &message);
+  void PrintInfo(const std::string &message);
+  void PrintWarning(const std::string &message);
+  bool eventFilter(QObject *object, QEvent *event);
   bool handleMousePress(QMouseEvent *);
   bool handleMouseRelease(QMouseEvent *);
   bool handleMouseMove(QMouseEvent *);
