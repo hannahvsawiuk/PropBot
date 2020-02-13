@@ -149,19 +149,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   </xacro:if>
 
-  <xacro:if value="$(arg kinect_enabled)">
 
-    <xacro:sensor_arch prefix="" parent="top_plate_link">
-      <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
-    </xacro:sensor_arch>
-    <joint name="kinect_frame_joint" type="fixed">
-      <origin xyz="$(arg kinect_xyz)" rpy="$(arg kinect_rpy)" />
-      <parent link="sensor_arch_mount_link"/>
-      <child link="camera_link"/>
-    </joint>
-
-    <xacro:kinect_camera prefix="camera" robot_namespace="$(arg robot_namespace)"/>
-  </xacro:if>
+  <xacro:sensor_arch prefix="" parent="top_plate_link">
+    <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
+  </xacro:sensor_arch>
+  <link name="camera_link"/>
+  <joint name="kinect_frame_joint" type="fixed">
+    <origin xyz="$(arg kinect_xyz)" rpy="$(arg kinect_rpy)" />
+    <parent link="sensor_arch_mount_link"/>
+    <child link="camera_link"/>
+  </joint>
+  <gazebo reference="camera_link">
+  </gazebo>
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
