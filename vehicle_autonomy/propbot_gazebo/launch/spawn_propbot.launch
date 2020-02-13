@@ -154,7 +154,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
         <arg name="enable_sync"         value="false"/>
         <arg name="align_depth"         value="false"/>
 
-        <arg name="base_frame_id"             value="base_link"/>
+        <arg name="base_frame_id"             value="camera_link"/>
         <arg name="depth_frame_id"            value="realsense_depth_frame"/>
         <arg name="infra1_frame_id"           value="realsense_infra1_frame"/>
         <arg name="infra2_frame_id"           value="realsense_infra2_frame"/>
