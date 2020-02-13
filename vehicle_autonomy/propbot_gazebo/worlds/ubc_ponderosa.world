@@ -110,11 +110,10 @@
         </link>
       </model> 
     </state>
-
-
     <spherical_coordinates>
         <latitude_deg> 49.26646 </latitude_deg>
         <longitude_deg> -123.255505 </longitude_deg>
+        <elevation>91</elevation>
     </spherical_coordinates>
 
   </world>
