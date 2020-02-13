@@ -38,6 +38,7 @@ class MissionHandler {
   // Mission commands
   void Start();
   void Pause();
+  void Resume() { SendGoal(); }
   void End();
   /* Function that returns if the mission is finished */
   bool Finished() const { return finished_; }

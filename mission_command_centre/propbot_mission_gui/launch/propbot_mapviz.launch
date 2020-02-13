@@ -1,18 +1,15 @@
 <launch>
   
-  <node pkg="mapviz" type="mapviz" name="mapviz">
-  <rosparam param="mission_topic">"mission_topic"</rosparam>
-  <rosparam param="mission_command_topic">"mission_command_topic"</rosparam>
-  </node>
+  <node pkg="mapviz" type="mapviz" name="mapviz" />
 
   <node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin" >
     <param name="local_xy_frame" value="/map"/>
     <param name="local_xy_origin" value="swri"/>
     <rosparam param="local_xy_origins">
       [{ name: swri,
-         latitude: 49.260100,
-         longitude: -123.248690,
-         altitude: 20,
+         latitude: 49.26646,
+         longitude: -123.255505,
+         altitude: 91,
          heading: 0.0}]
     </rosparam>
   </node>

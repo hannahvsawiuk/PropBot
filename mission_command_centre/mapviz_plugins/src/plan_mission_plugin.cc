@@ -65,7 +65,6 @@ namespace sru = swri_route_util;
 namespace stu = swri_transform_util;
 
 using namespace mapviz_plugins;
-constexpr const char *mapviz_node_str = "/mapviz";
 
 /**
  * PlanMissionPlugin constructor
