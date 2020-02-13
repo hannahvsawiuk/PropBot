@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+ 
+ <!--- Run gazebo -->
+  <include file="$(find propbot_gazebo)/launch/propbot_playpen.launch" />
+
+  <!--- Run autonomy stack -->
+  <include file="$(find propbot_demos)/launch/autonomy.launch" />
+
+</launch>
