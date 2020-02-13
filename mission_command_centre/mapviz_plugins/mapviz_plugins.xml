@@ -1,6 +1,10 @@
 <library path="lib/libmapviz_plugins">
   <class name="mapviz_plugins/plan_mission" type="mapviz_plugins::PlanMissionPlugin" base_class_type="mapviz::MapvizPlugin">
-    <description>Plan route mapviz plugin.</description>
+    <description>Plan mission mapviz plugin.</description>
+  </class>
+
+  <class name="mapviz_plugins/navsat" type="mapviz_plugins::NavSatPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>NavSat mapviz plugin.</description>
   </class>
 </library>
 
