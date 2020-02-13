@@ -107,9 +107,9 @@ PlanMissionPlugin::PlanMissionPlugin()
   QObject::connect(ui_.end_mission, SIGNAL(clicked()), this,
                    SLOT(EndMissionCommand()));
 
-  mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>("/mapviz/mission_command", 10, true);
+  mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>("/mapviz/mission_command", 10, false);
 
-  mission_pub_ = node_.advertise<mapviz_plugins::Mission>("/mapviz/mission", 10, true);
+  mission_pub_ = node_.advertise<mapviz_plugins::Mission>("/mapviz/mission", 10, false);
 }
 
 /**
