@@ -26,6 +26,7 @@
   <run_depend>pointcloud_to_laserscan</run_depend>
   <run_depend>rostopic</run_depend>
 
-  <export>
-  </export>
+<export>
+  <gazebo_ros gazebo_media_path="${prefix}" />
+</export>
 </package>

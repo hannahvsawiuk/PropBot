@@ -1,9 +1,6 @@
 <?xml version="1.0" ?>
 <launch>
 
-  <!--- Run gazebo -->
-  <include file="$(find propbot_gazebo)/launch/propbot_playpen.launch" />
-
   <!--- Run state estimation -->
   <include file="$(find propbot_state_estimation)/launch/ekf_filters.launch" />
 

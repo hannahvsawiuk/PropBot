@@ -49,9 +49,14 @@
 
 #include <swri_route_util/util.h>
 #include <swri_transform_util/frames.h>
-
-#include <mapviz_plugins/Mission.h>
 #include <marti_nav_msgs/PlanRoute.h>
+
+
+// msg headers
+#include <mapviz_plugins/Mission.h>
+#include <mapviz_plugins/MissionCommand.h>
+#include <mapviz_plugins/MissionCommandCode.h>
+
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(mapviz_plugins::PlanMissionPlugin, mapviz::MapvizPlugin)
@@ -89,8 +94,19 @@ PlanMissionPlugin::PlanMissionPlugin()
 
   // Connect UI button with their respective actions
   QObject::connect(ui_.clear, SIGNAL(clicked()), this, SLOT(Clear()));
+
+
   QObject::connect(ui_.upload_mission, SIGNAL(clicked()), this,
                    SLOT(UploadMission()));
+
+  QObject::connect(ui_.start_mission, SIGNAL(clicked()), this,
+                   SLOT(StartMissionCommand()));
+  QObject::connect(ui_.pause_mission, SIGNAL(clicked()), this,
+                   SLOT(PauseMissionCommand()));
+  QObject::connect(ui_.resume_mission, SIGNAL(clicked()), this,
+                   SLOT(ResumeMissionCommand()));
+  QObject::connect(ui_.end_mission, SIGNAL(clicked()), this,
+                   SLOT(EndMissionCommand()));
 }
 
 
@@ -107,14 +123,111 @@ PlanMissionPlugin::~PlanMissionPlugin() {
 
 
 /**
- * UploadMission function
+ * StartMissionCommand function
  *
- * This function publishes the mission waypoints to a ROS topic.
+ * This function publishes a start mission command to the mission_command_ ROS topic.
  *
  */
 
-void PlanMissionPlugin::UploadMission() {
+void PlanMissionPlugin::StartMissionCommand(){
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
+  PrintInfo("Starting mission");
+  if(SendMissionCommand( mission_command_code ))
+  {
+    PrintInfo("Mission started");
+  }
+  else
+  {
+    PrintError("Failed to start mission");
+  }
+  
+}
 
+
+/**
+ * PauseMissionCommand function
+ *
+ * This function publishes a pause mission command to the mission_command_ ROS topic.
+ *
+ */
+
+void PlanMissionPlugin::PauseMissionCommand(){
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
+  PrintInfo("Pausing mission");
+  if(SendMissionCommand( mission_command_code ))
+  {
+    PrintInfo("Mission paused");
+  }
+  else
+  {
+    PrintError("Failed to pause mission");
+  }
+}
+
+
+
+/**
+ * ResumeMissionCommand function
+ *
+ * This function publishes a start mission command to the mission_command_ ROS topic.
+ *
+ */
+
+void PlanMissionPlugin::ResumeMissionCommand(){
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
+  PrintInfo("Resuming mission");
+  if(SendMissionCommand( mission_command_code ))
+  {
+    PrintInfo("Mission resumed");
+  }
+  else
+  {
+    PrintError("Failed to resume mission");
+  }
+}
+
+/**
+ * EndMissionCommand function
+ *
+ * This function publishes a start mission command to the mission_command_ ROS topic.
+ *
+ */
+
+void PlanMissionPlugin::EndMissionCommand(){
+  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
+  PrintInfo("Ending mission");
+  if(SendMissionCommand( mission_command_code ))
+  {
+    PrintInfo("Mission ended");
+  }
+  else
+  {
+    PrintError("Failed to end mission");
+  }
+}
+
+
+
+bool PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
+  mapviz_plugins::MissionCommand mission_command;
+  mission_command.header.stamp = ros::Time::now();
+  mission_command.command = command_code;
+  mission_command_topic_ = ui_.mission_command_topic->text().toStdString();
+  if (!mission_command_topic_.empty()) {
+    mission_command_pub_.shutdown();
+    mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>(mission_command_topic_, 1, true);
+    mission_command_pub_.publish(mission_command);
+    return true;
+  } else {
+    PrintError("Mission Topic is empty");
+    return false;
+  }
+
+}
+
+
+void PlanMissionPlugin::UploadMission() {
+  PrintInfo("Uploading mission");
   // return if a single waypoint has not been set 
   if (gps_waypoints_.size() < 1) {
     return;
@@ -133,11 +246,19 @@ void PlanMissionPlugin::UploadMission() {
     mission_pub_.shutdown();
     mission_pub_ = node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
     mission_pub_.publish(mission);
-    ROS_INFO("Publishing GPS waypoints to %s", mission_topic_.c_str());
+    PrintInfo("Mission uploaded");
   } else {
     PrintError("Mission Topic is empty");
   }
 }
+
+/**
+ * UploadMission function
+ *
+ * This function publishes the mission waypoints to a ROS topic.
+ *
+ */
+
 
 /**
  * Clear function
@@ -155,7 +276,7 @@ void PlanMissionPlugin::Clear() {
 /**
  * PrintError function
  *
- * Prints ROS log level error message
+ * Prints to plugin status and ROS log level error message 
  *
  */
 
@@ -167,7 +288,7 @@ void PlanMissionPlugin::PrintError(const std::string& message) {
 /**
  * PrintInfo function
  *
- * Prints ROS log level info message
+ * Prints to plugin status and ROS log level info message
  *
  */
 
@@ -179,7 +300,7 @@ void PlanMissionPlugin::PrintInfo(const std::string& message) {
 /**
  * PrintWarning function
  *
- * Prints ROS log level warning message
+ * Prints to plugin status and ROS log level warning message
  *
  */
 
@@ -356,13 +477,9 @@ void PlanMissionPlugin::Draw(double x, double y, double scale) {
           glVertex2d(route.points[i].position().x(),
                      route.points[i].position().y());
         }
-
         glEnd();
       }
-
-      PrintInfo("OK");
     }
-
     // Draw waypoints
 
     glPointSize(20);
@@ -376,7 +493,7 @@ void PlanMissionPlugin::Draw(double x, double y, double scale) {
     }
     glEnd();
   } else {
-    PrintError("Failed to transform.");
+    PrintError("Waypoint transform cannot be retrieved");
   }
 }
 
@@ -430,6 +547,12 @@ void PlanMissionPlugin::LoadConfig(const YAML::Node& node,
     node["start_from_vehicle"] >> start_from_vehicle;
     ui_.start_from_vehicle->setChecked(start_from_vehicle);
   }
+
+  if (node["mission_command_topic"]) {
+    std::string mission_command_topic;
+    node["mission_command_topic"] >> mission_command_topic;
+    ui_.mission_command_topic->setText(mission_command_topic.c_str());
+  }
 }
 
 void PlanMissionPlugin::SaveConfig(YAML::Emitter& emitter,
@@ -445,4 +568,7 @@ void PlanMissionPlugin::SaveConfig(YAML::Emitter& emitter,
   bool start_from_vehicle = ui_.start_from_vehicle->isChecked();
   emitter << YAML::Key << "start_from_vehicle" << YAML::Value
           << start_from_vehicle;
+
+  std::string mission_command_topic = ui_.mission_command_topic->text().toStdString();
+  emitter << YAML::Key << "mission_command_topic" << YAML::Value << mission_command_topic_;
 }
