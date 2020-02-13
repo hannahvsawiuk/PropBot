@@ -20,6 +20,8 @@ message_generation
 add_message_files(
   FILES
   Mission.msg
+  MissionCommand.msg
+  MissionCommandCode.msg
 )
 
 generate_messages(
