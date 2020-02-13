@@ -65,18 +65,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Mission Topic:</string>
-     </property>
-    </widget>
-   </item>
    <item row="6" column="2">
     <widget class="mapviz::ColorButton" name="color">
      <property name="maximumSize">
@@ -93,15 +81,6 @@
      </property>
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="mission_topic">
-     <property name="font">
-      <font>
-       <pointsize>-1</pointsize>
-      </font>
      </property>
     </widget>
    </item>
@@ -156,21 +135,6 @@
       <string>Clear</string>
      </property>
     </widget>
-   </item>
-    <item row="12" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="font">
-      <font>
-       <pointsize>-1</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Mission Command Topic:</string>
-     </property>
-    </widget>
-   </item>
-    <item row="12" column="2">
-    <widget class="QLineEdit" name="mission_command_topic"/>
    </item>
 
    <item row="13" column="2">

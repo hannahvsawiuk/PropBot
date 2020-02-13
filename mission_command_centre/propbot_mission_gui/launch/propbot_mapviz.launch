@@ -1,6 +1,9 @@
 <launch>
-
-  <node pkg="mapviz" type="mapviz" name="mapviz"></node>
+  
+  <node pkg="mapviz" type="mapviz" name="mapviz">
+  <rosparam param="mission_topic">"mission_topic"</rosparam>
+  <rosparam param="mission_command_topic">"mission_command_topic"</rosparam>
+  </node>
 
   <node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin" >
     <param name="local_xy_frame" value="/map"/>

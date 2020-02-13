@@ -51,7 +51,6 @@
 #include <swri_transform_util/frames.h>
 #include <marti_nav_msgs/PlanRoute.h>
 
-
 // msg headers
 #include <mapviz_plugins/Mission.h>
 #include <mapviz_plugins/MissionCommand.h>
@@ -66,6 +65,7 @@ namespace sru = swri_route_util;
 namespace stu = swri_transform_util;
 
 using namespace mapviz_plugins;
+constexpr const char *mapviz_node_str = "/mapviz";
 
 /**
  * PlanMissionPlugin constructor
@@ -79,7 +79,8 @@ PlanMissionPlugin::PlanMissionPlugin()
       selected_point_(-1),
       is_mouse_down_(false),
       max_ms_(Q_INT64_C(500)),
-      max_distance_(2.0) {
+      max_distance_(2.0)
+{
   ui_.setupUi(config_widget_);
 
   ui_.color->setColor(Qt::green);
@@ -95,7 +96,6 @@ PlanMissionPlugin::PlanMissionPlugin()
   // Connect UI button with their respective actions
   QObject::connect(ui_.clear, SIGNAL(clicked()), this, SLOT(Clear()));
 
-
   QObject::connect(ui_.upload_mission, SIGNAL(clicked()), this,
                    SLOT(UploadMission()));
 
@@ -107,20 +107,24 @@ PlanMissionPlugin::PlanMissionPlugin()
                    SLOT(ResumeMissionCommand()));
   QObject::connect(ui_.end_mission, SIGNAL(clicked()), this,
                    SLOT(EndMissionCommand()));
-}
 
+  mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>("/mapviz/mission_command", 10, true);
+
+  mission_pub_ = node_.advertise<mapviz_plugins::Mission>("/mapviz/mission", 10, true);
+}
 
 /**
  * PlanMissionPlugin destructor
  *
  */
 
-PlanMissionPlugin::~PlanMissionPlugin() {
-  if (map_canvas_) {
+PlanMissionPlugin::~PlanMissionPlugin()
+{
+  if (map_canvas_)
+  {
     map_canvas_->removeEventFilter(this);
   }
 }
-
 
 /**
  * StartMissionCommand function
@@ -129,10 +133,11 @@ PlanMissionPlugin::~PlanMissionPlugin() {
  *
  */
 
-void PlanMissionPlugin::StartMissionCommand(){
+void PlanMissionPlugin::StartMissionCommand()
+{
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
   PrintInfo("Starting mission");
-  if(SendMissionCommand( mission_command_code ))
+  if (SendMissionCommand(mission_command_code))
   {
     PrintInfo("Mission started");
   }
@@ -140,9 +145,7 @@ void PlanMissionPlugin::StartMissionCommand(){
   {
     PrintError("Failed to start mission");
   }
-  
 }
-
 
 /**
  * PauseMissionCommand function
@@ -151,10 +154,11 @@ void PlanMissionPlugin::StartMissionCommand(){
  *
  */
 
-void PlanMissionPlugin::PauseMissionCommand(){
+void PlanMissionPlugin::PauseMissionCommand()
+{
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
   PrintInfo("Pausing mission");
-  if(SendMissionCommand( mission_command_code ))
+  if (SendMissionCommand(mission_command_code))
   {
     PrintInfo("Mission paused");
   }
@@ -164,8 +168,6 @@ void PlanMissionPlugin::PauseMissionCommand(){
   }
 }
 
-
-
 /**
  * ResumeMissionCommand function
  *
@@ -173,10 +175,11 @@ void PlanMissionPlugin::PauseMissionCommand(){
  *
  */
 
-void PlanMissionPlugin::ResumeMissionCommand(){
+void PlanMissionPlugin::ResumeMissionCommand()
+{
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
   PrintInfo("Resuming mission");
-  if(SendMissionCommand( mission_command_code ))
+  if (SendMissionCommand(mission_command_code))
   {
     PrintInfo("Mission resumed");
   }
@@ -193,10 +196,11 @@ void PlanMissionPlugin::ResumeMissionCommand(){
  *
  */
 
-void PlanMissionPlugin::EndMissionCommand(){
+void PlanMissionPlugin::EndMissionCommand()
+{
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
   PrintInfo("Ending mission");
-  if(SendMissionCommand( mission_command_code ))
+  if (SendMissionCommand(mission_command_code))
   {
     PrintInfo("Mission ended");
   }
@@ -206,30 +210,22 @@ void PlanMissionPlugin::EndMissionCommand(){
   }
 }
 
-
-
-bool PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
+bool PlanMissionPlugin::SendMissionCommand(uint16_t command_code)
+{
   mapviz_plugins::MissionCommand mission_command;
   mission_command.header.stamp = ros::Time::now();
   mission_command.command = command_code;
-  mission_command_topic_ = ui_.mission_command_topic->text().toStdString();
-  if (!mission_command_topic_.empty()) {
-    mission_command_pub_.shutdown();
-    mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>(mission_command_topic_, 1, true);
-    mission_command_pub_.publish(mission_command);
-    return true;
-  } else {
-    PrintError("Mission Topic is empty");
-    return false;
-  }
-
+  mission_command_pub_.publish(mission_command);
+  return true;
 }
 
-
-void PlanMissionPlugin::UploadMission() {
+void PlanMissionPlugin::UploadMission()
+{
   PrintInfo("Uploading mission");
-  // return if a single waypoint has not been set 
-  if (gps_waypoints_.size() < 1) {
+  // return if a single waypoint has not been set
+  if (gps_waypoints_.size() < 1)
+  {
+    PrintError("No waypoints were set!");
     return;
   }
 
@@ -239,17 +235,7 @@ void PlanMissionPlugin::UploadMission() {
   mission.header.frame_id = stu::_wgs84_frame;
   mission.header.stamp = ros::Time::now();
   mission.waypoints = gps_waypoints_;
-
-  // publish mission ROS message to user set topic
-  mission_topic_ = ui_.mission_topic->text().toStdString();
-  if (!mission_topic_.empty()) {
-    mission_pub_.shutdown();
-    mission_pub_ = node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
-    mission_pub_.publish(mission);
-    PrintInfo("Mission uploaded");
-  } else {
-    PrintError("Mission Topic is empty");
-  }
+  mission_pub_.publish(mission);
 }
 
 /**
@@ -259,7 +245,6 @@ void PlanMissionPlugin::UploadMission() {
  *
  */
 
-
 /**
  * Clear function
  *
@@ -267,11 +252,11 @@ void PlanMissionPlugin::UploadMission() {
  *
  */
 
-void PlanMissionPlugin::Clear() {
+void PlanMissionPlugin::Clear()
+{
   gps_waypoints_.clear();
   route_preview_ = sru::RoutePtr();
 }
-
 
 /**
  * PrintError function
@@ -280,10 +265,10 @@ void PlanMissionPlugin::Clear() {
  *
  */
 
-void PlanMissionPlugin::PrintError(const std::string& message) {
+void PlanMissionPlugin::PrintError(const std::string &message)
+{
   PrintErrorHelper(ui_.status, message, 1.0);
 }
-
 
 /**
  * PrintInfo function
@@ -292,10 +277,10 @@ void PlanMissionPlugin::PrintError(const std::string& message) {
  *
  */
 
-void PlanMissionPlugin::PrintInfo(const std::string& message) {
+void PlanMissionPlugin::PrintInfo(const std::string &message)
+{
   PrintInfoHelper(ui_.status, message, 1.0);
 }
-
 
 /**
  * PrintWarning function
@@ -304,38 +289,44 @@ void PlanMissionPlugin::PrintInfo(const std::string& message) {
  *
  */
 
-void PlanMissionPlugin::PrintWarning(const std::string& message) {
+void PlanMissionPlugin::PrintWarning(const std::string &message)
+{
   PrintWarningHelper(ui_.status, message, 1.0);
 }
 
-QWidget* PlanMissionPlugin::GetConfigWidget(QWidget* parent) {
+QWidget *PlanMissionPlugin::GetConfigWidget(QWidget *parent)
+{
   config_widget_->setParent(parent);
 
   return config_widget_;
 }
 
-bool PlanMissionPlugin::Initialize(QGLWidget* canvas) {
-  map_canvas_ = static_cast<mapviz::MapCanvas*>(canvas);
+bool PlanMissionPlugin::Initialize(QGLWidget *canvas)
+{
+  map_canvas_ = static_cast<mapviz::MapCanvas *>(canvas);
   map_canvas_->installEventFilter(this);
 
   initialized_ = true;
   return true;
 }
 
-bool PlanMissionPlugin::eventFilter(QObject* object, QEvent* event) {
-  switch (event->type()) {
-    case QEvent::MouseButtonPress:
-      return handleMousePress(static_cast<QMouseEvent*>(event));
-    case QEvent::MouseButtonRelease:
-      return handleMouseRelease(static_cast<QMouseEvent*>(event));
-    case QEvent::MouseMove:
-      return handleMouseMove(static_cast<QMouseEvent*>(event));
-    default:
-      return false;
+bool PlanMissionPlugin::eventFilter(QObject *object, QEvent *event)
+{
+  switch (event->type())
+  {
+  case QEvent::MouseButtonPress:
+    return handleMousePress(static_cast<QMouseEvent *>(event));
+  case QEvent::MouseButtonRelease:
+    return handleMouseRelease(static_cast<QMouseEvent *>(event));
+  case QEvent::MouseMove:
+    return handleMouseMove(static_cast<QMouseEvent *>(event));
+  default:
+    return false;
   }
 }
 
-bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMousePress(QMouseEvent *event)
+{
   selected_point_ = -1;
   int closest_point = 0;
   double closest_distance = std::numeric_limits<double>::max();
@@ -346,8 +337,10 @@ bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
   QPointF point = event->posF();
 #endif
   stu::Transform transform;
-  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
-    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform))
+  {
+    for (size_t i = 0; i < gps_waypoints_.size(); i++)
+    {
       tf::Vector3 waypoint(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y,
                            0.0);
       waypoint = transform * waypoint;
@@ -357,18 +350,23 @@ bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
 
       double distance = QLineF(transformed, point).length();
 
-      if (distance < closest_distance) {
+      if (distance < closest_distance)
+      {
         closest_distance = distance;
         closest_point = static_cast<int>(i);
       }
     }
   }
 
-  if (event->button() == Qt::LeftButton) {
-    if (closest_distance < 15) {
+  if (event->button() == Qt::LeftButton)
+  {
+    if (closest_distance < 15)
+    {
       selected_point_ = closest_point;
       return true;
-    } else {
+    }
+    else
+    {
       is_mouse_down_ = true;
 #if QT_VERSION >= 0x050000
       mouse_down_pos_ = event->localPos();
@@ -378,8 +376,11 @@ bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
       mouse_down_time_ = QDateTime::currentMSecsSinceEpoch();
       return false;
     }
-  } else if (event->button() == Qt::RightButton) {
-    if (closest_distance < 15) {
+  }
+  else if (event->button() == Qt::RightButton)
+  {
+    if (closest_distance < 15)
+    {
       gps_waypoints_.erase(gps_waypoints_.begin() + closest_point);
       return true;
     }
@@ -388,17 +389,20 @@ bool PlanMissionPlugin::handleMousePress(QMouseEvent* event) {
   return false;
 }
 
-bool PlanMissionPlugin::handleMouseRelease(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMouseRelease(QMouseEvent *event)
+{
 #if QT_VERSION >= 0x050000
   QPointF point = event->localPos();
 #else
   QPointF point = event->posF();
 #endif
   if (selected_point_ >= 0 &&
-      static_cast<size_t>(selected_point_) < gps_waypoints_.size()) {
+      static_cast<size_t>(selected_point_) < gps_waypoints_.size())
+  {
     stu::Transform transform;
     if (tf_manager_->GetTransform(stu::_wgs84_frame, target_frame_,
-                                  transform)) {
+                                  transform))
+    {
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
       position = transform * position;
@@ -408,7 +412,9 @@ bool PlanMissionPlugin::handleMouseRelease(QMouseEvent* event) {
 
     selected_point_ = -1;
     return true;
-  } else if (is_mouse_down_) {
+  }
+  else if (is_mouse_down_)
+  {
     qreal distance = QLineF(mouse_down_pos_, point).length();
     qint64 msecsDiff = QDateTime::currentMSecsSinceEpoch() - mouse_down_time_;
 
@@ -416,13 +422,15 @@ bool PlanMissionPlugin::handleMouseRelease(QMouseEvent* event) {
     // and was held for shorter than the maximum time..  This prevents click
     // events from being fired if the user is dragging the mouse across the map
     // or just holding the cursor in place.
-    if (msecsDiff < max_ms_ && distance <= max_distance_) {
+    if (msecsDiff < max_ms_ && distance <= max_distance_)
+    {
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
 
       stu::Transform transform;
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
       if (tf_manager_->GetTransform(stu::_wgs84_frame, target_frame_,
-                                    transform)) {
+                                    transform))
+      {
         position = transform * position;
 
         geometry_msgs::Pose pose;
@@ -437,9 +445,11 @@ bool PlanMissionPlugin::handleMouseRelease(QMouseEvent* event) {
   return false;
 }
 
-bool PlanMissionPlugin::handleMouseMove(QMouseEvent* event) {
+bool PlanMissionPlugin::handleMouseMove(QMouseEvent *event)
+{
   if (selected_point_ >= 0 &&
-      static_cast<size_t>(selected_point_) < gps_waypoints_.size()) {
+      static_cast<size_t>(selected_point_) < gps_waypoints_.size())
+  {
 #if QT_VERSION >= 0x050000
     QPointF point = event->localPos();
 #else
@@ -447,7 +457,8 @@ bool PlanMissionPlugin::handleMouseMove(QMouseEvent* event) {
 #endif
     stu::Transform transform;
     if (tf_manager_->GetTransform(stu::_wgs84_frame, target_frame_,
-                                  transform)) {
+                                  transform))
+    {
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
       position = transform * position;
@@ -460,11 +471,15 @@ bool PlanMissionPlugin::handleMouseMove(QMouseEvent* event) {
   return false;
 }
 
-void PlanMissionPlugin::Draw(double x, double y, double scale) {
+void PlanMissionPlugin::Draw(double x, double y, double scale)
+{
   stu::Transform transform;
-  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
-    if (!route_failed_) {
-      if (route_preview_) {
+  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform))
+  {
+    if (!route_failed_)
+    {
+      if (route_preview_)
+      {
         sru::Route route = *route_preview_;
         sru::transform(route, transform, target_frame_);
 
@@ -473,7 +488,8 @@ void PlanMissionPlugin::Draw(double x, double y, double scale) {
         glColor4d(color.redF(), color.greenF(), color.blue(), 1.0);
         glBegin(GL_LINE_STRIP);
 
-        for (size_t i = 0; i < route.points.size(); i++) {
+        for (size_t i = 0; i < route.points.size(); i++)
+        {
           glVertex2d(route.points[i].position().x(),
                      route.points[i].position().y());
         }
@@ -486,19 +502,23 @@ void PlanMissionPlugin::Draw(double x, double y, double scale) {
     glColor4f(0.0, 1.0, 1.0, 1.0);
     glBegin(GL_POINTS);
 
-    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+    for (size_t i = 0; i < gps_waypoints_.size(); i++)
+    {
       tf::Vector3 point(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y, 0);
       point = transform * point;
       glVertex2d(point.x(), point.y());
     }
     glEnd();
-  } else {
+  }
+  else
+  {
     PrintError("Waypoint transform cannot be retrieved");
   }
 }
 
-void PlanMissionPlugin::Paint(QPainter* painter, double x, double y,
-                            double scale) {
+void PlanMissionPlugin::Paint(QPainter *painter, double x, double y,
+                              double scale)
+{
   painter->save();
   painter->resetTransform();
 
@@ -507,8 +527,10 @@ void PlanMissionPlugin::Paint(QPainter* painter, double x, double y,
   painter->setFont(QFont("DejaVu Sans Mono", 7));
 
   stu::Transform transform;
-  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform)) {
-    for (size_t i = 0; i < gps_waypoints_.size(); i++) {
+  if (tf_manager_->GetTransform(target_frame_, stu::_wgs84_frame, transform))
+  {
+    for (size_t i = 0; i < gps_waypoints_.size(); i++)
+    {
       tf::Vector3 point(gps_waypoints_[i].position.x, gps_waypoints_[i].position.y, 0);
       point = transform * point;
       QPointF gl_point =
@@ -524,51 +546,40 @@ void PlanMissionPlugin::Paint(QPainter* painter, double x, double y,
   painter->restore();
 }
 
-void PlanMissionPlugin::LoadConfig(const YAML::Node& node,
-                                 const std::string& path) {
-  if (node["route_topic"]) {
+void PlanMissionPlugin::LoadConfig(const YAML::Node &node,
+                                   const std::string &path)
+{
+  if (node["route_topic"])
+  {
     std::string route_topic;
     node["route_topic"] >> route_topic;
     ui_.route_topic->setText(route_topic.c_str());
   }
-  if (node["color"]) {
+  if (node["color"])
+  {
     std::string color;
     node["color"] >> color;
-    ui_.color->setColor(QColor(color.c_str()));fabsf64;
+    ui_.color->setColor(QColor(color.c_str()));
+    fabsf64;
   }
 
-  if (node["mission_topic"]) {
-    std::string mission_topic;
-    node["mission_topic"] >> mission_topic;
-    ui_.mission_topic->setText(mission_topic.c_str());
-  }
-  if (node["start_from_vehicle"]) {
+  if (node["start_from_vehicle"])
+  {
     bool start_from_vehicle;
     node["start_from_vehicle"] >> start_from_vehicle;
     ui_.start_from_vehicle->setChecked(start_from_vehicle);
   }
-
-  if (node["mission_command_topic"]) {
-    std::string mission_command_topic;
-    node["mission_command_topic"] >> mission_command_topic;
-    ui_.mission_command_topic->setText(mission_command_topic.c_str());
-  }
 }
 
-void PlanMissionPlugin::SaveConfig(YAML::Emitter& emitter,
-                                 const std::string& path) {
+void PlanMissionPlugin::SaveConfig(YAML::Emitter &emitter,
+                                   const std::string &path)
+{
   emitter << YAML::Key << "route_topic" << YAML::Value << route_topic_;
 
   std::string color = ui_.color->color().name().toStdString();
   emitter << YAML::Key << "color" << YAML::Value << color;
 
-  std::string mission_topic = ui_.mission_topic->text().toStdString();
-  emitter << YAML::Key << "mission_topic" << YAML::Value << mission_topic_;
-
   bool start_from_vehicle = ui_.start_from_vehicle->isChecked();
   emitter << YAML::Key << "start_from_vehicle" << YAML::Value
           << start_from_vehicle;
-
-  std::string mission_command_topic = ui_.mission_command_topic->text().toStdString();
-  emitter << YAML::Key << "mission_command_topic" << YAML::Value << mission_command_topic_;
 }

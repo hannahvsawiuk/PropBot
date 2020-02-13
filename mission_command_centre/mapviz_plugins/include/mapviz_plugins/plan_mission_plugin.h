@@ -29,7 +29,6 @@
 
 #pragma once
 
-
 #include <string>
 #include <vector>
 
@@ -59,77 +58,75 @@ namespace mapviz_plugins
  * This plugin class allows the user to set mission waypoints on the Mapviz GUI and upload them to the robot
  *
  */
-  class PlanMissionPlugin : public mapviz::MapvizPlugin
+class PlanMissionPlugin : public mapviz::MapvizPlugin
+{
+  Q_OBJECT
+
+public:
+  PlanMissionPlugin();
+  virtual ~PlanMissionPlugin();
+
+  bool Initialize(QGLWidget *canvas) override;
+  void Shutdown() override {}
+
+  void Draw(double x, double y, double scale) override;
+  void Paint(QPainter *painter, double x, double y, double scale) override;
+
+  void Transform() override {}
+
+  void LoadConfig(const YAML::Node &node, const std::string &path) override;
+  void SaveConfig(YAML::Emitter &emitter, const std::string &path) override;
+
+  QWidget *GetConfigWidget(QWidget *parent) override;
+
+  bool SupportsPainting() override
   {
-    Q_OBJECT
+    return true;
+  }
 
-   public:
+protected:
+  void PrintError(const std::string &message) override;
+  void PrintInfo(const std::string &message) override;
+  void PrintWarning(const std::string &message) override;
+  bool eventFilter(QObject *object, QEvent *event) override;
+  bool handleMousePress(QMouseEvent *);
+  bool handleMouseRelease(QMouseEvent *);
+  bool handleMouseMove(QMouseEvent *);
 
-    PlanMissionPlugin();
-    virtual ~PlanMissionPlugin();
+protected Q_SLOTS:
+  void Clear();
+  void UploadMission();
+  void StartMissionCommand();
+  void PauseMissionCommand();
+  void ResumeMissionCommand();
+  void EndMissionCommand();
 
-    bool Initialize(QGLWidget* canvas) override;
-    void Shutdown() override {}
+private:
+  bool SendMissionCommand(uint16_t command_code);
+  Ui::plan_mission_config ui_;
+  QWidget *config_widget_;
+  mapviz::MapCanvas *map_canvas_;
 
-    void Draw(double x, double y, double scale) override;
-    void Paint(QPainter* painter, double x, double y, double scale) override;
+  std::string route_topic_;
+  std::string mission_topic_;
+  std::string mission_command_topic_;
 
-    void Transform() override {}
+  ros::Publisher mission_pub_;
+  ros::Publisher mission_command_pub_;
+  ros::Subscriber route_sub_;
+  ros::Timer retry_timer_;
 
-    void LoadConfig(const YAML::Node& node, const std::string& path) override;
-    void SaveConfig(YAML::Emitter& emitter, const std::string& path) override;
+  bool route_failed_;
+  swri_route_util::RoutePtr route_preview_;
 
-    QWidget* GetConfigWidget(QWidget* parent) override;
+  std::vector<geometry_msgs::Pose> gps_waypoints_;
 
-    bool SupportsPainting() override
-    {
-      return true;
-    }
+  int selected_point_;
+  bool is_mouse_down_;
+  QPointF mouse_down_pos_;
+  qint64 mouse_down_time_;
 
-   protected:
-    void PrintError(const std::string& message) override;
-    void PrintInfo(const std::string& message) override;
-    void PrintWarning(const std::string& message) override;
-    bool eventFilter(QObject *object, QEvent* event) override;
-    bool handleMousePress(QMouseEvent *);
-    bool handleMouseRelease(QMouseEvent *);
-    bool handleMouseMove(QMouseEvent *);
-
-   protected Q_SLOTS:
-    void Clear();
-    void UploadMission();
-    void StartMissionCommand();
-    void PauseMissionCommand();
-    void ResumeMissionCommand();
-    void EndMissionCommand();
-
-   private:
-    bool SendMissionCommand( uint16_t command_code );
-    Ui::plan_mission_config ui_;
-    QWidget* config_widget_;
-    mapviz::MapCanvas* map_canvas_;
-
-    std::string route_topic_;
-    std::string mission_topic_;
-    std::string mission_command_topic_;
-
-    ros::Publisher mission_pub_;
-    ros::Publisher mission_command_pub_;
-    ros::Subscriber route_sub_;
-    ros::Timer retry_timer_;
-
-    bool route_failed_;
-    swri_route_util::RoutePtr route_preview_;
-
-    std::vector<geometry_msgs::Pose> gps_waypoints_;
-
-    int selected_point_;
-    bool is_mouse_down_;
-    QPointF mouse_down_pos_;
-    qint64 mouse_down_time_;
-
-    qint64 max_ms_;
-    qreal max_distance_;
-
-  };
-}
+  qint64 max_ms_;
+  qreal max_distance_;
+};
+} // namespace mapviz_plugins
