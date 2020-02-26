@@ -10,8 +10,8 @@
 // Define PROPBOT to change config
 // #define PROPBOT
 
-volatile bool autonomy = false;
-volatile Array<wheel_motor_command_t, NUM_WHEELS> commands = all_brake_command;
+static bool autonomy = false;
+static Array<wheel_motor_command_t, NUM_WHEELS> commands = all_brake_command;
 
 Wheel * wheel_motors[NUM_WHEELS];
 
@@ -83,7 +83,7 @@ void setup()
             wheel_motors[i] = &Wheel(i);
         }
     #else 
-        Serial.print("Setting up DC motors");
+        Serial.println("Setting up DC motors");
         // Mini RC
         for (int i = 0; i < 2; i++ ) {
             Serial.println(i + 1);

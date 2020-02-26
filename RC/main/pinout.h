@@ -1,7 +1,7 @@
 #ifndef PINOUT_H
 #define PINOUT_H
 /**
- * @brief Pin definitions for the wheels
+ * @brief Pin definitions for the wheels on Propbot
  * 
  * R=Right L=Left  | F=Front B=Back 
  *      
@@ -9,23 +9,27 @@
  * 
  */
 #ifdef PROPBOT
-    #define RF_controlPin          2    //(RF MP)
-    #define RF_brakeReleasePin     3    //(RF BP)
-    #define RF_dirPin              4    //(RF DP)
+    // Right Front
+    #define RF_controlPin          2    // Motor control pin (PWM)
+    #define RF_brakeReleasePin     3    // Brake release pin
+    #define RF_dirPin              4    // Direction pin
 
-    #define RB_controlPin          5    //(RB MP)
-    #define RB_brakeReleasePin     8    //(RB BP)
-    #define RB_dirPin              9    //(RB DP)
+    // Right Back
+    #define RB_controlPin          5
+    #define RB_brakeReleasePin     8    
+    #define RB_dirPin              9    
 
-    #define LF_controlPin          6    //(LF MP)
-    #define LF_brakeReleasePin     10   //(LF BP)
-    #define LF_dirPin              11   //(LF DP)
+    // Left Front
+    #define LF_controlPin          6    
+    #define LF_brakeReleasePin     10   
+    #define LF_dirPin              11   
 
-    #define LB_controlPin          7    //(LB MP)
-    #define LB_brakeReleasePin     12   //(LB BP)
-    #define LB_dirPin              13   //(LB DP)
+    // Left Back
+    #define LB_controlPin          7    
+    #define LB_brakeReleasePin     12  
+    #define LB_dirPin              13   
 #else
-    // Else pins defined by the UCMotor header
+    // Else, pins defined in the UCMotor header: <UCMotor.h>
     #include "UCMotor.h"
 #endif
 

@@ -34,10 +34,7 @@ typedef struct wheel_motor_command_t
 /* Define structures and values for Propbot */
 #ifdef PROPBOT
 
-    #define NUM_WHEELS 4
-
-
-
+    #define NUM_WHEELS 4 
     /**
      * @brief Wheel index mapping
      * 
@@ -61,12 +58,12 @@ typedef struct wheel_motor_command_t
         End = 4U
     } wheel_indices;
 
-    /* Pseudo map bc Arduino does not support STL */
+    // Pseudo map bc Arduino does not support STL
     const Array<String, NUM_WHEELS> wheel_index_name_map = {"RF", "RB", "LF", "LB"};
 
     /**
      * @brief wheel motor pin struct
-     * 
+     *
      */
     typedef struct wheel_pins_t {
         uint8_t control;
@@ -74,7 +71,7 @@ typedef struct wheel_motor_command_t
         uint8_t dir;
     };
 
-    /* default motor commands */
+    /* Default motor commands */
     // Brake: duty = 0, brake on
     const Array<wheel_motor_command_t, NUM_WHEELS> all_brake_command = {{
         {0.0, ENGAGE_BRAKE, FORWARD},
@@ -106,7 +103,6 @@ typedef struct wheel_motor_command_t
      *        update the register value with the duty wrt to the TOP value to alter the duty
      * 
      */
-
     #if defined(__AVR_ATmega328P__)
         uint8_t* wheel_to_register[4] = {
             &OCR2A,     // #1, pin 11
@@ -123,9 +119,12 @@ typedef struct wheel_motor_command_t
         };
     #else
         #error "Architecture not supported"
-    #endif //Architecture
+    #endif // Architecture
 
-    /*  Wheel Class */
+    /**
+     * @brief Wheel class - Propbot
+     * 
+     */
     class Wheel
     {
     private:
@@ -135,14 +134,18 @@ typedef struct wheel_motor_command_t
         uint8_t wheel_index;
         Wheel(uint8_t wheel_index);
         ~Wheel();
-        sendCommand(wheel_motor_command_t command);
-        getSpeed();
+        void sendCommand(wheel_motor_command_t command);
+        uint16_t getSpeed();
     
     };
 #else 
-    /* Else, define values for mini rc */
+    // Else, define values for mini rc
     #define NUM_WHEELS 2 // driving with only two drive signals
 
+    /**
+     * @brief Mini RC car wheel index mapping
+     *
+     */
     typedef enum wheel_index_t
     {
         Start   = -1,
@@ -151,22 +154,29 @@ typedef struct wheel_motor_command_t
         End     = 2U,
     } wheel_indices;
 
+    // Associated names for wheel indices
     const Array<String, NUM_WHEELS> wheel_index_name_map = {"L", "R"};
     
+    // Command for engaging braking on all wheels
     const Array<wheel_motor_command_t, NUM_WHEELS> all_brake_command = {{
         {0.0, ENGAGE_BRAKE, FORWARD},
         {0.0, ENGAGE_BRAKE, FORWARD}
     }};
 
+    /**
+     * @brief Wheel class - Mini RC car
+     * 
+     */
     class Wheel
     {
     private:
-    public:
         UC_DCMotor uc_motor;
+    public:
         uint8_t wheel_index;
         Wheel(uint8_t wheel_index);
         ~Wheel();
-        sendCommand(wheel_motor_command_t command);
+        void sendCommand(wheel_motor_command_t command);
+        uint16_t getSpeed();
     };
 #endif // PROPBOT
 

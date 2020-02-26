@@ -2,67 +2,81 @@
 
 #ifdef PROPBOT
 
+    /**
+     * @brief Parametrized Wheel object constructor 
+     * 
+     */
     Wheel::Wheel(uint8_t wheel_index)
         : 
         , wheel_index(wheel_index)
         , wheel_pins{wheel_to_pins[wheel_index]}
         , control_register{wheel_to_register[wheel_index]}
-    {
-    }
-
+    {}
+    
+    /**
+     * @brief Default Wheel object destructor
+     * 
+     */
     Wheel::~Wheel() 
     {
-        delete control_register
+        delete control_register;
     }
-
-    Wheel::sendCommand(wheel_motor_command_t command)
-    {
-        /* Custom code for either CAN commands or PWM setting */
-
-        uint16_t duty_cycle = command.duty_cycle * TOP;
-        
+    
+    /**
+     * @brief Sends commands to the motor drivers
+     * 
+     * @param command the structured command to be sent 
+     */
+    void Wheel::sendCommand(wheel_motor_command_t command)
+    {       
         // disable interrupts
         _disableInterrupts();
         // update the brake state
         _digitalWrite(wheel_pins.brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
-        // update the duty
+        // update the output compare register with the scaled duty value
         *control_register = command.duty_cycle * TOP;
         // update the direction
         _digitalWrite(wheel_pins.dir, (command.dir == DIR_FW) ? HIGH : LOW);
         // re-enable interrupts
         _enableInterrupts();
-        }
-        return 0;
     }
 
     /**
-     * @brief Construct a new Wheel::get_speed object
+     * @brief Retrieves wheel speeds from encoders
      * 
      */
-
     uint16_t Wheel::get_speed()
     {
-        // return wheel speed from encoders
-        return 0;
+        #error "Not yet implemented"
     }
 #else
     /* Mini RC wheel class */
+
+    /**
+     * @brief Parametrized Wheel object constructor 
+     * 
+     */
     Wheel::Wheel(uint8_t wheel_index)
     : wheel_index(wheel_index)
     , uc_motor(UC_DCMotor(wheel_index))
     {
-        // uc_motor = UC_DCMotor(wheel_index);
         Serial.println(String("Init motor: ") + wheel_index);
         uc_motor.run(STOP);
         uc_motor.setSpeed(0);
     }
 
-    Wheel::~Wheel() 
-    {
-        // delete uc_motor;
-    }
+    /**
+     * @brief Default Wheel object destructor 
+     * 
+     */
+    Wheel::~Wheel() {}
 
-    Wheel::sendCommand(wheel_motor_command_t command)
+    /**
+     * @brief Sends commands to the motor drivers
+     * 
+     * @param command the structured command to be sent
+     */
+    void Wheel::sendCommand(wheel_motor_command_t command)
     {
         // BRAKE condition
         if (command.brake_release == ENGAGE_BRAKE) {   
@@ -74,13 +88,21 @@
 
         // Step 1: set rotation direction
         if (command.dir == DIR_FW) {
-            // Serial.println("FW");
             uc_motor.run(FORWARD);
         } else {
-            // Serial.println("BW");
             uc_motor.run(BACKWARD);
         }
+        // Step 2: set the speed
         uc_motor.setSpeed(command.duty_cycle * TOP);
+    }
+
+    /**
+     * @brief Retrieves wheel speeds from encoders
+     * 
+     */
+    uint16_t Wheel::getSpeed()
+    {
+        #error "Not yet implemented"
     }
 
 #endif

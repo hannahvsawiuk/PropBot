@@ -27,7 +27,7 @@ float linMapToFloat(float x, float in_min, float in_max, float out_min, float ou
 }
 
 /**
- * @brief Returns the input exponentially mapped to [0, 1]: -ln(1-x)/LN_SCALE_FACTOR
+ * @brief Returns the input logarithmically mapped to [0, 1]: -ln(1-x)/LN_SCALE_FACTOR
  * 
  * @param x         input value
  * @param in_min    input minimum
@@ -35,7 +35,7 @@ float linMapToFloat(float x, float in_min, float in_max, float out_min, float ou
  * @param out_min   output minimum
  * @param out_max   output maximum
  * @param bw        backwards flag. Inverts the value before exponentially scaling
- * @return float 
+ * @return float    the 
  */
 float logMapToFloat(float x, float in_min, float in_max, float out_min, float out_max, bool bw = false)
 {
@@ -52,6 +52,12 @@ float logMapToFloat(float x, float in_min, float in_max, float out_min, float ou
     );
 }    
 
+/**
+ * @brief Custom Array template class (since Arduino doesn't have built in STL support)
+ * 
+ * @tparam T Object type
+ * @tparam N Number of objects 
+ */
 template <class T, size_t N>
 struct Array {
     // Storage
@@ -84,4 +90,4 @@ struct Array {
     }
 };
 
-#endif // UTIL_H
+#endif // !UTIL_H
