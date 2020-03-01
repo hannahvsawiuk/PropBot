@@ -11,6 +11,13 @@
 
 using namespace propbot;
 
+/**
+ * Upload mission function
+ * 
+ * @brief This function instantiates a mission handler and initializes it with the new mission.
+ * 
+ * @param mission Mission received from mapviz to be uploaded to the robot 
+ */
 void MissionCommandInterface::UploadMission(
     const mapviz_plugins::Mission& mission) {
   std::vector<Waypoint> gps_waypoints;
@@ -28,6 +35,7 @@ void MissionCommandInterface::UploadMission(
   ROS_INFO("Uploading mission with %i waypoints...",
            gps_mission.number_waypoints());
 
+  // Instantiate mission handler with new mission
   try {
     mission_handler_ = std::make_unique<MissionHandler>(gps_mission);
   } catch (const propbot::Exception& e) {
@@ -38,8 +46,18 @@ void MissionCommandInterface::UploadMission(
   ROS_INFO("Successfully uploaded mission to Robot.");
 }
 
+/**
+ * Send Mission Command function
+ * 
+ * @brief This function uses mapviz mission commands and executes the relevant commands using the mission handler.
+ * 
+ * @param mission_command Mission command from mapviz including commands such as start, pause, resume, and end mission
+ * 
+ */
 void MissionCommandInterface::SendMissionCommand(
     const mapviz_plugins::MissionCommand& mission_command) {
+  
+  // Check if a mission handler has been instantiated with a mission
   if (!mission_handler_) {
     ROS_ERROR("No mission has been uploaded!");
     return;
@@ -47,6 +65,7 @@ void MissionCommandInterface::SendMissionCommand(
 
   using command = mapviz_plugins::MissionCommandCode;
 
+  // Call mission handler functions based on mission commands
   switch (mission_command.command) {
     case command::MISSION_START:
       mission_handler_->Start();

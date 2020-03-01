@@ -9,6 +9,13 @@
 
 namespace propbot {
 
+/**
+ * Mission Command Interface
+ *
+ * This class interfaces with the mission command centre mapviz plugins and executes missions.
+ * 
+ */
+
 class MissionCommandInterface {
  public:
   MissionCommandInterface() = delete;
@@ -18,8 +25,12 @@ class MissionCommandInterface {
   void SendMissionCommand(const mapviz_plugins::MissionCommand& mission_command);
 
  private:
+
+  // Pointer to a mission handler
   std::unique_ptr<MissionHandler> mission_handler_;
+
+  // UTM Zone config
   std::string utm_zone_;
 };
 
-}  // namespace propbot
+}  // namespace propbots
