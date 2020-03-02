@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!--- Run execute mission -->
+  <include file="$(find propbot_mission)/launch/execute_mission.launch" />
+
+</launch>
