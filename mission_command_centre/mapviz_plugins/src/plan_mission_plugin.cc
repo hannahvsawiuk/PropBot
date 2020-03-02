@@ -128,7 +128,7 @@ PlanMissionPlugin::~PlanMissionPlugin() {
 /**
  * StartMissionCommand function
  *
- * This function publishes a start mission command to the mission_command_ ROS topic.
+ * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
 
@@ -142,7 +142,7 @@ void PlanMissionPlugin::StartMissionCommand(){
 /**
  * PauseMissionCommand function
  *
- * This function publishes a pause mission command to the mission_command_ ROS topic.
+ * @brief This function publishes a pause mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
 
@@ -157,7 +157,7 @@ void PlanMissionPlugin::PauseMissionCommand(){
 /**
  * ResumeMissionCommand function
  *
- * This function publishes a start mission command to the mission_command_ ROS topic.
+ * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
 
@@ -170,7 +170,7 @@ void PlanMissionPlugin::ResumeMissionCommand(){
 /**
  * EndMissionCommand function
  *
- * This function publishes a start mission command to the mission_command_ ROS topic.
+ * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
 
@@ -180,7 +180,12 @@ void PlanMissionPlugin::EndMissionCommand(){
   SendMissionCommand( mission_command_code );
 }
 
-
+/**
+ * EndMissionCommand function
+ *
+ * @brief This is a helper function which publishes a mission command to the "/mapviz/mission_command" ROS topic.
+ *
+ */
 
 void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
   mapviz_plugins::MissionCommand mission_command;
@@ -189,6 +194,12 @@ void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
   mission_command_pub_.publish(mission_command);
 }
 
+/**
+ * UploadMission function
+ *
+ * @brief This function publishes the mission waypoints to the "/mapviz/mission" ROS topic.
+ *
+ */
 
 void PlanMissionPlugin::UploadMission() {
   PrintInfo("Uploading mission");
@@ -208,18 +219,11 @@ void PlanMissionPlugin::UploadMission() {
   mission_pub_.publish(mission);
 }
 
-/**
- * UploadMission function
- *
- * This function publishes the mission waypoints to a ROS topic.
- *
- */
-
 
 /**
  * Clear function
  *
- * This function clears mission waypoints from class variable and Mapviz GUI
+ * @brief This function clears mission waypoints from class variable and Mapviz GUI
  *
  */
 
@@ -232,7 +236,7 @@ void PlanMissionPlugin::Clear() {
 /**
  * PrintError function
  *
- * Prints to plugin status and ROS log level error message 
+ * @brief This function prints to plugin status and ROS log level error message 
  *
  */
 
@@ -244,7 +248,7 @@ void PlanMissionPlugin::PrintError(const std::string& message) {
 /**
  * PrintInfo function
  *
- * Prints to plugin status and ROS log level info message
+ * @brief This function prints to plugin status and ROS log level info message
  *
  */
 
@@ -256,7 +260,7 @@ void PlanMissionPlugin::PrintInfo(const std::string& message) {
 /**
  * PrintWarning function
  *
- * Prints to plugin status and ROS log level warning message
+ * @brief This function prints to plugin status and ROS log level warning message
  *
  */
 
