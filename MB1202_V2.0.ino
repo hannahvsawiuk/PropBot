@@ -15,27 +15,29 @@ void setup(){
 void loop()
 {
   // Read a sensor at the default address
-  read_the_sensor_example();
-  
-  // Your code here
+  int distance = read_the_sensor_example();
+  if(distance == 25) {
+    Serial.print("Unsafe distance\n");
+     // Shut down the car
+  }
 
 }
 
 //////////////////////////////////////////////////////////
 // Code Example: Read the sensor at the default address //
 //////////////////////////////////////////////////////////
-void read_the_sensor_example(){
+int read_the_sensor_example(){
   boolean error = 0;  //Create a bit to check for catch errors as needed.
-  int range;
+  int distance;
   
   //Take a range reading at the default address of 224
   error = start_sensor(224);    //Start the sensor and collect any error codes.
   if (!error){                  //If you had an error starting the sensor there is little point in reading it as you will get old data.
     delay(100);
-    range = read_sensor(224);   //reading the sensor will return an integer value -- if this value is 0 there was an error
+    distance = read_sensor(224);   //reading the sensor will return an integer value -- if this value is 0 there was an error
     //Serial.print("Distance:");Serial.println(range);Serial.print("cm");
-    Serial.println((String)"Distance:"+range+" cm");
-    if(range == 25) Serial.print("Unsafe distance\n");
+    Serial.println((String)"Distance:"+distance+" cm");
+    return distance;
   }
 }
 
