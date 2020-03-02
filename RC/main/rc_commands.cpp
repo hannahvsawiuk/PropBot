@@ -1,8 +1,18 @@
 #include "rc_commands.h"
 #include "util.h"
-#define DEBUG_MODE
 #include "debug.h"
 
+/**
+ * @brief initializes RC comms
+ * 
+ */
+void initialize_rc()
+{
+    pinMode(RC_RIGHT_CHANNEL_PIN,   INPUT);
+    pinMode(RC_LEFT_CHANNEL_PIN,    INPUT);
+    pinMode(RC_SWA_CHANNEL_PIN,     INPUT);
+    pinMode(RC_SWB_CHANNEL_PIN,     INPUT);
+}
 
 /**
  * @brief fetches RC commands and returns motor commands
@@ -40,26 +50,22 @@ Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands()
     // Forward
     if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
         // map the duty from 0 to 1 given the min and max threshold values
-        // right_duty = logMapToFloat(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1);
         right_duty = linMapToFloat(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1);
     }
     // Backward 
     else if (rc_right < RC_RIGHT_SET_BW_MAX && rc_right > RC_RIGHT_SET_BW_MIN)
     {
-        // right_duty = logMapToFloat(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1, true);
         right_duty = 1 - linMapToFloat(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1);
         right_dir = DIR_BW;
     } 
     /* Left side longitudinal wheel set */
     // Forward
     if (rc_left < RC_LEFT_SET_FW_MAX && rc_left > RC_LEFT_SET_FW_MIN) {
-        // left_duty = logMapToFloat(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1);
         left_duty = linMapToFloat(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1);
     }
     // Backward 
     else if (rc_left < RC_LEFT_SET_BW_MAX && rc_left > RC_LEFT_SET_BW_MIN)
     {
-        // left_duty = logMapToFloat(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1, true);
         left_duty = 1 - linMapToFloat(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1);
         left_dir = DIR_BW;
     }

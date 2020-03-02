@@ -3,6 +3,7 @@
 #include "pinout.h"
 #include "wheel.h"
 #include "util.h"
+#include "types.h"
 
 /*  Define the max and min thresholds for the longitudinal wheel sets */
 // CH2 - right longitudinal wheel set
@@ -23,6 +24,7 @@
 #define RC_SWX_HIGH_MIN             1900
 
 /*  Function prototype for rc commands */
+void initialize_rc();
 Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(); 
 
 #endif // !RC_COMMANDS_H

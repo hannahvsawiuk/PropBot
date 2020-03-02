@@ -1,10 +1,9 @@
-#ifndef Wheel_h
-#define Wheel_h
+#ifndef WHEEL_h
+#define WHEEL_h
 
-#include <Arduino.h>
-#include "pinout.h"
-#include "util.h"
-#include "UCMotor.h"
+#include <Arduino.h>    // For architecture selection
+#include "pinout.h"     // Pin mapping
+#include "types.h"      // Custom data types
 
 /* Define Important Values */
 #if defined(__AVR_ATmega328P__)
@@ -140,6 +139,7 @@ typedef struct wheel_motor_command_t
     };
 #else 
     // Else, define values for mini rc
+    #include "UCMotor.h"    // Mini RC motors
     #define NUM_WHEELS 2 // driving with only two drive signals
 
     /**
@@ -170,7 +170,7 @@ typedef struct wheel_motor_command_t
     class Wheel
     {
     private:
-        UC_DCMotor uc_motor;
+        UC_DCMotor * uc_motor;
     public:
         uint8_t wheel_index;
         Wheel(uint8_t wheel_index);
@@ -180,4 +180,7 @@ typedef struct wheel_motor_command_t
     };
 #endif // PROPBOT
 
-#endif // !Wheel_h
+// Function prototype
+Wheel ** initializeWheels();
+
+#endif // !WHEEL_h
