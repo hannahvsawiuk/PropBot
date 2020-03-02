@@ -19,6 +19,7 @@ using namespace propbot;
 Mission::Mission(const std::string &mission_file, const std::string &utm_zone) {
   std::ifstream file(mission_file);
 
+  // Create a vector of waypoints using the latitude and longitude
   double latitude, longitude; 
   if (file.is_open()) {
     while (!file.eof()) {

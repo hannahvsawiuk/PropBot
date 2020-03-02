@@ -29,32 +29,37 @@ Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
  */
 geometry_msgs::PointStamped Waypoint::TransformToFrame(
     const std::string& frame_id) const {
-  geometry_msgs::PointStamped utm_waypoint, transformed_waypoint;
 
   // Declare utm x and y variables
   double utm_northing = 0, utm_easting = 0;
   std::string utm_zone = utm_zone_;
+
   // Convert latitude and longitude to utm waypoints
   RobotLocalization::NavsatConversions::LLtoUTM(
       gps_waypoint_.first, gps_waypoint_.second, utm_northing, utm_easting,
       utm_zone);
 
+  // Create utm waypoint based on conversion
+  geometry_msgs::PointStamped utm_waypoint;
   utm_waypoint.header.frame_id = "utm";
   utm_waypoint.header.stamp = ros::Time(0);
   utm_waypoint.point.x = utm_easting;
   utm_waypoint.point.y = utm_northing;
   utm_waypoint.point.z = 0;
 
+  // Declare transformed waypoint
+  geometry_msgs::PointStamped transformed_waypoint;
   tf::TransformListener transform_listener;
   ros::Time time = ros::Time::now();
 
   bool transform_finished = false;
   while (!transform_finished) {
     try {
+      // Wait for transform and then transform point
       utm_waypoint.header.stamp = ros::Time::now();
-      transform_listener.waitForTransform("map", "utm", time,
+      transform_listener.waitForTransform(frame_id, "utm", time,
                                           ros::Duration(3.0));
-      transform_listener.transformPoint("map", utm_waypoint,
+      transform_listener.transformPoint(frame_id, utm_waypoint,
                                         transformed_waypoint);
       transform_finished = true;
     } catch (tf::TransformException& exception) {
