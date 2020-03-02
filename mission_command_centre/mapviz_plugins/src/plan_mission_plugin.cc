@@ -71,7 +71,6 @@ using namespace mapviz_plugins;
  * PlanMissionPlugin constructor
  *
  */
-
 PlanMissionPlugin::PlanMissionPlugin()
     : config_widget_(new QWidget()),
       map_canvas_(NULL),
@@ -117,7 +116,6 @@ PlanMissionPlugin::PlanMissionPlugin()
  * PlanMissionPlugin destructor
  *
  */
-
 PlanMissionPlugin::~PlanMissionPlugin() {
   if (map_canvas_) {
     map_canvas_->removeEventFilter(this);
@@ -131,7 +129,6 @@ PlanMissionPlugin::~PlanMissionPlugin() {
  * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
-
 void PlanMissionPlugin::StartMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
   PrintInfo("Starting mission");
@@ -145,7 +142,6 @@ void PlanMissionPlugin::StartMissionCommand(){
  * @brief This function publishes a pause mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
-
 void PlanMissionPlugin::PauseMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
   PrintInfo("Pausing mission");
@@ -160,7 +156,6 @@ void PlanMissionPlugin::PauseMissionCommand(){
  * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
-
 void PlanMissionPlugin::ResumeMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
   PrintInfo("Resuming mission");
@@ -173,7 +168,6 @@ void PlanMissionPlugin::ResumeMissionCommand(){
  * @brief This function publishes a start mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
-
 void PlanMissionPlugin::EndMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
   PrintInfo("Ending mission");
@@ -186,7 +180,6 @@ void PlanMissionPlugin::EndMissionCommand(){
  * @brief This is a helper function which publishes a mission command to the "/mapviz/mission_command" ROS topic.
  *
  */
-
 void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
   mapviz_plugins::MissionCommand mission_command;
   mission_command.header.stamp = ros::Time::now();
@@ -200,7 +193,6 @@ void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
  * @brief This function publishes the mission waypoints to the "/mapviz/mission" ROS topic.
  *
  */
-
 void PlanMissionPlugin::UploadMission() {
   PrintInfo("Uploading mission");
   // return if a single waypoint has not been set 
@@ -226,7 +218,6 @@ void PlanMissionPlugin::UploadMission() {
  * @brief This function clears mission waypoints from class variable and Mapviz GUI
  *
  */
-
 void PlanMissionPlugin::Clear() {
   gps_waypoints_.clear();
   route_preview_ = sru::RoutePtr();
@@ -239,7 +230,6 @@ void PlanMissionPlugin::Clear() {
  * @brief This function prints to plugin status and ROS log level error message 
  *
  */
-
 void PlanMissionPlugin::PrintError(const std::string& message) {
   PrintErrorHelper(ui_.status, message, 1.0);
 }
@@ -251,7 +241,6 @@ void PlanMissionPlugin::PrintError(const std::string& message) {
  * @brief This function prints to plugin status and ROS log level info message
  *
  */
-
 void PlanMissionPlugin::PrintInfo(const std::string& message) {
   PrintInfoHelper(ui_.status, message, 1.0);
 }
@@ -263,7 +252,6 @@ void PlanMissionPlugin::PrintInfo(const std::string& message) {
  * @brief This function prints to plugin status and ROS log level warning message
  *
  */
-
 void PlanMissionPlugin::PrintWarning(const std::string& message) {
   PrintWarningHelper(ui_.status, message, 1.0);
 }
