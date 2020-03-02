@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <!--- Run autonomy stack -->
+  <include file="$(find propbot_autonomy)/launch/autonomy.launch" />
+ 
+ <!--- Run gazebo -->
+  <include file="$(find propbot_gazebo)/launch/propbot_playpen.launch" />
+
+  <!--- Run rviz -->
+  <include file="$(find propbot_rviz)/launch/view_robot.launch" />
+
+
+</launch>

@@ -1,0 +1,9 @@
+#pragma once
+
+/**
+ * Main header with version information
+ */
+
+
+#define PROPBOT_UTIL_VERSION "@PROJECT_VERSION@"
+
