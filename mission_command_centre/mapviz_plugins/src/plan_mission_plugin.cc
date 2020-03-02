@@ -107,6 +107,9 @@ PlanMissionPlugin::PlanMissionPlugin()
                    SLOT(ResumeMissionCommand()));
   QObject::connect(ui_.end_mission, SIGNAL(clicked()), this,
                    SLOT(EndMissionCommand()));
+  mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>("/mapviz/mission_command", 10, false);
+
+  mission_pub_ = node_.advertise<mapviz_plugins::Mission>("/mapviz/mission", 10, false);
 }
 
 
@@ -132,15 +135,7 @@ PlanMissionPlugin::~PlanMissionPlugin() {
 void PlanMissionPlugin::StartMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
   PrintInfo("Starting mission");
-  if(SendMissionCommand( mission_command_code ))
-  {
-    PrintInfo("Mission started");
-  }
-  else
-  {
-    PrintError("Failed to start mission");
-  }
-  
+  SendMissionCommand( mission_command_code );
 }
 
 
@@ -154,14 +149,7 @@ void PlanMissionPlugin::StartMissionCommand(){
 void PlanMissionPlugin::PauseMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
   PrintInfo("Pausing mission");
-  if(SendMissionCommand( mission_command_code ))
-  {
-    PrintInfo("Mission paused");
-  }
-  else
-  {
-    PrintError("Failed to pause mission");
-  }
+  SendMissionCommand( mission_command_code );
 }
 
 
@@ -176,14 +164,7 @@ void PlanMissionPlugin::PauseMissionCommand(){
 void PlanMissionPlugin::ResumeMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
   PrintInfo("Resuming mission");
-  if(SendMissionCommand( mission_command_code ))
-  {
-    PrintInfo("Mission resumed");
-  }
-  else
-  {
-    PrintError("Failed to resume mission");
-  }
+  SendMissionCommand( mission_command_code );
 }
 
 /**
@@ -196,33 +177,16 @@ void PlanMissionPlugin::ResumeMissionCommand(){
 void PlanMissionPlugin::EndMissionCommand(){
   uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
   PrintInfo("Ending mission");
-  if(SendMissionCommand( mission_command_code ))
-  {
-    PrintInfo("Mission ended");
-  }
-  else
-  {
-    PrintError("Failed to end mission");
-  }
+  SendMissionCommand( mission_command_code );
 }
 
 
 
-bool PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
+void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
   mapviz_plugins::MissionCommand mission_command;
   mission_command.header.stamp = ros::Time::now();
   mission_command.command = command_code;
-  mission_command_topic_ = ui_.mission_command_topic->text().toStdString();
-  if (!mission_command_topic_.empty()) {
-    mission_command_pub_.shutdown();
-    mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>(mission_command_topic_, 1, true);
-    mission_command_pub_.publish(mission_command);
-    return true;
-  } else {
-    PrintError("Mission Topic is empty");
-    return false;
-  }
-
+  mission_command_pub_.publish(mission_command);
 }
 
 
@@ -241,15 +205,7 @@ void PlanMissionPlugin::UploadMission() {
   mission.waypoints = gps_waypoints_;
 
   // publish mission ROS message to user set topic
-  mission_topic_ = ui_.mission_topic->text().toStdString();
-  if (!mission_topic_.empty()) {
-    mission_pub_.shutdown();
-    mission_pub_ = node_.advertise<mapviz_plugins::Mission>(mission_topic_, 1, true);
-    mission_pub_.publish(mission);
-    PrintInfo("Mission uploaded");
-  } else {
-    PrintError("Mission Topic is empty");
-  }
+  mission_pub_.publish(mission);
 }
 
 /**
@@ -526,49 +482,25 @@ void PlanMissionPlugin::Paint(QPainter* painter, double x, double y,
 
 void PlanMissionPlugin::LoadConfig(const YAML::Node& node,
                                  const std::string& path) {
-  if (node["route_topic"]) {
-    std::string route_topic;
-    node["route_topic"] >> route_topic;
-    ui_.route_topic->setText(route_topic.c_str());
-  }
   if (node["color"]) {
     std::string color;
     node["color"] >> color;
     ui_.color->setColor(QColor(color.c_str()));fabsf64;
-  }
-
-  if (node["mission_topic"]) {
-    std::string mission_topic;
-    node["mission_topic"] >> mission_topic;
-    ui_.mission_topic->setText(mission_topic.c_str());
   }
   if (node["start_from_vehicle"]) {
     bool start_from_vehicle;
     node["start_from_vehicle"] >> start_from_vehicle;
     ui_.start_from_vehicle->setChecked(start_from_vehicle);
   }
-
-  if (node["mission_command_topic"]) {
-    std::string mission_command_topic;
-    node["mission_command_topic"] >> mission_command_topic;
-    ui_.mission_command_topic->setText(mission_command_topic.c_str());
-  }
 }
 
 void PlanMissionPlugin::SaveConfig(YAML::Emitter& emitter,
                                  const std::string& path) {
-  emitter << YAML::Key << "route_topic" << YAML::Value << route_topic_;
 
   std::string color = ui_.color->color().name().toStdString();
   emitter << YAML::Key << "color" << YAML::Value << color;
 
-  std::string mission_topic = ui_.mission_topic->text().toStdString();
-  emitter << YAML::Key << "mission_topic" << YAML::Value << mission_topic_;
-
   bool start_from_vehicle = ui_.start_from_vehicle->isChecked();
   emitter << YAML::Key << "start_from_vehicle" << YAML::Value
           << start_from_vehicle;
-
-  std::string mission_command_topic = ui_.mission_command_topic->text().toStdString();
-  emitter << YAML::Key << "mission_command_topic" << YAML::Value << mission_command_topic_;
 }

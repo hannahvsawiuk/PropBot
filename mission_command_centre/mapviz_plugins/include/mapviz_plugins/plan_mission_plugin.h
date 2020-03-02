@@ -104,14 +104,10 @@ namespace mapviz_plugins
     void EndMissionCommand();
 
    private:
-    bool SendMissionCommand( uint16_t command_code );
+    void SendMissionCommand( uint16_t command_code );
     Ui::plan_mission_config ui_;
     QWidget* config_widget_;
     mapviz::MapCanvas* map_canvas_;
-
-    std::string route_topic_;
-    std::string mission_topic_;
-    std::string mission_command_topic_;
 
     ros::Publisher mission_pub_;
     ros::Publisher mission_command_pub_;
