@@ -37,6 +37,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="propbot_rear_bumper_extend" value="$(optenv PROPBOT_REAR_BUMPER_EXTEND 0)" />
 
   <xacro:arg name="robot_namespace" default="/" />
+  <xacro:arg name="spawn_lat" default="49.9" />
+  <xacro:arg name="spawn_long" default="8.9" />
+
+
 
   <!-- Included URDF/XACRO Files -->
   <xacro:include filename="$(find propbot_description)/urdf/decorations.urdf.xacro" />
@@ -192,8 +196,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <frameId>base_link</frameId>
       <topicName>navsat/fix</topicName>
       <velocityTopicName>navsat/vel</velocityTopicName>
-      <referenceLatitude>49.9</referenceLatitude>
-      <referenceLongitude>8.9</referenceLongitude>
+      <referenceLatitude>$(arg spawn_lat)</referenceLatitude>
+      <referenceLongitude>$(arg spawn_long)</referenceLongitude>
       <referenceHeading>0</referenceHeading>
       <referenceAltitude>0</referenceAltitude>
       <drift>0.0001 0.0001 0.0001</drift>
