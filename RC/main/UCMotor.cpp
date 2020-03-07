@@ -337,6 +337,7 @@ inline void setPWM4(uint8_t s) {
 
 UC_DCMotor::UC_DCMotor(uint8_t num, uint8_t freq) {
   motornum = num;
+  Serial.println(String("Creating motor with ID: ") + motornum);
   pwmfreq = freq;
   MC.enable();
 
@@ -365,6 +366,7 @@ UC_DCMotor::UC_DCMotor(uint8_t num, uint8_t freq) {
 }
 
 void UC_DCMotor::run(uint8_t cmd) {
+  // Serial.println(motornum, DEC);
   uint8_t a, b;
   switch (motornum) {
   case 1:
@@ -453,6 +455,10 @@ void UC_DCMotor::run(uint8_t cmd) {
 }
 
 void UC_DCMotor::setSpeed(uint8_t speed) {
+  // Serial.println("\n\nMotornum and speed");
+  // Serial.println(motornum, DEC);
+  // Serial.println(speed, DEC);
+  // Serial.println("\n\n");
   switch (motornum) {
   case 1:
     setPWM1(speed); break;

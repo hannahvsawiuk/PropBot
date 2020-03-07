@@ -129,12 +129,13 @@ typedef struct wheel_motor_command_t
     private:
         wheel_pins_t wheel_pins;
         uint16_t* control_register;
+        uint8_t wheel_index_;
     public:
-        uint8_t wheel_index;
-        Wheel(uint8_t wheel_index);
+        Wheel(uint8_t index);
         ~Wheel();
         void sendCommand(wheel_motor_command_t command);
         uint16_t getSpeed();
+        uint8_t wheel_index();
     
     };
 #else 
@@ -171,11 +172,12 @@ typedef struct wheel_motor_command_t
     {
     private:
         UC_DCMotor * uc_motor;
+        uint8_t wheel_index_;
     public:
-        uint8_t wheel_index;
-        Wheel(uint8_t wheel_index);
+        Wheel(uint8_t index);
         ~Wheel();
         void sendCommand(wheel_motor_command_t command);
+        uint8_t wheel_index();
         uint16_t getSpeed();
     };
 #endif // PROPBOT

@@ -5,9 +5,9 @@
      * @brief Parametrized Wheel object constructor 
      * 
      */
-    Wheel::Wheel(uint8_t wheel_index)
+    Wheel::Wheel(uint8_t index)
         : 
-        , wheel_index(wheel_index)
+        , wheel_index_{index)
         , wheel_pins{wheel_to_pins[wheel_index]}
         , control_register{wheel_to_register[wheel_index]}
     {}
@@ -49,6 +49,13 @@
         Serial.print(String("ERROR: ") + __FUNCTION__ + String(" not yet implemented"));
         return 0;
     }
+
+    /**
+     * @brief Getter for wheel_index_
+     * 
+     * @return uint8_t 
+     */
+    uint8_t Wheel::wheel_index() { return wheel_index_; }
 
     /**
      * @brief Configures timers for PWM and initializes the wheel objects
@@ -96,13 +103,13 @@
             #error "No timers configured for PWM"
         #endif
 
-        Wheel * wheel_motors[NUM_WHEELS]; 
+        Wheel ** wheel_motors;
         // Pin setup for all wheel motors
         for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
             pinMode(wheel_to_pins[i].control,       OUTPUT);
             pinMode(wheel_to_pins[i].brake_release, OUTPUT);
             pinMode(wheel_to_pins[i].dir,           OUTPUT);
-            wheel_motors[i] = new Wheel(i);    // extern
+            wheel_motors[i] = new Wheel(i);
         }
         return wheel_motors;
     }
@@ -113,11 +120,11 @@
      * @brief Parametrized Wheel object constructor 
      * 
      */
-    Wheel::Wheel(uint8_t wheel_index)
-    : wheel_index(wheel_index)
+    Wheel::Wheel(uint8_t index)
     {
-        uc_motor = new UC_DCMotor(wheel_index); 
-        Serial.println(String("Init motor: ") + wheel_index);
+        wheel_index_ = index;
+        uc_motor = new UC_DCMotor(wheel_index_); 
+        Serial.println(String("Init motor: ") + wheel_index_);
         uc_motor->run(STOP);
         uc_motor->setSpeed(0);
     }
@@ -139,8 +146,7 @@
     void Wheel::sendCommand(wheel_motor_command_t command)
     {
         // BRAKE condition
-        if (command.brake_release == ENGAGE_BRAKE) {   
-            // Serial.println("BRAKE");
+        if (command.brake_release == ENGAGE_BRAKE) {
             uc_motor->run(STOP);
             uc_motor->setSpeed(0);
             return;
@@ -166,15 +172,26 @@
     }
 
     /**
+     * @brief Getter for wheel_index_
+     * 
+     * @return uint8_t 
+     */
+    uint8_t Wheel::wheel_index() { return wheel_index_; }
+
+    /**
     * @brief Initializes the mini wheel objects
     * 
     * @return
     */
-    Wheel ** initializeWheels() 
+    Wheel ** initializeWheels()
     {   
-        Wheel * wheel_motors[NUM_WHEELS]; 
+        Wheel ** wheel_motors;
         for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
             wheel_motors[i] = new Wheel(i + 1);
+            Serial.println(
+                String("\nIndex: ") + i +\
+                String("\twheel index: ") + wheel_motors[i]->wheel_index()
+            );
         }
         return wheel_motors;
     }

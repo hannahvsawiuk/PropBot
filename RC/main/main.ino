@@ -1,11 +1,6 @@
 #include "rc_commands.h"
 #include "wheel.h"
 #include "types.h"
-
-#define DEBUG_MODE
-#include "debug.h"
-
-#include <string.h>
 #include <stdio.h>
 
 // Define PROPBOT to change config
@@ -13,7 +8,7 @@
 
 static bool autonomy = false;
 static Array<wheel_motor_command_t, NUM_WHEELS> commands = all_brake_command;
-Wheel ** wheel_motors = NULL;
+Wheel ** wheel_motors;
 
 void setup()
 {
@@ -27,6 +22,12 @@ void setup()
 
     // Setup and initialize wheel objects
     wheel_motors = initializeWheels();
+    Serial.println("Init'd motors");
+    for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+        Serial.println(
+            String("It index: ") + i + String("\tWheel index: ") +  wheel_motors[i]->wheel_index()
+        );
+    }
 
     // Indicate that setup is complete
     Serial.println("Setup complete");
@@ -37,5 +38,8 @@ void loop()
     commands = fetch_rc_commands(); // update wheel commands
     for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
         wheel_motors[i]->sendCommand(commands[i]);
+        // Serial.println(
+        //     String("\nIndex ") + i +  String("and fetched index ") + wheel_motors[i]->getSpeed()
+        // );
     }
 }
