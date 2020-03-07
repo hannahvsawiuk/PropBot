@@ -13,7 +13,7 @@
 
 static bool autonomy = false;
 static Array<wheel_motor_command_t, NUM_WHEELS> commands = all_brake_command;
-Wheel ** wheel_motors; 
+Wheel ** wheel_motors = NULL;
 
 void setup()
 {

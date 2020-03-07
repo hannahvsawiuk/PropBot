@@ -1,5 +1,4 @@
 #include "rc_commands.h"
-#include "util.h"
 #include "debug.h"
 
 /**
@@ -50,23 +49,23 @@ Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands()
     // Forward
     if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
         // map the duty from 0 to 1 given the min and max threshold values
-        right_duty = linMapToFloat(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1);
+        right_duty = speedMapToFloat(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1, true);
     }
     // Backward 
     else if (rc_right < RC_RIGHT_SET_BW_MAX && rc_right > RC_RIGHT_SET_BW_MIN)
     {
-        right_duty = 1 - linMapToFloat(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1);
+        right_duty = speedMapToFloat(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1, false);
         right_dir = DIR_BW;
     } 
     /* Left side longitudinal wheel set */
     // Forward
     if (rc_left < RC_LEFT_SET_FW_MAX && rc_left > RC_LEFT_SET_FW_MIN) {
-        left_duty = linMapToFloat(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1);
+        left_duty = speedMapToFloat(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1, true);
     }
     // Backward 
     else if (rc_left < RC_LEFT_SET_BW_MAX && rc_left > RC_LEFT_SET_BW_MIN)
     {
-        left_duty = 1 - linMapToFloat(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1);
+        left_duty = speedMapToFloat(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1, false);
         left_dir = DIR_BW;
     }
 
