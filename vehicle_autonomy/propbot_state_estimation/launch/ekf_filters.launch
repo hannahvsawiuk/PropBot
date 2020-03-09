@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <launch>
 
-  <node pkg="robot_localization" type="ekf_localization_node" name="odom_ekf_filter" clear_params="true">
+  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="odom_ekf_filter" clear_params="true">
     <rosparam command="load" file="$(find propbot_state_estimation)/config/odom_ekf_filter.yaml" />
-  </node>
+  </node> -->
 
   <node pkg="robot_localization" type="ekf_localization_node" name="map_ekf_filter" clear_params="true">
     <rosparam command="load" file="$(find propbot_state_estimation)/config/map_ekf_filter.yaml" />
