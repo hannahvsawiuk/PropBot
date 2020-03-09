@@ -67,6 +67,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
         <arg name="multimaster" value="$(arg multimaster)"/>
         <arg name="laser_enabled" value="$(arg laser_enabled)"/>
         <arg name="kinect_enabled" value="$(arg kinect_enabled)"/>
+        <arg name="spawn_lat" value="$(arg spawn_lat)" />
+        <arg name="spawn_long" value="$(arg spawn_long)" />
       </include>
     </group>
 
