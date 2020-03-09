@@ -7,8 +7,11 @@
 
   <description>Ceres Solver</description>
 
-  <maintainer email="davemichealson@propbot.com">
-  </maintainer>
+  <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
+  <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
+  <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
+  <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
+  <maintainer email="jackguo380p@gmail.com">Jack Guo</maintainer>
 
   <buildtool_depend>catkin</buildtool_depend>
 
