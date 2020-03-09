@@ -7,8 +7,8 @@
 // #define PROPBOT
 
 static bool autonomy = false;
-static Array<wheel_motor_command_t, NUM_WHEELS> commands = all_brake_command;
-Wheel ** wheel_motors;
+wheel_motor_command_t ** commands = NULL;
+Wheel ** wheel_motors = NULL;
 
 void setup()
 {
@@ -23,7 +23,7 @@ void setup()
     // Setup and initialize wheel objects
     wheel_motors = initializeWheels();
     Serial.println("Init'd motors");
-    for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
         Serial.println(
             String("It index: ") + i + String("\tWheel index: ") +  wheel_motors[i]->wheel_index()
         );
@@ -36,7 +36,7 @@ void setup()
 void loop()
 {
     commands = fetch_rc_commands(); // update wheel commands
-    for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
         wheel_motors[i]->sendCommand(commands[i]);
         // Serial.println(
         //     String("\nIndex ") + i +  String("and fetched index ") + wheel_motors[i]->getSpeed()

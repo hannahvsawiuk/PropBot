@@ -17,7 +17,7 @@
  * @brief motor command structure that includes duty, brake, and direction
  * 
  */
-typedef struct wheel_motor_command_t
+struct wheel_motor_command_t
 {
     float duty_cycle; // float from 0 to 1
     bool brake_release;
@@ -49,22 +49,22 @@ typedef struct wheel_motor_command_t
      */
     typedef enum wheel_index_t
     {
-        Start = -1,
-        RF  = 0U,
-        RB  = 1U,
-        LF  = 2U,
-        LB  = 3U,
-        End = 4U
+        Start   = 0U,
+        RF      = 1U,
+        RB      = 2U,
+        LF      = 3U,
+        LB      = 4U,
+        End     = 5U
     } wheel_indices;
 
     // Pseudo map bc Arduino does not support STL
-    const Array<String, NUM_WHEELS> wheel_index_name_map = {"RF", "RB", "LF", "LB"};
+    const char * wheel_index_name_map[NUM_WHEELS] = {"RF", "RB", "LF", "LB"};
 
     /**
      * @brief wheel motor pin struct
      *
      */
-    typedef struct wheel_pins_t {
+    struct wheel_pins_t {
         uint8_t control;
         uint8_t brake_release;
         uint8_t dir;
@@ -72,14 +72,14 @@ typedef struct wheel_motor_command_t
 
     /* Default motor commands */
     // Brake: duty = 0, brake on
-    const Array<wheel_motor_command_t, NUM_WHEELS> all_brake_command = {{
+    const wheel_motor_command_t all_brake_command[NUM_WHEELS] = {{
         {0.0, ENGAGE_BRAKE, FORWARD},
         {0.0, ENGAGE_BRAKE, FORWARD},
         {0.0, ENGAGE_BRAKE, FORWARD},
         {0.0, ENGAGE_BRAKE, FORWARD}
     }};
     // Coast: duty = 0, brake released
-    const Array<wheel_motor_command_t, NUM_WHEELS> all_coast_command = {{
+    const wheel_motor_command_t all_coast_command[NUM_WHEELS] = {{
         {0.0, RELEASE_BRAKE, FORWARD},
         {0.0, RELEASE_BRAKE, FORWARD},
         {0.0, RELEASE_BRAKE, FORWARD},
@@ -90,7 +90,7 @@ typedef struct wheel_motor_command_t
      * @brief maps wheel index to a struct that defines the wheel pins (digital pin index)
      * 
      */
-    const Array<wheel_pins_t, 4> wheel_to_pins = {{
+    const wheel_pins_t wheel_to_pins[NUM_WHEELS] = {{
         {RF_controlPin, RF_brakeReleasePin, RF_dirPin},
         {RB_controlPin, RB_brakeReleasePin, RB_dirPin},
         {LF_controlPin, LF_brakeReleasePin, LF_dirPin},
@@ -103,14 +103,14 @@ typedef struct wheel_motor_command_t
      * 
      */
     #if defined(__AVR_ATmega328P__)
-        uint8_t* wheel_to_register[4] = {
+        volatile uint8_t* wheel_to_register[4] = {
             &OCR2A,     // #1, pin 11
             &OCR2B,     // #2, pin 3
             &OCR0A,     // #3, pin 6
             &OCR0B      // #4, pin 5
         };
     #elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-        uint16_t* wheel_to_register[4] = {
+        volatile uint16_t* wheel_to_register[4] = {
             &OCR3B,     // RF: digital pin 2, PE4
             &OCR3A,     // RB: digital pin 5, PE3
             &OCR4A,     // LF: digital pin 6, PH3
@@ -127,13 +127,13 @@ typedef struct wheel_motor_command_t
     class Wheel
     {
     private:
-        wheel_pins_t wheel_pins;
-        uint16_t* control_register;
+        wheel_pins_t * wheel_pins;
+        volatile uint16_t* control_register;
         uint8_t wheel_index_;
     public:
         Wheel(uint8_t index);
         ~Wheel();
-        void sendCommand(wheel_motor_command_t command);
+        void sendCommand(wheel_motor_command_t * command);
         uint16_t getSpeed();
         uint8_t wheel_index();
     
@@ -149,20 +149,26 @@ typedef struct wheel_motor_command_t
      */
     typedef enum wheel_index_t
     {
-        Start   = -1,
-        L       = 0U,
-        R       = 1U,
-        End     = 2U,
+        Start   = 0U,
+        L       = 1U,
+        R       = 2U,
+        End     = 3U,
     } wheel_indices;
 
     // Associated names for wheel indices
-    const Array<String, NUM_WHEELS> wheel_index_name_map = {"L", "R"};
+    const char * wheel_index_name_map[NUM_WHEELS] = {"L", "R"};
     
-    // Command for engaging braking on all wheels
-    const Array<wheel_motor_command_t, NUM_WHEELS> all_brake_command = {{
+    /* Default motor commands */
+    // Brake
+    const wheel_motor_command_t all_brake_command[NUM_WHEELS] = {
         {0.0, ENGAGE_BRAKE, FORWARD},
         {0.0, ENGAGE_BRAKE, FORWARD}
-    }};
+    };
+    // Coast
+    const wheel_motor_command_t all_coast_command[NUM_WHEELS] = {
+        {0.0, RELEASE_BRAKE, FORWARD},
+        {0.0, RELEASE_BRAKE, FORWARD}
+    };
 
     /**
      * @brief Wheel class - Mini RC car
@@ -176,7 +182,7 @@ typedef struct wheel_motor_command_t
     public:
         Wheel(uint8_t index);
         ~Wheel();
-        void sendCommand(wheel_motor_command_t command);
+        void sendCommand(wheel_motor_command_t * command);
         uint8_t wheel_index();
         uint16_t getSpeed();
     };

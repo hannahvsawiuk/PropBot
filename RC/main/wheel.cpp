@@ -8,7 +8,7 @@
     Wheel::Wheel(uint8_t index)
         : 
         , wheel_index_{index)
-        , wheel_pins{wheel_to_pins[wheel_index]}
+        , wheel_pins{&wheel_to_pins[wheel_index]}
         , control_register{wheel_to_register[wheel_index]}
     {}
     
@@ -24,18 +24,18 @@
     /**
      * @brief Sends commands to the motor drivers
      * 
-     * @param command the structured command to be sent 
+     * @param command reference to the structured command to be sent 
      */
-    void Wheel::sendCommand(wheel_motor_command_t command)
+    void Wheel::sendCommand(wheel_motor_command_t * command)
     {       
         // disable interrupts
         _disableInterrupts();
         // update the brake state
-        _digitalWrite(wheel_pins.brake_release, (command.brake_release == RELEASE_BRAKE) ? HIGH : LOW);
+        _digitalWrite(wheel_pins->brake_release, (command->brake_release == RELEASE_BRAKE) ? HIGH : LOW);
         // update the output compare register with the scaled duty value
-        *control_register = command.duty_cycle * TOP;
+        *control_register = command->duty_cycle * TOP;
         // update the direction
-        _digitalWrite(wheel_pins.dir, (command.dir == DIR_FW) ? HIGH : LOW);
+        _digitalWrite(wheel_pins->dir, (command->dir == DIR_FW) ? HIGH : LOW);
         // re-enable interrupts
         _enableInterrupts();
     }
@@ -105,7 +105,7 @@
 
         Wheel ** wheel_motors;
         // Pin setup for all wheel motors
-        for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+        for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             pinMode(wheel_to_pins[i].control,       OUTPUT);
             pinMode(wheel_to_pins[i].brake_release, OUTPUT);
             pinMode(wheel_to_pins[i].dir,           OUTPUT);
@@ -141,25 +141,25 @@
     /**
      * @brief Sends commands to the motor drivers
      * 
-     * @param command the structured command to be sent
+     * @param command reference to the structured command to be sent
      */
-    void Wheel::sendCommand(wheel_motor_command_t command)
+    void Wheel::sendCommand(wheel_motor_command_t * command)
     {
         // BRAKE condition
-        if (command.brake_release == ENGAGE_BRAKE) {
+        if (command->brake_release == ENGAGE_BRAKE) {
             uc_motor->run(STOP);
             uc_motor->setSpeed(0);
             return;
         }
 
         // Step 1: set rotation direction
-        if (command.dir == DIR_FW) {
+        if (command->dir == DIR_FW) {
             uc_motor->run(FORWARD);
         } else {
             uc_motor->run(BACKWARD);
         }
         // Step 2: set the speed
-        uc_motor->setSpeed(command.duty_cycle * TOP);
+        uc_motor->setSpeed(command->duty_cycle * TOP);
     }
 
     /**
@@ -186,7 +186,7 @@
     Wheel ** initializeWheels()
     {   
         Wheel ** wheel_motors;
-        for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
+        for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             wheel_motors[i] = new Wheel(i + 1);
             Serial.println(
                 String("\nIndex: ") + i +\

@@ -18,7 +18,7 @@ void initialize_rc()
  * 
  * @return returns array of motor commands
  */
-Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands() 
+wheel_motor_command_t ** fetch_rc_commands() 
 {
     // Get commands
     uint16_t sw_a       = pulseIn(RC_SWA_CHANNEL_PIN,   HIGH);
@@ -37,7 +37,7 @@ Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands()
     // Check if stop asserted
     if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
         DEBUG_PRINT("All brake");
-        return all_brake_command; // fix to also return mode
+        return &all_brake_command; // fix to also return mode
     }
     // Check if mode changed
     if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
@@ -71,14 +71,14 @@ Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands()
 
     /* Define and fill wheel motor commands */
     #ifdef PROPBOT
-        Array<wheel_motor_command_t, NUM_WHEELS> wheel_motor_commands = {{
+        wheel_motor_command_t* wheel_motor_commands[NUM_WHEELS] = {{
             {right_duty, RELEASE_BRAKE, right_dir},
             {right_duty, RELEASE_BRAKE, right_dir},
             {left_duty, RELEASE_BRAKE, left_dir},
             {left_duty, RELEASE_BRAKE, left_dir}
         }};
     #else
-        Array<wheel_motor_command_t, NUM_WHEELS> wheel_motor_commands = {{
+        wheel_motor_command_t* wheel_motor_commands[NUM_WHEELS] = {{
             {left_duty, RELEASE_BRAKE, left_dir},
             {right_duty, RELEASE_BRAKE, right_dir},
         }};

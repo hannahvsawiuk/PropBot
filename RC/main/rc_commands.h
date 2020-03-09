@@ -25,6 +25,6 @@
 
 /*  Function prototype for rc commands */
 void initialize_rc();
-Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(); 
+wheel_motor_command_t ** fetch_rc_commands(); 
 
 #endif // !RC_COMMANDS_H
