@@ -28,12 +28,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <arg name="robot_namespace" default="/"/>
   <arg name="laser_enabled" default="$(optenv PROPBOT_LMS1XX_ENABLED false)"/>
   <arg name="kinect_enabled" default="$(optenv PROPBOT_KINECT_ENABLED false)"/>
+  <arg name="spawn_lat" default="49.9" />
+  <arg name="spawn_long" default="8.9" />
 
   <param name="robot_description" command="$(find xacro)/xacro '$(find propbot_description)/urdf/propbot.urdf.xacro'
     --inorder
     robot_namespace:=$(arg robot_namespace)
     laser_enabled:=$(arg laser_enabled)
     kinect_enabled:=$(arg kinect_enabled)
+    spawn_lat:=$(arg spawn_lat)
+    spawn_long:=$(arg spawn_long)
     
     " />
 
