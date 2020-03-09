@@ -4,8 +4,6 @@ from_sim:
       type: sensor_msgs/JointState
     - topic: scan
       type: sensor_msgs/LaserScan
-    - topic: propbot_velocity_controller/odom
-      type: nav_msgs/Odometry
     - topic: imu/data
       type: sensor_msgs/Imu
     - topic: navsat/fix
