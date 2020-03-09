@@ -33,7 +33,7 @@
 
 #define MINI_TOP 255
 
-typedef struct bit_shift_t 
+struct bit_shift_t 
 {
     uint8_t high;
     uint8_t low;
@@ -55,7 +55,7 @@ public:
 
 private:
     uint8_t motor_index;
-    uint8_t* pwm_register;
+    volatile uint8_t* pwm_register;
     bit_shift_t bit_shift_vals;
     void enable();
     void latch_tx(uint8_t latch_state);
