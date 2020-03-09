@@ -27,8 +27,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <arg name="laser_enabled" default="true" />
   <arg name="kinect_enabled" default="false" />
-  <arg name="spawn_lat" default="40" />
-  <arg name="spawn_long" default="30" />
+  <arg name="spawn_lat" default="49.267648" />
+  <arg name="spawn_long" default="-123.251080" />
 
   <include file="$(find propbot_gazebo)/launch/ubc_student_union.launch" />
 
