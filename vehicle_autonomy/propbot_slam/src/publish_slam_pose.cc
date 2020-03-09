@@ -56,7 +56,6 @@ int main(int argc, char** argv) {
       transform_listener.transformPose(frame_id, pose_base_link, pose);
     } catch (tf::TransformException& ex) {
       ROS_ERROR("%s", ex.what());
-      ros::Duration(1.0).sleep();
     }
 
     geometry_msgs::PoseWithCovarianceStamped pose_with_covariance;

@@ -7,7 +7,7 @@
 #include <propbot_mission/mission_handler.hh>
 #include <propbot_util/exception.hh>
 
-// Send mission node
+// Execute mission node
 using namespace propbot;
 
 int main(int argc, char** argv) {

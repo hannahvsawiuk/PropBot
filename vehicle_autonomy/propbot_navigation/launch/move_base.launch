@@ -39,8 +39,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
     <!-- local costmap, needs size -->
     <rosparam file="$(find propbot_navigation)/config/costmap_local.yaml" command="load" ns="local_costmap" />
-    <!-- <param name="local_costmap/width" value="10.0"/>
-    <param name="local_costmap/height" value="10.0"/> -->
 
     <!-- static global costmap, static map provides size -->
     <rosparam file="$(find propbot_navigation)/config/costmap_global_static.yaml" command="load" ns="global_costmap" unless="$(arg no_static_map)"/>

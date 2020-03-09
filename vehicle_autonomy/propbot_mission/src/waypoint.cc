@@ -1,5 +1,7 @@
 #include <propbot_mission/waypoint.hh>
 
+#include <chrono>
+
 #include <robot_localization/navsat_conversions.h>
 #include <tf/transform_listener.h>
 
@@ -21,7 +23,7 @@ Waypoint::Waypoint(std::pair<double, double> gps_waypoint, std::string utm_zone)
 /**
  * Map waypoint accessor
  *
- * Returns waypoint as may waypoint with correct timestamp. The function uses
+ * @brief Returns waypoint as may waypoint with correct timestamp. The function uses
  * the utm waypoint and a ros transform to convert to a map waypoint.
  *
  * @return map_waypoint map waypoint with correct timestamp
@@ -62,7 +64,7 @@ geometry_msgs::PointStamped Waypoint::TransformToFrame(
       transform_listener.transformPoint(frame_id, utm_waypoint,
                                         transformed_waypoint);
       transform_finished = true;
-    } catch (tf::TransformException& exception) {
+    } catch (const tf::TransformException& exception) {
       ROS_WARN("%s", exception.what());
       ros::Duration(0.01).sleep();
     }

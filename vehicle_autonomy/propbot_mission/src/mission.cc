@@ -7,7 +7,7 @@ using namespace propbot;
 /**
  * Mission constructor
  *
- * This is a mission constructor that takes in a text file of x and y map
+ * @brief This is a mission constructor that takes in a text file of x and y map
  * waypoints.
  *
  * @param mission_file A text file with the waypoints. The x and y coordinates
@@ -26,7 +26,7 @@ Mission::Mission(const std::string &mission_file, const std::string &utm_zone) {
       file >> latitude;
       file >> longitude;
 
-      mission_.push_back(Waypoint(std::pair<double, double>(latitude, longitude), utm_zone));
+      mission_.push_back(Waypoint({latitude, longitude}, utm_zone));
     }
     ROS_INFO("%lu Map waypoints were read", mission_.size());
     file.close();

@@ -38,6 +38,7 @@ class MissionHandler {
   // Mission commands
   void Start();
   void Pause();
+  void Resume();
   void End();
   /* Function that returns if the mission is finished */
   bool Finished() const { return finished_; }
@@ -64,10 +65,6 @@ class MissionHandler {
 
   // Functions
   void SendGoal();
-  void SetDesiredOrientation(
-      const geometry_msgs::PointStamped& current_map_waypoint,
-      const geometry_msgs::PointStamped& next_map_waypoint,
-      move_base_msgs::MoveBaseGoal* current_goal) const;
   move_base_msgs::MoveBaseGoal CreateCurrentGoal() const;
   void WaypointCallback(const actionlib::SimpleClientGoalState& state,
                         const ResultConstPtr& result);
