@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<package format="2">
+  <name>ceres-solver</name>
+  <version>1.1.4</version>
+  <license>GPLv3</license>
+
+  <description>Ceres Solver</description>
+
+  <maintainer email="davemichealson@propbot.com">
+  </maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>eigen</build_depend>
+  <build_depend>libgoogle-glog-dev</build_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
