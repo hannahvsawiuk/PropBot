@@ -90,14 +90,20 @@ include_directories(SYSTEM
 
 set(UI_FILES
     ui/plan_mission_config.ui
+    ui/navsat_config.ui
 )
 
 set(SRC_FILES
     src/plan_mission_plugin.cc
+    src/navsat_plugin.cc
+    src/point_drawing_plugin.cc
 )
 
 set(HEADER_FILES
     include/${PROJECT_NAME}/plan_mission_plugin.h
+    include/${PROJECT_NAME}/navsat_plugin.h
+    include/${PROJECT_NAME}/point_drawing_plugin.h
+
 )
     
 if("$ENV{ROS_DISTRO}" STRLESS "kinetic")
