@@ -70,7 +70,6 @@ int main(int argc, char** argv) {
     pose_pub.publish(pose_with_covariance);
 
     // Sleep
-    ros::spinOnce();
     loop_rate.sleep();
   }
   ros::shutdown();
