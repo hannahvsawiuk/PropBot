@@ -4,12 +4,14 @@
 #define LN_SCALE_FACTOR -3.0
 #define MAX_DUTY        0.95
 
+#include <stdint.h>
+
 /* Macros */
 #define _digitalWrite(pin, val)   digitalWrite(pin, val)
 #define _enableInterrupts()     sei()
 #define _disableInterrupts()    cli()
 
 /* Function prototypes */
-float speedMapToFloat(float input, float in_min, float in_max, float out_min, float out_max, bool dir = true);
+uint8_t speedMapToFloat(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true);
 
 #endif // !UTIL_H

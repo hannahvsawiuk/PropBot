@@ -6,9 +6,8 @@
 // Define PROPBOT to change config
 // #define PROPBOT
 
-static bool autonomy = false;
-wheel_motor_command_t ** commands = NULL;
-Wheel ** wheel_motors = NULL;
+wheel_motor_command_t* commands[NUM_WHEELS] = { { NULL } };
+Wheel* wheel_motors[NUM_WHEELS] = { { NULL } };
 
 void setup()
 {
@@ -20,10 +19,14 @@ void setup()
     // Setup RC pins in input mode (input capture)
     initialize_rc();
 
-    // Setup and initialize wheel objects
-    wheel_motors = initializeWheels();
+    // initialize motor commands
+    commands = initializeWheelCommands();
+
+    // // Setup and initialize wheel objects
+    wheel_motors = initializeWheels(); 
+
     Serial.println("Init'd motors");
-    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {        
         Serial.println(
             String("It index: ") + i + String("\tWheel index: ") +  wheel_motors[i]->wheel_index()
         );
@@ -35,11 +38,8 @@ void setup()
 
 void loop()
 {
-    commands = fetch_rc_commands(); // update wheel commands
+    fetch_rc_commands(commands); // update wheel commands
     for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
         wheel_motors[i]->sendCommand(commands[i]);
-        // Serial.println(
-        //     String("\nIndex ") + i +  String("and fetched index ") + wheel_motors[i]->getSpeed()
-        // );
     }
 }

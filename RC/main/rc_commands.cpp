@@ -14,11 +14,10 @@ void initialize_rc()
 }
 
 /**
- * @brief fetches RC commands and returns motor commands
+ * @brief fetches RC commands and modifies motor commands
  * 
- * @return returns array of motor commands
  */
-wheel_motor_command_t ** fetch_rc_commands() 
+void fetch_rc_commands(wheel_motor_command_t* commands[NUM_WHEELS])
 {
     // Get commands
     uint16_t sw_a       = pulseIn(RC_SWA_CHANNEL_PIN,   HIGH);
@@ -27,9 +26,9 @@ wheel_motor_command_t ** fetch_rc_commands()
     uint16_t rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN,  HIGH);
     
     // define temp variables
-    float right_duty    = 0.0;
+    uint8_t right_duty    = 0.0;
     bool right_dir      = DIR_FW;  // default direction
-    float left_duty     = 0.0;
+    uint8_t left_duty     = 0.0;
     bool left_dir       = DIR_FW;  // default direction
     bool autonomy_mode  = false;
 
@@ -37,7 +36,7 @@ wheel_motor_command_t ** fetch_rc_commands()
     // Check if stop asserted
     if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
         DEBUG_PRINT("All brake");
-        return &all_brake_command; // fix to also return mode
+        brake(commands);
     }
     // Check if mode changed
     if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
@@ -70,20 +69,17 @@ wheel_motor_command_t ** fetch_rc_commands()
     }
 
     /* Define and fill wheel motor commands */
+
     #ifdef PROPBOT
-        wheel_motor_command_t* wheel_motor_commands[NUM_WHEELS] = {{
-            {right_duty, RELEASE_BRAKE, right_dir},
-            {right_duty, RELEASE_BRAKE, right_dir},
-            {left_duty, RELEASE_BRAKE, left_dir},
-            {left_duty, RELEASE_BRAKE, left_dir}
-        }};
+        for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+            if (i < (NUM_WHEELS / 2) - 1) {
+                *commands[i] = wheel_motor_command_t{right_duty, RELEASE_BRAKE, right_dir}; 
+            } else {
+                *commands[i] = wheel_motor_command_t{left_duty, RELEASE_BRAKE, left_dir}; 
+            }
+        }
     #else
-        wheel_motor_command_t* wheel_motor_commands[NUM_WHEELS] = {{
-            {left_duty, RELEASE_BRAKE, left_dir},
-            {right_duty, RELEASE_BRAKE, right_dir},
-        }};
+        *commands[0] = wheel_motor_command_t{left_duty, RELEASE_BRAKE, left_dir};
+        *commands[1] = wheel_motor_command_t{right_duty, RELEASE_BRAKE, right_dir};
     #endif 
-    
-    /*  Return reference to the command set */
-    return wheel_motor_commands;
 }

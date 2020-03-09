@@ -1,5 +1,19 @@
 #include "wheel.h"
 
+void brake(wheel_motor_command_t* commands[NUM_WHEELS])
+{
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+        *commands[i] = brake_command;
+    }
+}
+
+void coast(wheel_motor_command_t* commands[NUM_WHEELS])
+{
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+        *commands[i] = coast_command;
+    }
+}
+
 #ifdef PROPBOT
     /**
      * @brief Parametrized Wheel object constructor 
@@ -26,7 +40,7 @@
      * 
      * @param command reference to the structured command to be sent 
      */
-    void Wheel::sendCommand(wheel_motor_command_t * command)
+    void Wheel::sendCommand(wheel_motor_command_t* command)
     {       
         // disable interrupts
         _disableInterrupts();
@@ -62,7 +76,7 @@
      * 
      * @return
      */
-    Wheel ** initializeWheels()
+    auto initializeWheels() -> Wheel* [NUM_WHEELS];
     {
         /*
         * Fast PWM configuration:
@@ -103,7 +117,7 @@
             #error "No timers configured for PWM"
         #endif
 
-        Wheel ** wheel_motors;
+        Wheel* wheel_motors[NUM_WHEELS] = { { 0 } };
         // Pin setup for all wheel motors
         for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             pinMode(wheel_to_pins[i].control,       OUTPUT);
@@ -113,6 +127,21 @@
         }
         return wheel_motors;
     }
+
+    /**
+     * @brief Initializes pointers to wheel commands
+     * 
+     * @return wheel_motor_command_t*[NUM_WHEELS]: initialized wheel objects
+     */
+    auto initializeWheelCommands() -> wheel_motor_command_t*[NUM_WHEELS]
+    {
+        wheel_motor_command_t* commands[NUM_WHEELS] = { { 0 } };
+        for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+            commands[i] = &wheel_motor_command_t{0.0, RELEASE_BRAKE, FORWARD};
+        }
+        return commands;
+    }
+
 #else
     /* Mini RC wheel class */
 
@@ -143,7 +172,7 @@
      * 
      * @param command reference to the structured command to be sent
      */
-    void Wheel::sendCommand(wheel_motor_command_t * command)
+    void Wheel::sendCommand(wheel_motor_command_t* command)
     {
         // BRAKE condition
         if (command->brake_release == ENGAGE_BRAKE) {
@@ -181,11 +210,11 @@
     /**
     * @brief Initializes the mini wheel objects
     * 
-    * @return
+    * @return wheel_motor_command_t*[NUM_WHEELS]: the initialized wheel objects
     */
-    Wheel ** initializeWheels()
+    auto initializeWheels() -> Wheel* [NUM_WHEELS]
     {   
-        Wheel ** wheel_motors;
+        Wheel* wheel_motors[NUM_WHEELS] = { { 0 } };
         for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             wheel_motors[i] = new Wheel(i + 1);
             Serial.println(

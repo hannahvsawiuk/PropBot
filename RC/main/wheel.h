@@ -19,16 +19,21 @@
  */
 struct wheel_motor_command_t
 {
-    float duty_cycle; // float from 0 to 1
+    uint8_t duty_cycle; // uint8_tfrom 0 to 1
     bool brake_release;
     bool dir;
 };
+
 
 // Direction values
 #define DIR_FW          true
 #define DIR_BW          false
 #define ENGAGE_BRAKE    false
 #define RELEASE_BRAKE   true
+
+/* Default commands */
+const wheel_motor_command_t brake_command = {0.0, ENGAGE_BRAKE, FORWARD};
+const wheel_motor_command_t coast_command = {0.0, RELEASE_BRAKE, FORWARD};
 
 /* Define structures and values for Propbot */
 #ifdef PROPBOT
@@ -58,7 +63,12 @@ struct wheel_motor_command_t
     } wheel_indices;
 
     // Pseudo map bc Arduino does not support STL
-    const char * wheel_index_name_map[NUM_WHEELS] = {"RF", "RB", "LF", "LB"};
+    const char* wheel_index_name_map[NUM_WHEELS] = {
+        "RF", 
+        "RB", 
+        "LF", 
+        "LB"
+    };
 
     /**
      * @brief wheel motor pin struct
@@ -70,32 +80,16 @@ struct wheel_motor_command_t
         uint8_t dir;
     };
 
-    /* Default motor commands */
-    // Brake: duty = 0, brake on
-    const wheel_motor_command_t all_brake_command[NUM_WHEELS] = {{
-        {0.0, ENGAGE_BRAKE, FORWARD},
-        {0.0, ENGAGE_BRAKE, FORWARD},
-        {0.0, ENGAGE_BRAKE, FORWARD},
-        {0.0, ENGAGE_BRAKE, FORWARD}
-    }};
-    // Coast: duty = 0, brake released
-    const wheel_motor_command_t all_coast_command[NUM_WHEELS] = {{
-        {0.0, RELEASE_BRAKE, FORWARD},
-        {0.0, RELEASE_BRAKE, FORWARD},
-        {0.0, RELEASE_BRAKE, FORWARD},
-        {0.0, RELEASE_BRAKE, FORWARD}
-    }};
-
     /**
      * @brief maps wheel index to a struct that defines the wheel pins (digital pin index)
      * 
      */
-    const wheel_pins_t wheel_to_pins[NUM_WHEELS] = {{
+    const wheel_pins_t wheel_to_pins[NUM_WHEELS] = {
         {RF_controlPin, RF_brakeReleasePin, RF_dirPin},
         {RB_controlPin, RB_brakeReleasePin, RB_dirPin},
         {LF_controlPin, LF_brakeReleasePin, LF_dirPin},
         {LB_controlPin, LB_brakeReleasePin, LB_dirPin}   
-    }};
+    };
 
     /**
      * @brief mapping of wheel index to the output compare associated with PWM generation
@@ -127,13 +121,13 @@ struct wheel_motor_command_t
     class Wheel
     {
     private:
-        wheel_pins_t * wheel_pins;
+        wheel_pins_t* wheel_pins;
         volatile uint16_t* control_register;
         uint8_t wheel_index_;
     public:
         Wheel(uint8_t index);
         ~Wheel();
-        void sendCommand(wheel_motor_command_t * command);
+        void sendCommand(wheel_motor_command_t* command);
         uint16_t getSpeed();
         uint8_t wheel_index();
     
@@ -156,20 +150,11 @@ struct wheel_motor_command_t
     } wheel_indices;
 
     // Associated names for wheel indices
-    const char * wheel_index_name_map[NUM_WHEELS] = {"L", "R"};
+    const char* wheel_index_name_map[NUM_WHEELS] = {
+        "L", 
+        "R"
+    };
     
-    /* Default motor commands */
-    // Brake
-    const wheel_motor_command_t all_brake_command[NUM_WHEELS] = {
-        {0.0, ENGAGE_BRAKE, FORWARD},
-        {0.0, ENGAGE_BRAKE, FORWARD}
-    };
-    // Coast
-    const wheel_motor_command_t all_coast_command[NUM_WHEELS] = {
-        {0.0, RELEASE_BRAKE, FORWARD},
-        {0.0, RELEASE_BRAKE, FORWARD}
-    };
-
     /**
      * @brief Wheel class - Mini RC car
      * 
@@ -177,18 +162,23 @@ struct wheel_motor_command_t
     class Wheel
     {
     private:
-        UC_DCMotor * uc_motor;
+        UC_DCMotor* uc_motor;
         uint8_t wheel_index_;
     public:
         Wheel(uint8_t index);
         ~Wheel();
-        void sendCommand(wheel_motor_command_t * command);
+        void sendCommand(wheel_motor_command_t* command);
         uint8_t wheel_index();
         uint16_t getSpeed();
     };
 #endif // PROPBOT
 
 // Function prototype
-Wheel ** initializeWheels();
+auto initializeWheels() -> Wheel* [NUM_WHEELS];
+auto initializeWheelCommands() -> wheel_motor_command_t* [NUM_WHEELS];
+
+void brake(wheel_motor_command_t* commands[NUM_WHEELS]);
+void coast(wheel_motor_command_t* commands[NUM_WHEELS]);
+
 
 #endif // !WHEEL_h

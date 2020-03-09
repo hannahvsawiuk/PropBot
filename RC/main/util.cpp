@@ -10,9 +10,9 @@
  * @param out_min   output minimum
  * @param out_max   output maximum
  * @param dir       direction flag. Forward = true, backward = false.
- * @return float    mapped value
+ * @return uint8_t   mapped value
  */
-float linMapToFloat(float input, float in_min, float in_max, float out_min, float out_max, bool dir = true)
+uint8_t linMapToFloat(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true)
 {
     if (dir)
         return fabs((input - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
@@ -29,9 +29,9 @@ float linMapToFloat(float input, float in_min, float in_max, float out_min, floa
      * @param out_min   output minimum
      * @param out_max   output maximum
      * @param dir       direction flag. Forward = true, backward = false. Inverts the value before exponentially scaling
-     * @return float    mapped value
+     * @return uint8_t   mapped value
      */
-    float speedMapToFloat(float input, float in_min, float in_max, float out_min, float out_max, bool dir = true) {
+    uint8_t speedMapToFloat(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true) {
         if (dir) {
             return min(
                 - log(1 - linMapToFloat(input, in_min, in_max, out_min, out_max)) / LN_SCALE_FACTOR,
@@ -53,9 +53,9 @@ float linMapToFloat(float input, float in_min, float in_max, float out_min, floa
      * @param out_min   output minimum
      * @param out_max   output maximum
      * @param dir       direction flag. Forward = true, backward = false.
-     * @return float    mapped value
+     * @return uint8_t   mapped value
      */
-    float speedMapToFloat(float input, float in_min, float in_max, float out_min, float out_max, bool dir = true) {
+    uint8_t speedMapToFloat(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true) {
         if (dir) {
             return fabs((input - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
         }
