@@ -2,7 +2,7 @@
 <launch>
 
   <!--- Run gazebo -->
-  <include file="$(find propbot_gazebo)/launch/propbot_ponderosa.launch" />
+  <include file="$(find propbot_gazebo)/launch/propbot_ubc_student_union.launch" />
 
   <!--- Run autonomy stack -->
   <include file="$(find propbot_demos)/launch/autonomy.launch" />

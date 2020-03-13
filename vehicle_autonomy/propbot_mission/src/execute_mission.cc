@@ -5,6 +5,7 @@
 
 #include <propbot_mission/mission_command_interface.hh>
 
+// Execute mission node
 using namespace propbot;
 
 int main(int argc, char** argv) {
