@@ -22,6 +22,12 @@ void MissionCommandInterface::UploadMission(
     const mapviz_plugins::Mission& mission) {
   std::vector<Waypoint> gps_waypoints;
 
+  // Check if a mission handler has been instantiated with a mission
+  if (!mission_handler_) {
+    ROS_ERROR("A mission is already in progress. Cannot upload new mission! Please end current mission.");
+    return;
+  }
+
   for (const auto& waypoint : mission.waypoints) {
     double longitude = waypoint.position.x;
     double latitude = waypoint.position.y;
