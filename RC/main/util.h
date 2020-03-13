@@ -12,6 +12,6 @@
 #define _disableInterrupts()    cli()
 
 /* Function prototypes */
-uint8_t speedMapToFloat(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true);
+uint8_t speedMapToInt(uint8_t input, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max, bool dir = true);
 
 #endif // !UTIL_H

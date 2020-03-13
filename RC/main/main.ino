@@ -6,9 +6,6 @@
 // Define PROPBOT to change config
 // #define PROPBOT
 
-wheel_motor_command_t* commands[NUM_WHEELS] = { { NULL } };
-Wheel* wheel_motors[NUM_WHEELS] = { { NULL } };
-
 void setup()
 {
 
@@ -19,12 +16,13 @@ void setup()
     // Setup RC pins in input mode (input capture)
     initialize_rc();
 
-    // initialize motor commands
-    commands = initializeWheelCommands();
+    // Initialize motor commands
+    initializeWheelCommands();
 
-    // // Setup and initialize wheel objects
-    wheel_motors = initializeWheels(); 
+    // Setup and initialize wheel objects
+    initializeWheels();
 
+    // Indicate that the wheels have been initialized
     Serial.println("Init'd motors");
     for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {        
         Serial.println(
@@ -38,7 +36,9 @@ void setup()
 
 void loop()
 {
-    fetch_rc_commands(commands); // update wheel commands
+    // Update wheel commands
+    fetch_rc_commands(commands); 
+    // Send commands to the wheels
     for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
         wheel_motors[i]->sendCommand(commands[i]);
     }

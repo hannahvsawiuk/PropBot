@@ -26,9 +26,9 @@ void fetch_rc_commands(wheel_motor_command_t* commands[NUM_WHEELS])
     uint16_t rc_left    = pulseIn(RC_LEFT_CHANNEL_PIN,  HIGH);
     
     // define temp variables
-    uint8_t right_duty    = 0.0;
+    uint8_t right_duty    = 0;
     bool right_dir      = DIR_FW;  // default direction
-    uint8_t left_duty     = 0.0;
+    uint8_t left_duty     = 0;
     bool left_dir       = DIR_FW;  // default direction
     bool autonomy_mode  = false;
 
@@ -48,23 +48,23 @@ void fetch_rc_commands(wheel_motor_command_t* commands[NUM_WHEELS])
     // Forward
     if (rc_right < RC_RIGHT_SET_FW_MAX && rc_right > RC_RIGHT_SET_FW_MIN) {
         // map the duty from 0 to 1 given the min and max threshold values
-        right_duty = speedMapToFloat(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1, true);
+        right_duty = speedMapToInt(rc_right, RC_RIGHT_SET_FW_MIN, RC_RIGHT_SET_FW_MAX, 0, 1, true);
     }
     // Backward 
     else if (rc_right < RC_RIGHT_SET_BW_MAX && rc_right > RC_RIGHT_SET_BW_MIN)
     {
-        right_duty = speedMapToFloat(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1, false);
+        right_duty = speedMapToInt(rc_right, RC_RIGHT_SET_BW_MIN, RC_RIGHT_SET_BW_MAX, 0, 1, false);
         right_dir = DIR_BW;
     } 
     /* Left side longitudinal wheel set */
     // Forward
     if (rc_left < RC_LEFT_SET_FW_MAX && rc_left > RC_LEFT_SET_FW_MIN) {
-        left_duty = speedMapToFloat(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1, true);
+        left_duty = speedMapToInt(rc_left, RC_LEFT_SET_FW_MIN, RC_LEFT_SET_FW_MAX, 0, 1, true);
     }
     // Backward 
     else if (rc_left < RC_LEFT_SET_BW_MAX && rc_left > RC_LEFT_SET_BW_MIN)
     {
-        left_duty = speedMapToFloat(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1, false);
+        left_duty = speedMapToInt(rc_left, RC_LEFT_SET_BW_MIN, RC_LEFT_SET_BW_MAX, 0, 1, false);
         left_dir = DIR_BW;
     }
 

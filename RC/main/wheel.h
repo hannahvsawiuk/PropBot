@@ -22,6 +22,13 @@ struct wheel_motor_command_t
     uint8_t duty_cycle; // uint8_tfrom 0 to 1
     bool brake_release;
     bool dir;
+
+    wheel_motor_command_t(uint8_t duty_cycle_, bool brake_release_, bool dir_)
+    : duty_cycle(duty_cycle_),
+    brake_release(brake_release_),
+    dir(dir_)
+    {}
+
 };
 
 
@@ -32,8 +39,8 @@ struct wheel_motor_command_t
 #define RELEASE_BRAKE   true
 
 /* Default commands */
-const wheel_motor_command_t brake_command = {0.0, ENGAGE_BRAKE, FORWARD};
-const wheel_motor_command_t coast_command = {0.0, RELEASE_BRAKE, FORWARD};
+const wheel_motor_command_t brake_command = {0, ENGAGE_BRAKE, FORWARD};
+const wheel_motor_command_t coast_command = {0, RELEASE_BRAKE, FORWARD};
 
 /* Define structures and values for Propbot */
 #ifdef PROPBOT
@@ -62,13 +69,13 @@ const wheel_motor_command_t coast_command = {0.0, RELEASE_BRAKE, FORWARD};
         End     = 5U
     } wheel_indices;
 
-    // Pseudo map bc Arduino does not support STL
-    const char* wheel_index_name_map[NUM_WHEELS] = {
-        "RF", 
-        "RB", 
-        "LF", 
-        "LB"
-    };
+    /* Pseudo wheel name map */
+    // const char* wheel_index_name_map[NUM_WHEELS] = {
+    //     "RF", 
+    //     "RB", 
+    //     "LF", 
+    //     "LB"
+    // };
 
     /**
      * @brief wheel motor pin struct
@@ -149,11 +156,11 @@ const wheel_motor_command_t coast_command = {0.0, RELEASE_BRAKE, FORWARD};
         End     = 3U,
     } wheel_indices;
 
-    // Associated names for wheel indices
-    const char* wheel_index_name_map[NUM_WHEELS] = {
-        "L", 
-        "R"
-    };
+    /* Pseudo wheel name map */
+    // const char* wheel_index_name_map[NUM_WHEELS] = {
+    //     "L", 
+    //     "R"
+    // };
     
     /**
      * @brief Wheel class - Mini RC car
@@ -173,12 +180,16 @@ const wheel_motor_command_t coast_command = {0.0, RELEASE_BRAKE, FORWARD};
     };
 #endif // PROPBOT
 
-// Function prototype
-auto initializeWheels() -> Wheel* [NUM_WHEELS];
-auto initializeWheelCommands() -> wheel_motor_command_t* [NUM_WHEELS];
+/* Definition and initialization of global static vars */
+static wheel_motor_command_t* commands[NUM_WHEELS] = {};
+static Wheel* wheel_motors[NUM_WHEELS] = {};
 
+/* Initialization function prototypes */
+void initializeWheels();
+void initializeWheelCommands();
+
+/* Basic wheel command function prototypes */
 void brake(wheel_motor_command_t* commands[NUM_WHEELS]);
 void coast(wheel_motor_command_t* commands[NUM_WHEELS]);
-
 
 #endif // !WHEEL_h

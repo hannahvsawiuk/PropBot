@@ -1,5 +1,10 @@
 #include "wheel.h"
 
+/**
+ * @brief Updates wheel commands to BRAKE
+ * 
+ * @param commands 
+ */
 void brake(wheel_motor_command_t* commands[NUM_WHEELS])
 {
     for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
@@ -7,10 +12,27 @@ void brake(wheel_motor_command_t* commands[NUM_WHEELS])
     }
 }
 
+/**
+ * @brief Updates wheel commands to COAST 
+ * 
+ * @param commands 
+ */
 void coast(wheel_motor_command_t* commands[NUM_WHEELS])
 {
     for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
         *commands[i] = coast_command;
+    }
+}
+
+/**
+ * @brief Initializes wheel commands
+ * 
+ * @return
+ */
+void initializeWheelCommands()
+{
+    for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
+        commands[i] = new wheel_motor_command_t(0, RELEASE_BRAKE, FORWARD);
     }
 }
 
@@ -76,7 +98,7 @@ void coast(wheel_motor_command_t* commands[NUM_WHEELS])
      * 
      * @return
      */
-    auto initializeWheels() -> Wheel* [NUM_WHEELS];
+    void initializeWheels()
     {
         /*
         * Fast PWM configuration:
@@ -117,7 +139,6 @@ void coast(wheel_motor_command_t* commands[NUM_WHEELS])
             #error "No timers configured for PWM"
         #endif
 
-        Wheel* wheel_motors[NUM_WHEELS] = { { 0 } };
         // Pin setup for all wheel motors
         for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             pinMode(wheel_to_pins[i].control,       OUTPUT);
@@ -125,21 +146,6 @@ void coast(wheel_motor_command_t* commands[NUM_WHEELS])
             pinMode(wheel_to_pins[i].dir,           OUTPUT);
             wheel_motors[i] = new Wheel(i);
         }
-        return wheel_motors;
-    }
-
-    /**
-     * @brief Initializes pointers to wheel commands
-     * 
-     * @return wheel_motor_command_t*[NUM_WHEELS]: initialized wheel objects
-     */
-    auto initializeWheelCommands() -> wheel_motor_command_t*[NUM_WHEELS]
-    {
-        wheel_motor_command_t* commands[NUM_WHEELS] = { { 0 } };
-        for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
-            commands[i] = &wheel_motor_command_t{0.0, RELEASE_BRAKE, FORWARD};
-        }
-        return commands;
     }
 
 #else
@@ -210,11 +216,10 @@ void coast(wheel_motor_command_t* commands[NUM_WHEELS])
     /**
     * @brief Initializes the mini wheel objects
     * 
-    * @return wheel_motor_command_t*[NUM_WHEELS]: the initialized wheel objects
+    * @return
     */
-    auto initializeWheels() -> Wheel* [NUM_WHEELS]
+    void initializeWheels()
     {   
-        Wheel* wheel_motors[NUM_WHEELS] = { { 0 } };
         for (int i = wheel_indices::Start; i < wheel_indices::End; i++ ) {
             wheel_motors[i] = new Wheel(i + 1);
             Serial.println(
@@ -222,7 +227,6 @@ void coast(wheel_motor_command_t* commands[NUM_WHEELS])
                 String("\twheel index: ") + wheel_motors[i]->wheel_index()
             );
         }
-        return wheel_motors;
     }
 
 #endif
