@@ -1,5 +1,4 @@
 #include "rc_commands.h"
-#include "debug.h"
 
 /**
  * @brief initializes RC comms
@@ -35,12 +34,10 @@ void fetch_rc_commands(wheel_motor_command_t* commands[NUM_WHEELS])
     /* Switches */
     // Check if stop asserted
     if (sw_a < RC_SWX_HIGH_MAX && sw_a > RC_SWX_HIGH_MIN) {
-        DEBUG_PRINT("All brake");
         brake(commands);
     }
     // Check if mode changed
     if (sw_b < RC_SWX_HIGH_MAX && sw_b > RC_SWX_HIGH_MIN) {
-        DEBUG_PRINT("Manual Mode")
         autonomy_mode = true;
     }
 

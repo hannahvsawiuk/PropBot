@@ -3,7 +3,6 @@
 
 #include <Arduino.h>    // For architecture selection
 #include "pinout.h"     // Pin mapping
-#include "types.h"      // Custom data types
 
 /* Define Important Values */
 #if defined(__AVR_ATmega328P__)

@@ -1,6 +1,5 @@
 #include "rc_commands.h"
 #include "wheel.h"
-#include "types.h"
 #include <stdio.h>
 
 // Define PROPBOT to change config

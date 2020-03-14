@@ -3,7 +3,6 @@
 #include "pinout.h"
 #include "wheel.h"
 #include "util.h"
-#include "types.h"
 
 /*  Define the max and min thresholds for the longitudinal wheel sets */
 // CH2 - right longitudinal wheel set
