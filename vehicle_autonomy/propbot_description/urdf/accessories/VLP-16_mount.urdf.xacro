@@ -49,7 +49,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <!-- This offset is from the base of the bracket to the LIDAR's focal point. -->
 
      <VLP-16 name="base_laser" topic="camera/depth/points" hz="10" samples="440" parent="${prefix}_laser_mount">
-      <origin xyz="0.0352 0 1" rpy="0 0 0" />
+      <origin xyz="0.0352 0 0.11" rpy="0 0 0" />
      </VLP-16>
 
   </xacro:macro>
