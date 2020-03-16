@@ -5,6 +5,9 @@
   <include file="$(find propbot_gazebo)/launch/propbot_ubc_student_union.launch" />
 
   <!--- Run autonomy stack -->
-  <include file="$(find propbot_demos)/launch/autonomy.launch" />
+  <include file="$(find propbot_autonomy)/launch/autonomy.launch" />
+
+  <!--- Run rviz -->
+  <include file="$(find propbot_rviz)/launch/view_robot.launch" />
 
 </launch>

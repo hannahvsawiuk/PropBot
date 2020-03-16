@@ -25,14 +25,19 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 -->
 <launch>
 
-  <arg name="laser_enabled" default="true"/>
-  <arg name="kinect_enabled" default="false"/>
+  <arg name="laser_enabled" default="true" />
+  <arg name="kinect_enabled" default="false" />
+  <arg name="spawn_lat" default="49.267648" />
+  <arg name="spawn_long" default="-123.251080" />
 
   <include file="$(find propbot_gazebo)/launch/ubc_student_union.launch" />
 
   <include file="$(find propbot_gazebo)/launch/spawn_propbot.launch">
     <arg name="laser_enabled" value="$(arg laser_enabled)"/>
     <arg name="kinect_enabled" value="$(arg kinect_enabled)"/>
+    <arg name="spawn_lat" value="$(arg spawn_lat)"/>
+    <arg name="spawn_long" value="$(arg spawn_long)"/>
+
   </include>
 
 </launch>
