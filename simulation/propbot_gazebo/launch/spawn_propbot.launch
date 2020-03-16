@@ -47,7 +47,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <arg name="spawn_lat" value="$(arg spawn_lat)" />
       <arg name="spawn_long" value="$(arg spawn_long)" />
     </include>
-    
+
     <!-- Spawn robot in gazebo -->
     <node name="spawn_propbot_model" pkg="gazebo_ros" type="spawn_model" args="-x $(arg x)
               -y $(arg y)
