@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <arg name="robot_namespace" default="/" />
+
+  <group ns="$(arg robot_namespace)">
+    <!--- Run autonomy stack -->
+    <include file="$(find propbot_autonomy)/launch/autonomy.launch" />
+
+    <!--- Run GUI -->
+    <include file="$(find propbot_mission_gui)/launch/mapviz.launch" />
+  </group>
+
+</launch>

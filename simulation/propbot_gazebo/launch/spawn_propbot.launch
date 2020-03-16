@@ -40,16 +40,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <group ns="$(arg robot_namespace)">
 
-    <!-- For single master bringup, run robot control on the gazebo master -->
-    <!-- Note that propbot_description/description.launch is already included in propbot_control/control.launch. -->
-      <include file="$(find propbot_control)/launch/control.launch">
-        <arg name="laser_enabled" value="$(arg laser_enabled)" />
-        <arg name="kinect_enabled" value="$(arg kinect_enabled)" />
-        <arg name="spawn_lat" value="$(arg spawn_lat)" />
-        <arg name="spawn_long" value="$(arg spawn_long)" />
-      </include>
-
-
+    <!-- Load robot description -->
+    <include file="$(find propbot_description)/launch/description.launch">
+      <arg name="laser_enabled" default="$(arg laser_enabled)" />
+      <arg name="kinect_enabled" default="$(arg kinect_enabled)" />
+      <arg name="spawn_lat" value="$(arg spawn_lat)" />
+      <arg name="spawn_long" value="$(arg spawn_long)" />
+    </include>
+    
     <!-- Spawn robot in gazebo -->
     <node name="spawn_propbot_model" pkg="gazebo_ros" type="spawn_model" args="-x $(arg x)
               -y $(arg y)

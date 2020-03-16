@@ -5,7 +5,7 @@
 
   <group ns="$(arg robot_namespace)">
     <!--- Run gazebo -->
-    <include file="$(find propbot_gazebo)/launch/propbot_playpen.launch" />
+    <include file="$(find propbot_gazebo)/launch/propbot_ubc_student_union.launch" />
 
     <!--- Run rviz -->
     <include file="$(find propbot_rviz)/launch/view_robot.launch" />
