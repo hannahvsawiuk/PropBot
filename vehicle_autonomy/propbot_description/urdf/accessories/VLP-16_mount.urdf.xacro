@@ -48,7 +48,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       
       <!-- This offset is from the base of the bracket to the LIDAR's focal point. -->
 
-     <VLP-16 name="velodyne" frame="base_laser" topic="scan" hz="10" samples="440" parent="${prefix}_laser_mount">
+     <VLP-16 name="base_laser" topic="camera/depth/points" hz="10" samples="440" parent="${prefix}_laser_mount">
       <origin xyz="0 0 0.4" rpy="0 0 0" />
      </VLP-16>
 

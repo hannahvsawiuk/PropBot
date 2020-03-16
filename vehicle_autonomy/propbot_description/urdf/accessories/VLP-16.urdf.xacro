@@ -26,15 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="VLP-16">
   <xacro:property name="M_PI" value="3.1415926535897931" />
-  <xacro:macro name="VLP-16" params="*origin parent:=base_link name:=velodyne topic:=/velodyne_points hz:=10 lasers:=16 samples:=1875 collision_range:=0.3 min_range:=0.9 max_range:=130.0 noise:=0.008 min_angle:=-${M_PI} max_angle:=${M_PI} gpu:=false frame:=base_laser">
+  <xacro:macro name="VLP-16" params="*origin parent:=base_laser_mount name:=base_laser topic:=/velodyne_points hz:=10 lasers:=16 samples:=1875 collision_range:=0.3 min_range:=0.9 max_range:=130.0 noise:=0.008 min_angle:=-${M_PI} max_angle:=${M_PI} gpu:=false">
 
     <joint name="${name}_mount_joint" type="fixed">
       <xacro:insert_block name="origin" />
       <parent link="${parent}"/>
-      <child link="${name}_base_link"/>
+      <child link="${name}_shell"/>
     </joint>
+    
+    <!-- Link to Velodyne Puck. -->
 
-    <link name="${name}_base_link">
+    <link name="${name}_shell">
       <inertial>
         <mass value="0.83"/>
         <origin xyz="0 0 0.03585"/>
@@ -62,10 +64,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <joint name="${name}_scan_joint" type="fixed" >
       <origin xyz="0 0 0.0377" rpy="0 0 0" />
-      <parent link="${name}_base_link" />
+      <parent link="${name}_shell" />
       <child link="${name}"/>
     </joint>
 
+    <!-- Link to sensor -->
     <link name="${name}">
       <inertial>
         <mass value="0.01"/>
@@ -115,7 +118,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </ray>
           <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_gpu_laser.so">
             <topicName>${topic}</topicName>
-            <frameName>${frame}</frameName>
+            <frameName>${name}</frameName>
             <min_range>${min_range}</min_range>
             <max_range>${max_range}</max_range>
             <gaussianNoise>${noise}</gaussianNoise>
@@ -155,7 +158,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </ray>
           <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_laser.so">
             <topicName>${topic}</topicName>
-            <frameName>${frame}</frameName>
+            <frameName>${name}</frameName>
             <min_range>${min_range}</min_range>
             <max_range>${max_range}</max_range>
             <gaussianNoise>${noise}</gaussianNoise>
