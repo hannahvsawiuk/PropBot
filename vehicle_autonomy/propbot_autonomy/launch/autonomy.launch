@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <launch>
 
-  <!--- Run control -->
-  <!-- <include file="$(find propbot_control)/launch/control.launch" /> -->
+  <!--- Run state estimation -->
+  <include file="$(find propbot_state_estimation)/launch/ekf_filters.launch" />
 
-  <!--- Run gmapping -->
-  <include file="$(find propbot_navigation)/launch/gmapping.launch" />
+  <!-- - Launch SLAM-->
+  <include file="$(find propbot_slam)/launch/slam.launch" />
 
   <!--- Run Move Base -->
   <include file="$(find propbot_navigation)/launch/move_base.launch" />
