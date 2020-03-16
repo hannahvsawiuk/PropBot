@@ -20,6 +20,7 @@
   <run_depend>xacro</run_depend>
   <run_depend>lms1xx</run_depend>
   <run_depend>realsense2_camera</run_depend>
+  <run_depend>velodyne_gazebo_plugins</run_depend>
 
   <export>
   </export>
