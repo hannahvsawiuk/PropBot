@@ -9,9 +9,7 @@
 
     <!--- Run rviz -->
     <include file="$(find propbot_rviz)/launch/view_robot.launch" />
-
-    <!--- Run Mission Execution stack -->
-    <include file="$(find propbot_simulation)/launch/mission_sim.launch" />
+    
   </group>
 
 </launch>
