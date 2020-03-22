@@ -3465,5 +3465,42 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
         <view_controller>orbit</view_controller>
       </camera>
     </gui>
+
+    <!-- Moving Actors -->
+    <actor name="pacing_pedestrian">
+      <skin>
+        <filename>walk.dae</filename>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <script>
+        <trajectory id="0" type="walking">
+          <waypoint>
+            <time>0</time>
+            <pose>-2 2 0 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>2</time>
+            <pose>-2 -2 0 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>2.5</time>
+            <pose>-2 -2 0 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>7</time>
+            <pose>-2 2 0 0 0 1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>7.5</time>
+            <pose>-2 2 0 0 0 -1.57</pose>
+          </waypoint>
+        </trajectory>
+      </script>
+    </actor>
+
   </world>
 </sdf>
+
