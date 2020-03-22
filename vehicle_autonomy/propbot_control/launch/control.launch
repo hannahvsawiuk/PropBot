@@ -4,29 +4,6 @@
   <arg name="simulation" default="$(optenv ROBOT_SIMULATION false)"/>
   <arg name="robot_namespace" default="$(optenv ROBOT_NAMESPACE robot)"/>
 
-<<<<<<< HEAD
-=======
-  <arg name="laser_enabled" default="$(optenv PROPBOT_VLP-16_ENABLED false)"/>
-  <arg name="kinect_enabled" default="$(optenv PROPBOT_KINECT_ENABLED false)"/>
-  <arg name="spawn_lat" default="49.9" />
-  <arg name="spawn_long" default="8.9" />
-
-  <include file="$(find multimaster_launch)/launch/multimaster_robot.launch" if="$(arg multimaster)">
-    <arg name="gazebo_interface" value="$(find propbot_control)/config/gazebo_interface.yaml" />
-    <arg name="public_interface" value="$(find propbot_control)/config/public_interface.yaml" />
-    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
-    <arg name="simulation" value="$(arg simulation)"/>
-  </include>
-
-  <!-- Load robot description -->
-  <include file="$(find propbot_description)/launch/description.launch" >
-    <arg name="laser_enabled" default="$(arg laser_enabled)"/>
-    <arg name="kinect_enabled" default="$(arg kinect_enabled)"/>
-    <arg name="spawn_lat" value="$(arg spawn_lat)" />
-    <arg name="spawn_long" value="$(arg spawn_long)" />
-  </include>
-
->>>>>>> Velodyne is floating
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find propbot_control)/config/control.yaml" />
 
