@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>propbot_autonomy_arduino</name>
+  <name>propbot_autonomy_vehicle_interface</name>
   <version>0.0.1</version>
   <description>Hardware drivers for propbot</description>
   
