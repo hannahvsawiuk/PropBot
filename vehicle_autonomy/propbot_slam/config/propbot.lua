@@ -50,7 +50,7 @@ TRAJECTORY_BUILDER_2D.missing_data_ray_length = 2.
 TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 15
-TRAJECTORY_BUILDER_2D.min_z = -0.6
+TRAJECTORY_BUILDER_2D.min_z = 0.1
 TRAJECTORY_BUILDER_2D.max_z = 2.
 
 POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.angular_search_window = math.rad(15.)
