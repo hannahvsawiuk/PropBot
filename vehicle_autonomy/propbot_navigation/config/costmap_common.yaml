@@ -16,15 +16,7 @@ static_layer:
 
 obstacle_layer:
     observation_sources: 3d_lidar 
-    # laser: {
-    #     data_type: LaserScan, 
-    #     clearing: true, 
-    #     marking: true, 
-    #     topic: scan, 
-    #     inf_is_valid: true,
-    #     obstacle_range: 5.5,
-    #     raytrace_range: 6.0
-    #     }
+    
     camera: {
         data_type: PointCloud2,
         clearing: true, 
