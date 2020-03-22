@@ -5,3 +5,4 @@ track_unknown_space: true
 plugins:
   - {name: static_layer,                  type: "costmap_2d::StaticLayer"}
   - {name: inflation_layer,               type: "costmap_2d::InflationLayer"}
+  

@@ -22,7 +22,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 -->
 <launch>
 
-  <arg name="no_static_map" default="true"/>
+  <arg name="static_map" default="false"/>
 
   <arg name="base_global_planner" default="navfn/NavfnROS"/>
   <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
@@ -41,12 +41,10 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
     <rosparam file="$(find propbot_navigation)/config/costmap_local.yaml" command="load" ns="local_costmap" />
 
     <!-- static global costmap, static map provides size -->
-    <rosparam file="$(find propbot_navigation)/config/costmap_global_static.yaml" command="load" ns="global_costmap" unless="$(arg no_static_map)"/>
+    <rosparam file="$(find propbot_navigation)/config/costmap_global_static.yaml" command="load" ns="global_costmap" if="$(arg static_map)"/>
     
     <!-- global costmap with laser -->
-    <rosparam file="$(find propbot_navigation)/config/costmap_global_slam.yaml" command="load" ns="global_costmap" if="$(arg no_static_map)"/>
-    <param name="global_costmap/width" value="100.0" if="$(arg no_static_map)"/>
-    <param name="global_costmap/height" value="100.0" if="$(arg no_static_map)"/>
+    <rosparam file="$(find propbot_navigation)/config/costmap_global_slam.yaml" command="load" ns="global_costmap" unless="$(arg static_map)"/>
 
   </node>
 
