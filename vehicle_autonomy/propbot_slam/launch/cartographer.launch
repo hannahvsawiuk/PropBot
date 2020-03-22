@@ -10,7 +10,8 @@
     <remap from="imu" to="imu/data" />
     <remap from="odom" to="odometry/filtered" />
     <remap from="fix" to="/navsat/fix" />
-    <remap from="points2" to="/camera/depth/points" />
+    <remap from="points2_1" to="/camera/depth/points" />
+    <remap from="points2_2" to="/velodyne/points" />
   </node>
 
   <!-- Run Cartographer occupancy grid node -->
