@@ -15,8 +15,8 @@ static_layer:
     subscribe_to_updates: true
 
 obstacle_layer:
-    observation_sources: 3d_lidar 
-    
+    observation_sources: 3d_lidar camera
+
     camera: {
         data_type: PointCloud2,
         clearing: true, 
@@ -32,7 +32,7 @@ obstacle_layer:
         topic: /velodyne/points, 
         min_obstacle_height: 0.2,
         obstacle_range: 10,
-        raytrace_range: 15}
+        raytrace_range: 20}
 
 inflation_layer:
     inflation_radius: 1.0
