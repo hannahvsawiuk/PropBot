@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>propbot_demos</name>
+  <name>propbot_autonomy</name>
   <version>0.0.1</version>
-  <description>Propbot demos</description>
+  <description>Propbot autonomy</description>
   
   <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
   <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>

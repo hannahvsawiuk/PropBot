@@ -2,11 +2,9 @@
 
 <launch>
 
-  <arg name="mission_file" default="/missions/test_mission_1.txt" />
   <arg name="utm_zone" default="32" />
 
-  <node ns="/propbot_mission" pkg="propbot_mission" type="execute_mission" name="execute_mission" output="screen" />
-  <param name="/propbot_mission/mission_file" value="$(arg mission_file)" type="string" />
   <param name="/propbot_mission/utm_zone" value="$(arg utm_zone)" type="string" />
+  <node ns="/propbot_mission" pkg="propbot_mission" type="execute_mission" name="execute_mission" output="screen" />
 
 </launch>
