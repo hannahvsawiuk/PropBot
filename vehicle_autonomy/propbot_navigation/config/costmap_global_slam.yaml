@@ -1,6 +1,7 @@
 global_frame: odom
 rolling_window: true
 track_unknown_space: true
+lethal_cost_threshold: 64
 
 plugins:
   - {name: static_layer,                    type: "costmap_2d::StaticLayer"}

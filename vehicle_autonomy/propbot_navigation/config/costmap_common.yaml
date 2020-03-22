@@ -8,9 +8,6 @@ transform_tolerance: 0.5
 
 resolution: 0.05
 
-obstacle_range: 5.5
-raytrace_range: 6.0
-lethal_cost_threshold: 55
 
 #layer definitions
 static_layer:
@@ -19,8 +16,24 @@ static_layer:
 
 obstacle_layer:
     observation_sources: laser camera
-    laser: {data_type: LaserScan, clearing: true, marking: true, topic: scan, inf_is_valid: true}
-    camera: {data_type: PointCloud2, clearing: true, marking: true, topic: /camera/depth/points, inf_is_valid: true, min_obstacle_height: 0.05}
+    laser: {
+        data_type: LaserScan, 
+        clearing: true, 
+        marking: true, 
+        topic: scan, 
+        inf_is_valid: true,
+        obstacle_range: 5.5,
+        raytrace_range: 6.0
+        }
+    camera: {
+        data_type: PointCloud2,
+        clearing: true, 
+        marking: true, 
+        topic: /camera/depth/points, 
+        inf_is_valid: true, 
+        min_obstacle_height: 0.05,
+        obstacle_range: 5.5,
+        raytrace_range: 6.0}
 
 inflation_layer:
     inflation_radius: 1.0
