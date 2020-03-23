@@ -1,2 +1,3 @@
 publish_tf: false
 wait_from_transform: false
+rgbd_cameras: 1
