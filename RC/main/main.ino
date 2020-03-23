@@ -18,7 +18,7 @@ void setup()
 {
     // For debugging
     Serial.begin(9600);
-    Serial.print("Init");
+    Serial.println("Init");
 
     // Setup RC pins in input mode (input capture)
     pinMode(RC_RIGHT_CHANNEL_PIN,   INPUT);
@@ -41,7 +41,6 @@ void setup()
 void sendCommandMini(UC_DCMotor * uc_motor, wheel_motor_command_t command) {
     // BRAKE condition
     if (command.brake_release == ENGAGE_BRAKE) {  
-        Serial.println("Braking...") ;
         uc_motor->run(STOP);
         uc_motor->setSpeed(0);
         return;
@@ -50,16 +49,12 @@ void sendCommandMini(UC_DCMotor * uc_motor, wheel_motor_command_t command) {
     // Step 1: set rotation direction
     String debug_str = String();
     if (command.dir == DIR_FW) {
-        debug_str += String("Direction: BW");
         uc_motor->run(FORWARD);
     } else {
-        debug_str += String("Direction: BW");
         uc_motor->run(BACKWARD);
     }
 
     // Step 2: set speed
-    debug_str += String("Speed: ") + command.duty_cycle;
-    Serial.println(debug_str);
     uc_motor->setSpeed(command.duty_cycle * TOP);
 }
 
@@ -70,7 +65,6 @@ void loop()
 
     // Send commands to wheels
     for (int i = wheel_indices::Start + 1; i < wheel_indices::End; i++ ) {
-        Serial.println(String("Index: ") + i);
         sendCommandMini(minis[i], commands[i]);
     }
 }
