@@ -23,6 +23,6 @@
 #define RC_SWX_HIGH_MIN             1900//1974
 
 /*  Function prototypes for rc commands */
-Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(); 
+Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(void); 
 
 #endif // !RC_COMMANDS_H

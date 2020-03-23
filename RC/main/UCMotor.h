@@ -1,3 +1,11 @@
+/**
+ * @file UCMotor.h
+ * @author 
+ * @brief This was fetched from https://github.com/UCTRONICS/Smart-Robot-Car-Arduino/tree/master/UCTRONICS_Smart_Robot_Car
+ * 
+ * @note No edits have been made to to this file aside from the brief
+ * 
+ */
 // UCTRONICS Motor shield library
 // this code is public domain, enjoy!
 
