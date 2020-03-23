@@ -14,7 +14,7 @@
     </include>
 
     <!-- - Launch state estimation -->
-    <include file="$(find propbot_state_estimation)/launch/ekf_filters.launch" />
+    <include file="$(find propbot_state_estimation)/launch/state_estimation.launch" />
 
     <!-- - Launch SLAM-->
     <include file="$(find propbot_slam)/launch/slam.launch" />

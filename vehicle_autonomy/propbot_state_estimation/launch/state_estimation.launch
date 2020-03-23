@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <!-- - Launch visual odometry -->
+    <include file="$(find propbot_state_estimation)/launch/visual_odometry.launch" />
+
+    <!-- - Launch state estimation -->
+    <include file="$(find propbot_state_estimation)/launch/ekf_filters.launch" />
+
+</launch>
