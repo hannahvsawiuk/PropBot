@@ -98,8 +98,7 @@ Now that ROS has been installed, we need to start by building Google Cartographe
 The script to setup the custom version of Cartographer is in `vehicle_autonomy/scripts`. To run the setup for the `cartographer_ws`, run the following command:
 
 ```bash
-. ~/propbot_ws/src/PropBot/vehicle_autonomy/scripts/setup_cartographer_build.sh ~/cartographer_ws
-
+~/propbot_ws/src/PropBot/vehicle_autonomy/scripts/setup_cartographer_build.sh ~/cartographer_ws
 ```
 
 If everything runs smoothly, you should see the following when the process finishes
@@ -109,9 +108,9 @@ If everything runs smoothly, you should see the following when the process finis
 #### Build the Cartographer workspace
 
 Run the following to initialize and build the workspace
+
 ```bash
 cd ~/cartographer_ws
-catkin init
 catkin build
 ```
 
@@ -141,9 +140,19 @@ For more information on `catkin config`, see here: https://catkin-tools.readthed
 
 To ensure that everything runs smoothly, the dependencies specified by the Propbot packages need to be installed. To accomplish this, run the following:
 
+**Ubuntu**
+
 ```bash
 cd ~/propbot_ws
-rosdep install --os=ubuntu:bionic --from-paths src --ignore-src
+rosdep install --from-paths src --ignore-src
+```
+
+**Alternative Distros**
+If you are not using Ubuntu, the `--os` argument is needed, e.g. `--os=ubuntu:bionic`:
+
+```bash
+cd ~/propbot_ws
+rosdep install --os=<distro info> --from-paths src --ignore-src
 ```
 
 ##### A note on rosdep
