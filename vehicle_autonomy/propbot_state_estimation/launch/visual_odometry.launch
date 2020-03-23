@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <group ns="camera">
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="visual_odometry_node" clear_params="true">
+      <rosparam command="load" file="$(find propbot_state_estimation)/config/rgbd_odometry.yaml" />
+      <remap from="odom" to="visual/odom" />
+      <remap from="rgb/image" to="rgb/image_raw" />
+      <remap from="depth/image" to="depth/image_raw" />
+    </node>
+  </group>
+
+</launch>
