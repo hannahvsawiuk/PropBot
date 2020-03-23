@@ -1,0 +1,11 @@
+diff -ur original/drivers/media/usb/uvc/uvc_ctrl.c modified/drivers/media/usb/uvc/uvc_ctrl.c
+--- original/drivers/media/usb/uvc/uvc_ctrl.c	2019-12-09 22:38:02.000000000 -0800
++++ modified/drivers/media/usb/uvc/uvc_ctrl.c	2020-03-22 17:04:29.125986708 -0700
+@@ -357,6 +357,7 @@
+ 	{ 0, "Disabled" },
+ 	{ 1, "50 Hz" },
+ 	{ 2, "60 Hz" },
++	{ 3, "Auto" },
+ };
+ 
+ static struct uvc_menu_info exposure_auto_controls[] = {
