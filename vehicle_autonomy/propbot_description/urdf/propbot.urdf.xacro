@@ -161,7 +161,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <child link="camera_link"/>
     </joint>
 
-    <xacro:kinect_camera prefix="camera" robot_namespace="$(arg robot_namespace)"/>
+    <realsense_d435 name="camera" parent="sensor_arch_mount_link">
+      <origin xyz="$(arg depth_camera_xyz)" rpy="$(arg depth_camera_rpy)" robot_namespace="$(arg robot_namespace)"/>
+     </realsense_d435>
   </xacro:if>
 
   <!-- TODO: Enable Realsense -->

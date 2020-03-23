@@ -15,7 +15,7 @@ static_layer:
     subscribe_to_updates: true
 
 obstacle_layer:
-    observation_sources: 3d_lidar camera
+    observation_sources: camera 3d_lidar 
 
     camera: {
         data_type: PointCloud2,
