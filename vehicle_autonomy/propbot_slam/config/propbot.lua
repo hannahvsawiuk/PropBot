@@ -25,7 +25,7 @@ options = {
   provide_odom_frame = true,
   publish_frame_projected_to_2d = false,
   use_odometry = false,
-  use_nav_sat = false,
+  use_nav_sat = true,
   use_landmarks = false,
   num_laser_scans = 1,
   num_multi_echo_laser_scans = 0,
@@ -48,7 +48,7 @@ TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
 
 TRAJECTORY_BUILDER_2D.min_range = 0.3
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 2.
-TRAJECTORY_BUILDER_2D.use_imu_data = false
+TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 15
 

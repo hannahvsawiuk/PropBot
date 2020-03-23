@@ -1,0 +1,10 @@
+global_frame: odom
+rolling_window: true
+track_unknown_space: true
+lethal_cost_threshold: 64
+width: 100
+height: 100
+
+plugins:
+  - {name: static_layer,                    type: "costmap_2d::StaticLayer"}
+  - {name: inflation_layer,                 type: "costmap_2d::InflationLayer"}

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   roslaunch
   propbot_util
+  mapviz_plugins
 )
 
 catkin_package()
@@ -25,8 +26,8 @@ include_directories(
 
 add_library(propbot_mission 
   src/waypoint.cc
-  src/mission.cc
   src/mission_handler.cc
+  src/mission_command_interface.cc
 )
 
 add_executable(execute_mission 
