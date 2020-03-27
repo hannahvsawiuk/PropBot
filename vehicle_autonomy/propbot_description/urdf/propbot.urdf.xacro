@@ -45,8 +45,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <!-- Included URDF/XACRO Files -->
   <xacro:include filename="$(find propbot_description)/urdf/decorations.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/wheel.urdf.xacro" />
-
-  <xacro:include filename="$(find propbot_description)/urdf/accessories/kinect_camera.urdf.xacro"/>
+  <xacro:include filename="$(find propbot_description)/urdf/accessories/realsense_d435.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/sensor_arch.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/VLP-16_mount.urdf.xacro"/>
 
@@ -155,8 +154,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <xacro:sensor_arch prefix="" parent="top_plate_link">
       <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
     </xacro:sensor_arch>
-    <joint name="kinect_frame_joint" type="fixed">
-      <origin xyz="$(arg kinect_xyz)" rpy="$(arg kinect_rpy)" />
+    <joint name="rgbd_camera_frame_joint" type="fixed">
+      <origin xyz="$(arg rgbd_camera_xyz)" rpy="$(arg rgbd_camera_rpy)" />
       <parent link="sensor_arch_mount_link"/>
       <child link="camera_link"/>
     </joint>

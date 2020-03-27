@@ -114,7 +114,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <far>8.0</far>
           </clip>
         </camera>
-        <plugin name="kinect_${name}_controller" filename="libgazebo_ros_openni_kinect.so">
+        <plugin name="realsense_${name}_controller" filename="libgazebo_ros_openni_kinect.so">
           <cameraName>${name}</cameraName>
           <alwaysOn>true</alwaysOn>
           <updateRate>10</updateRate>
