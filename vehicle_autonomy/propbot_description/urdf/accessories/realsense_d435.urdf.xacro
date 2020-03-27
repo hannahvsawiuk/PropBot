@@ -33,13 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   <xacro:macro name="realsense_d435" params="parent *origin name:=camera robot_namespace:=/">
     <xacro:property name="M_PI" value="3.1415926535897931" />
-  
-    <!-- The following values are approximate, and the camera node
-     publishing TF values with actual calibrated camera extrinsic values -->
-    <xacro:property name="d435_cam_depth_to_infra1_offset" value="0.0"/>
-    <xacro:property name="d435_cam_depth_to_infra2_offset" value="-0.050"/>
-    <xacro:property name="d435_cam_depth_to_color_offset" value="0.015"/>
-
+    
     <!-- The following values model the aluminum peripherial case for the
   	D435 camera, with the camera joint represented by the actual
   	peripherial camera tripod mount -->
@@ -103,6 +97,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <always_on>true</always_on>
         <update_rate>20.0</update_rate>
         <camera>
+          <!-- Horizontal FOV is 69 degrees -->
           <horizontal_fov>${69.0*M_PI/180.0}</horizontal_fov>
           <image>
             <format>R8G8B8</format>
