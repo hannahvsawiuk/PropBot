@@ -80,7 +80,11 @@ tags
 
 ### VisualStudioCode ###
 .vscode/*
+<<<<<<< HEAD
 !.vscode/settings.json
+=======
+# !.vscode/settings.json
+>>>>>>> 68ec067... Ignore vscode settings file
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
