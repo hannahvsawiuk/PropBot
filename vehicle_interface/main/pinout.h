@@ -4,6 +4,11 @@
 // Pins defined by the UCMotor header
 #include "UCMotor.h"
 
+//Pin definitions for the ultrasonic sensor(MB1202)
+#define SCL_PIN 5              //Default SDA is Pin5 PORTC for the UNO -- you can set this to any tristate pin
+#define SCL_PORT PORTC 
+#define SDA_PIN 4              //Default SCL is Pin4 PORTC for the UNO -- you can set this to any tristate pin
+#define SDA_PORT PORTC
 
 // Pin definitions for the RC receiver
 #ifdef __AVR_ATmega328P__ 

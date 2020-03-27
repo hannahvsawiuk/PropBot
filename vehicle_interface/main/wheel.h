@@ -9,7 +9,7 @@
 /* Define Important Values */
 #if defined(__AVR_ATmega328P__)
         #define TOP 0XFF
-    #elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+    #elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
         #define TOP 0x03FF     // Top value of the registers (configuration done in MAIN) 
 #endif
 
