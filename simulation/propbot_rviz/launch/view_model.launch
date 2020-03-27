@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="laser_enabled" default="$(optenv PROPBOT_LMS1XX_ENABLED false)"/>
+  <arg name="laser_enabled" default="$(optenv PROPBOT_VLP-16_ENABLED false)"/>
   <arg name="kinect_enabled" default="false"/>
 
   <!-- Standalone launcher to visualize the robot model. -->

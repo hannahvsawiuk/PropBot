@@ -27,10 +27,10 @@ options = {
   use_odometry = false,
   use_nav_sat = true,
   use_landmarks = false,
-  num_laser_scans = 1,
+  num_laser_scans = 0,
   num_multi_echo_laser_scans = 0,
   num_subdivisions_per_laser_scan = 1,
-  num_point_clouds = 0,
+  num_point_clouds = 1,
   lookup_transform_timeout_sec = 0.2,
   submap_publish_period_sec = 0.3,
   pose_publish_period_sec = 5e-3,
@@ -45,12 +45,13 @@ options = {
 MAP_BUILDER.use_trajectory_builder_2d = true
 
 TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
-
 TRAJECTORY_BUILDER_2D.min_range = 0.3
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 2.
 TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 10
 TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 15
+TRAJECTORY_BUILDER_2D.min_z = 0.1
+TRAJECTORY_BUILDER_2D.max_z = 2.
 
 POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.angular_search_window = math.rad(15.)
 POSE_GRAPH.constraint_builder.fast_correlative_scan_matcher.linear_search_window = 3.
@@ -68,7 +69,7 @@ POSE_GRAPH.global_constraint_search_after_n_seconds = 30 -- Increase
 
 ---------Global/Local SLAM---------
 TRAJECTORY_BUILDER_2D.submaps.num_range_data = 100 -- Decrease
-TRAJECTORY_BUILDER_2D.max_range = 10. -- Decrease
+TRAJECTORY_BUILDER_2D.max_range = 20. -- Decrease
 
 -------------------------------------------------------------------------------------
 
