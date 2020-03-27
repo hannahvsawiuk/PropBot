@@ -1,10 +1,23 @@
-#include <FileIO.h>
-
+#include<EEPROM.h>
 int rc_channel2 = 3;
 int rc_channel3 = 4;
 int switchA = 6;  //Channel 5
 int switchB = 7;  //Channel 6
-File script;
+
+//Address in EEPROM
+const int rc2_addr_max = 0;
+const int rc2_addr_min = 1;
+const int rc2_addr_central = 2;
+
+const int rc3_addr_max = 3;
+const int rc3_addr_min = 4;
+const int rc3_addr_central = 5;
+
+const int rc5_addr_zero = 6;
+const int rc5_addr_one = 7;
+
+const int rc6_addr_zero = 8;
+const int rc6_addr_one = 9;
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,8 +25,6 @@ void setup() {
   pinMode(rc_channel3, INPUT);
   pinMode(switchA, INPUT);
   pinMode(switchB, INPUT); 
-  FileSystem.begin();
-  File script = FileSystem.open("RC_Threshold.txt", FILE_WRITE);
   Serial.begin(9600);
 }
 
@@ -26,71 +37,64 @@ void loop() {
 //**********Right Joystick**********//
   //MAX Position
   Serial.println("Please move the right joystick to the maximum position\n");
-  script.print("Righ Joystick\n");
   delay(2000);
   rc2 = pulseIn(rc_channel2, HIGH);
-  script.print("MAX: "); script.println(rc2); script.print("\n");
-  
+  EEPROM.put(rc2_addr_max, rc2);  
   //MIN Position
   Serial.println("Please move the right joystick to the minimum position\n");
   delay(2000);
   rc2 = pulseIn(rc_channel2, HIGH);
-  script.print("MIN: "); script.println(rc2); script.print("\n");
+  EEPROM.put(rc2_addr_min, rc2);  
 
   //Central Position
   Serial.println("Please move the right joystick to the central position\n");
   delay(2000);
   rc2 = pulseIn(rc_channel2, HIGH);
-  script.print("Central: "); script.println(rc2); script.print("\n");
+  EEPROM.put(rc2_addr_central, rc2);  
 
 //**********Left Joystick**********//
   //MAX Position
   Serial.println("Please move the left joystick to the maximum position\n");
-  script.print("Left Joystick\n");
   delay(2000);
   rc3 = pulseIn(rc_channel3, HIGH);
-  script.print("MAX: "); script.println(rc3); script.print("\n");
+  EEPROM.put(rc3_addr_max, rc3);  
   
   //MIN Position
   Serial.println("Please move the left joystick to the minimum position\n");
   delay(2000);
   rc3 = pulseIn(rc_channel3, HIGH);
-  script.print("MIN: "); script.println(rc3); script.print("\n");
+  EEPROM.put(rc3_addr_min, rc3);  
 
   //Central Position
   Serial.println("Please move the left joystick to the central position\n");
   delay(2000);
   rc3 = pulseIn(rc_channel3, HIGH);
-  script.print("Central: "); script.println(rc3); script.print("\n");
+  EEPROM.put(rc3_addr_central, rc3);  
 
 //**********Switch A(Remote E-stop)**********//
   //Position 0
   Serial.println("Please move Switch A to 0\n");
-  script.print("Switch A\n");
   delay(2000);
   swa = pulseIn(switchA, HIGH);
-  script.print("MAX: "); script.println(swa); script.print("\n");
-  
+  EEPROM.put(rc5_addr_zero, swa);  
   //Position 1
   Serial.println("Please move Switch A to 1\n");
   delay(2000);
   swa = pulseIn(switchA, HIGH);
-  script.print("MIN: "); script.println(swa); script.print("\n");
+  EEPROM.put(rc5_addr_one, swa);  
 
 //**********Switch B(Mode Switch)**********//
   //Position 0
   Serial.println("Please move Switch B to 0\n");
-  script.print("Switch B\n");
   delay(2000);
   swb = pulseIn(switchB, HIGH);
-  script.print("MAX: "); script.println(swb); script.print("\n");
+  EEPROM.put(rc6_addr_zero, swb);  
   
   //Position 1
   Serial.println("Please move Switch B to 1\n");
   delay(2000);
   swb = pulseIn(switchB, HIGH);
-  script.print("MIN: "); script.println(swb); script.print("\n");
+  EEPROM.put(rc6_addr_one, swb);  
   
-  script.close();
   for(;;){} //stop the loop function
 }
