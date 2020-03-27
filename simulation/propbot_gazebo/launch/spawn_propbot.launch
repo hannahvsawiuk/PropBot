@@ -33,7 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <arg name="yaw" default="0.0" />
 
   <arg name="laser_enabled" default="$(optenv PROPBOT_LMS1XX_ENABLED false)" />
-  <arg name="kinect_enabled" default="$(optenv PROPBOT_UR5_ENABLED false)" />
+  <arg name="rgbd_camera_enabled" default="$(optenv PROPBOT_UR5_ENABLED false)" />
   <arg name="spawn_lat" default="49.9" />
   <arg name="spawn_long" default="8.9" />
 
@@ -43,7 +43,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <!-- Load robot description -->
     <include file="$(find propbot_description)/launch/description.launch">
       <arg name="laser_enabled" default="$(arg laser_enabled)" />
-      <arg name="kinect_enabled" default="$(arg kinect_enabled)" />
+      <arg name="rgbd_camera_enabled" default="$(arg rgbd_camera_enabled)" />
       <arg name="spawn_lat" value="$(arg spawn_lat)" />
       <arg name="spawn_long" value="$(arg spawn_long)" />
     </include>
