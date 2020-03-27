@@ -10,6 +10,9 @@ sensor_timeout: 0.1
 two_d_mode: true
 debug: true
 
+# config parameter format
+# config: [X,Y,Z,roll,pitch,yaw,X',Y',Z',roll',pitch',yaw',X",Y",Z"]
+
 pose0: /slam/map/pose
 pose0_config: [true,  true,  true,
               false, true, true,
