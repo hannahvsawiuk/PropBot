@@ -26,13 +26,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 <launch>
 
   <arg name="laser_enabled" default="true"/>
-  <arg name="kinect_enabled" default="false"/>
+  <arg name="rgbd_camera_enabled" default="false"/>
 
   <include file="$(find propbot_gazebo)/launch/playpen_people.launch" />
 
   <include file="$(find propbot_gazebo)/launch/spawn_propbot.launch">
     <arg name="laser_enabled" value="$(arg laser_enabled)"/>
-    <arg name="kinect_enabled" value="$(arg kinect_enabled)"/>
+    <arg name="rgbd_camera_enabled" value="$(arg rgbd_camera_enabled)"/>
   </include>
 
 </launch>
