@@ -101,7 +101,7 @@ After flashing unplug the drive and plug it into the TX1's Sata port.
 The flash script will have restarted the TX1 automatically but it will have
 failed booting due to the missing drive. Press the Reset button once to reboot the TX1.
 
-#### Post Flash
+### Post Flash
 
 After flashing with one of the methods the setup must be completed.
 To do this, connect the TX1 to a monitor, keyboard, and mouse. This setup process
@@ -114,3 +114,22 @@ Open a terminal on the TX1 and run:
 $ sudo apt update
 $ sudo apt upgrade
 ```
+
+### Nvidia Drivers/Libraries
+
+Another thing missing will be CUDA, OpenCV, and other libraries that Nvidia
+installs on Jetsons. This can be installed via the Nvidia SDKManager. The program
+is free but you must register as a Nvidia developer with your UBC alumni email.
+
+After installing and opening SDKManager select the Jetson TX1 and the same version
+of Jetpack you installed (Newer one may be backwards compatible).
+
+At the second step make sure to disable the option for downloading of the Jetson TX1 OS
+and flashing it. We only need SDKManager to install cuda and other stuff on the TX1.
+
+Make sure the Jetson TX1 has a fast internet connection and that you can SSH into it from
+the computer running SDKManager. Now proceed onto the next step, SDKManager will ask for
+the IP address and login credentials for the TX1. Provide these and let the installation run.
+
+The process overall easily takes 20+ minutes, even worse if on a slow internet connection.
+After it is done the Jetson TX1 should have CUDA and other libraries onboard.
