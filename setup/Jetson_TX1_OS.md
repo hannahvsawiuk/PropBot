@@ -1,5 +1,8 @@
 # Jetson TX1
 
+**These instructions are outdated but kept for reference.
+Prefer the instructions in the Jetson directory**
+
 These are instructions for re-flashing the OS on the Jetson TX1.
 
 ## Required Stuff

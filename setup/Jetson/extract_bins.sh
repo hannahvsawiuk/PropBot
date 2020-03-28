@@ -54,13 +54,4 @@ for f in "${check_files[@]}"; do
     fi
 done
 
-echo "Extracting $ROOTFS_TAR..."
-# Yes this must be extracted with sudo to get correct permissions
-sudo tar -C build/Linux_for_Tegra/rootfs -xvf "$PWD/$ROOTFS_TAR"
-
-if [ ! -f "build/Linux_for_Tegra/rootfs/etc/passwd" ]; then
-    echo "Rootfs tarball did not extract correctly"
-    exit 1
-fi
-
 echo "Done extracting all bins!"
