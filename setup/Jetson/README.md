@@ -43,3 +43,74 @@ File: `Tegra_Linux_Sample-Root-Filesystem_R32.3.1_aarch64.tbz2`
 This is the actual root filesystem Nvidia uses for the TX1 despite being called
 "Sample".
 
+
+## Building
+
+### Extracting Binaries
+
+Run the extract script which will extra all the archives into their locations
+
+```sh
+$ ./extract_bins.sh
+```
+
+### Building the Kernel
+
+Build the kernel, this also applies the patches for the realsense
+
+```sh
+$ ./build_kernel.sh
+```
+
+### Flashing TX1
+
+There are two storage configurations possible:
+- Internal Storage
+- Sata SSD (Do NOT use a hard drive as they take too much power)
+
+#### Internal Storage
+
+To flash:
+
+```sh
+$ ./flash_tx1.sh
+```
+
+#### Sata Drive
+
+A Sata drive can be connected to your computer using a Sata to USB adapter
+which can be found cheaply online or at a computer parts store like memory express.
+
+Plug the drive into your computer and note its device name.
+Usually this is /dev/sda, /dev/sdb, ... depending on how many
+disks your computer already has.
+
+Drive Format:
+- The drive should be using a GPT partition table
+- The drive should exactly 1 partition named /dev/sdX1 (X = a,b,c,...)
+
+If the drive isn't already formatted this way you can use gparted to format it.
+
+Assuming that the drive is /dev/sdf then to flash:
+
+```sh
+$ ./flash_tx1.sh /dev/sdf1
+```
+
+After flashing unplug the drive and plug it into the TX1's Sata port.
+The flash script will have restarted the TX1 automatically but it will have
+failed booting due to the missing drive. Press the Reset button once to reboot the TX1.
+
+#### Post Flash
+
+After flashing with one of the methods the setup must be completed.
+To do this, connect the TX1 to a monitor, keyboard, and mouse. This setup process
+is the same as setting up any other Ubuntu Linux system for the first time.
+
+After you are done setup it is recommended to update the system.
+
+Open a terminal on the TX1 and run:
+```sh
+$ sudo apt update
+$ sudo apt upgrade
+```
