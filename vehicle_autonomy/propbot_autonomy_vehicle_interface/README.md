@@ -1,9 +1,9 @@
 # PropBot
 Using the following commands to install Arduino Rosserial Library:
 
-$ sudo apt-get install ros-kinetic-rosserial-arduino ros-kinetic-
-rosserial-embeddedlinux ros-kinetic-rosserial-windows ros-kinetic-
-rosserial-server ros-kinetic-rosserial-python
+$ sudo apt-get install ros-melodic-rosserial-arduino ros-melodic-
+rosserial-embeddedlinux ros-melodic-rosserial-windows ros-melodic-
+rosserial-server ros-melodic-rosserial-python
 
 $ cd ~/catkin_ws/src/
 
