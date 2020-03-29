@@ -22,6 +22,8 @@
 #define RC_SWX_HIGH_MAX             2000//1981
 #define RC_SWX_HIGH_MIN             1900//1974
 
+/*  Define the minimum distance that the ultrasonic sensor can detect*/
+#define MIN_DISTANCE                25
 /*  Function prototypes for rc commands */
 Array<wheel_motor_command_t, NUM_WHEELS> fetch_rc_commands(void); 
 

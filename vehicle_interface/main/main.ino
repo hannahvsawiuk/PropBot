@@ -64,8 +64,8 @@ void sendCommandMini(UC_DCMotor * uc_motor, wheel_motor_command_t command) {
 
 void loop()
 {
-    int distance = read_the_sensor_example();
-    if (distance > 25){
+    int distance = read_ultrasonic_sensor();
+    if (distance > MIN_DISTANCE){
     // Update wheel commands
     commands = fetch_rc_commands(); 
     }
@@ -80,9 +80,9 @@ void loop()
 }
 
 //////////////////////////////////////////////////////////
-// Code Example: Read the sensor at the default address //
+//       Read the sensor at the default address         //
 //////////////////////////////////////////////////////////
-int read_the_sensor_example(){
+int read_ultrasonic_sensor(){
   boolean error = 0;  //Create a bit to check for catch errors as needed.
   int distance;
   
