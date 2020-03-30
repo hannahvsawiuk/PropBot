@@ -16,7 +16,6 @@
 
   <build_depend>libqt_dev</build_depend>
   <build_depend>libqt_opengl_dev</build_depend>
-  <build_depend>message_generation</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <depend>mapviz</depend>
   <depend>marti_common_msgs</depend>
@@ -30,7 +29,6 @@
   
   <exec_depend>libqt_core</exec_depend>
   <exec_depend>libqt_opengl</exec_depend>
-  <exec_depend>message_runtime</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
 
   <export>
