@@ -23,7 +23,7 @@ void MissionCommandInterface::UploadMission(
   std::vector<Waypoint> gps_waypoints;
 
   // Check if a mission handler has been instantiated with a mission
-  if (mission_handler_&&(!mission_handler_->Finished())) {
+  if (mission_handler_) {
     ROS_ERROR("A mission is already in progress. Cannot upload new mission! Please end current mission.");
     return;
   }
