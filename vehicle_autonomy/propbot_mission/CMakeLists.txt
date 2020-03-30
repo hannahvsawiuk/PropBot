@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   roslaunch
   propbot_util
-  mapviz_plugins
+  propbot_common_msgs
 )
 
 catkin_package()

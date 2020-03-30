@@ -32,7 +32,7 @@ class MissionHandler {
   MissionHandler(const Mission& mission)
       : mission_(mission),
         current_waypoint_index_(0),
-        finished_(false),
+        finished_(true),
         failed_(false){};
 
   // Mission commands

@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include <mapviz_plugins/Mission.h>
-#include <mapviz_plugins/MissionCommand.h>
+#include <propbot_common_msgs/Mission.h>
+#include <propbot_common_msgs/MissionCommand.h>
 
 #include <propbot_mission/mission_handler.hh>
 
@@ -21,8 +21,8 @@ class MissionCommandInterface {
   MissionCommandInterface() = delete;
   MissionCommandInterface(std::string utm_zone) : utm_zone_(utm_zone) {}
 
-  void UploadMission(const mapviz_plugins::Mission& mission);
-  void SendMissionCommand(const mapviz_plugins::MissionCommand& mission_command);
+  void UploadMission(const propbot_common_msgs::Mission& mission);
+  void SendMissionCommand(const propbot_common_msgs::MissionCommand& mission_command);
 
  private:
 

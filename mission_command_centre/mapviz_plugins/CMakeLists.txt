@@ -10,6 +10,7 @@ set(DEPENDENCIES
   swri_transform_util
   tf 
   geometry_msgs
+  propbot_common_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS ${DEPENDENCIES}
