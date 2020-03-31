@@ -53,9 +53,9 @@
 
 
 // msg headers
-#include <mapviz_plugins/Mission.h>
-#include <mapviz_plugins/MissionCommand.h>
-#include <mapviz_plugins/MissionCommandCode.h>
+#include <propbot_common_msgs/Mission.h>
+#include <propbot_common_msgs/MissionCommand.h>
+#include <propbot_common_msgs/MissionCommandCode.h>
 
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
@@ -106,9 +106,9 @@ PlanMissionPlugin::PlanMissionPlugin()
                    SLOT(ResumeMissionCommand()));
   QObject::connect(ui_.end_mission, SIGNAL(clicked()), this,
                    SLOT(EndMissionCommand()));
-  mission_command_pub_ = node_.advertise<mapviz_plugins::MissionCommand>("/mapviz/mission_command", 10, false);
+  mission_command_pub_ = node_.advertise<propbot_common_msgs::MissionCommand>("/mapviz/mission_command", 10, false);
 
-  mission_pub_ = node_.advertise<mapviz_plugins::Mission>("/mapviz/mission", 10, false);
+  mission_pub_ = node_.advertise<propbot_common_msgs::Mission>("/mapviz/mission", 10, false);
 }
 
 
@@ -130,7 +130,7 @@ PlanMissionPlugin::~PlanMissionPlugin() {
  *
  */
 void PlanMissionPlugin::StartMissionCommand(){
-  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_START;
+  uint16_t mission_command_code = propbot_common_msgs::MissionCommandCode::MISSION_START;
   PrintInfo("Starting mission");
   SendMissionCommand( mission_command_code );
 }
@@ -143,7 +143,7 @@ void PlanMissionPlugin::StartMissionCommand(){
  *
  */
 void PlanMissionPlugin::PauseMissionCommand(){
-  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_PAUSE;
+  uint16_t mission_command_code = propbot_common_msgs::MissionCommandCode::MISSION_PAUSE;
   PrintInfo("Pausing mission");
   SendMissionCommand( mission_command_code );
 }
@@ -157,7 +157,7 @@ void PlanMissionPlugin::PauseMissionCommand(){
  *
  */
 void PlanMissionPlugin::ResumeMissionCommand(){
-  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_RESUME;
+  uint16_t mission_command_code = propbot_common_msgs::MissionCommandCode::MISSION_RESUME;
   PrintInfo("Resuming mission");
   SendMissionCommand( mission_command_code );
 }
@@ -169,7 +169,7 @@ void PlanMissionPlugin::ResumeMissionCommand(){
  *
  */
 void PlanMissionPlugin::EndMissionCommand(){
-  uint16_t mission_command_code = mapviz_plugins::MissionCommandCode::MISSION_END;
+  uint16_t mission_command_code = propbot_common_msgs::MissionCommandCode::MISSION_END;
   PrintInfo("Ending mission");
   SendMissionCommand( mission_command_code );
 }
@@ -181,7 +181,7 @@ void PlanMissionPlugin::EndMissionCommand(){
  *
  */
 void PlanMissionPlugin::SendMissionCommand( uint16_t command_code ){
-  mapviz_plugins::MissionCommand mission_command;
+  propbot_common_msgs::MissionCommand mission_command;
   mission_command.header.stamp = ros::Time::now();
   mission_command.command = command_code;
   mission_command_pub_.publish(mission_command);
@@ -200,7 +200,7 @@ void PlanMissionPlugin::UploadMission() {
     return;
   }
 
-  mapviz_plugins::Mission mission;
+  propbot_common_msgs::Mission mission;
 
   // configure mission ROS message
   mission.header.frame_id = stu::_wgs84_frame;

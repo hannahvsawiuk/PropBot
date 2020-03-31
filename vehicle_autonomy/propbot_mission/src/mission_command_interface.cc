@@ -4,7 +4,7 @@
 #include <ros/ros.h>
 #include <vector>
 
-#include <mapviz_plugins/MissionCommandCode.h>
+#include <propbot_common_msgs/MissionCommandCode.h>
 #include <propbot_mission/mission.hh>
 #include <propbot_mission/waypoint.hh>
 #include <propbot_util/exception.hh>
@@ -19,11 +19,11 @@ using namespace propbot;
  * @param mission Mission received from mapviz to be uploaded to the robot 
  */
 void MissionCommandInterface::UploadMission(
-    const mapviz_plugins::Mission& mission) {
+    const propbot_common_msgs::Mission& mission) {
   std::vector<Waypoint> gps_waypoints;
 
   // Check if a mission handler has been instantiated with a mission
-  if (!mission_handler_) {
+  if (mission_handler_) {
     ROS_ERROR("A mission is already in progress. Cannot upload new mission! Please end current mission.");
     return;
   }
@@ -61,7 +61,7 @@ void MissionCommandInterface::UploadMission(
  * 
  */
 void MissionCommandInterface::SendMissionCommand(
-    const mapviz_plugins::MissionCommand& mission_command) {
+    const propbot_common_msgs::MissionCommand& mission_command) {
   
   // Check if a mission handler has been instantiated with a mission
   if (!mission_handler_) {
@@ -69,7 +69,7 @@ void MissionCommandInterface::SendMissionCommand(
     return;
   }
 
-  using command = mapviz_plugins::MissionCommandCode;
+  using command = propbot_common_msgs::MissionCommandCode;
 
   // Call mission handler functions based on mission commands
   switch (mission_command.command) {

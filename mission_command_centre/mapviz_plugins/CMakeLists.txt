@@ -5,28 +5,16 @@ set(DEPENDENCIES
   mapviz
   marti_nav_msgs
   pluginlib 
-  roscpp 
-  std_msgs 
+  roscpp  
   swri_route_util
   swri_transform_util
+  swri_image_util
   tf 
   geometry_msgs
+  propbot_common_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS ${DEPENDENCIES}
-message_generation
-)
-
-add_message_files(
-  FILES
-  Mission.msg
-  MissionCommand.msg
-  MissionCommandCode.msg
-)
-
-generate_messages(
-  DEPENDENCIES
-  geometry_msgs
 )
 
 
@@ -73,7 +61,6 @@ catkin_package(
   LIBRARIES ${PROJECT_NAME}
   DEPENDS Qt
   CATKIN_DEPENDS ${DEPENDENCIES}
-  message_runtime
 )
 
 # Fix conflict between Boost signals used by tf and QT signals used by mapviz
