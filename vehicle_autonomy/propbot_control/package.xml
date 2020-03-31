@@ -26,6 +26,7 @@
   <run_depend>controller_manager</run_depend>
   <run_depend>teleop_twist_joy</run_depend>
   <run_depend>twist_mux</run_depend>
+  <run_depend>realsense2_camera</run_depend>
 
   <export>
   </export>
