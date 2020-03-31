@@ -4,7 +4,7 @@
   <arg name="simulation" default="$(optenv ROBOT_SIMULATION false)"/>
   <arg name="robot_namespace" default="$(optenv ROBOT_NAMESPACE robot)"/>
   <arg name="laser_enabled" default="$(optenv PROPBOT_VLP-16_ENABLED false)" />
-  <arg name="rgbd_camera_enabled" default="$(optenv REALSENSE_ENABLED false)" />
+  <arg name="rgbd_camera_enabled" default="$(optenv PROPBOT_REALSENSE_ENABLED false)" />
 
    <!-- Load robot description -->
   <include file="$(find propbot_description)/launch/description.launch">
