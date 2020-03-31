@@ -8,6 +8,7 @@ set(DEPENDENCIES
   roscpp  
   swri_route_util
   swri_transform_util
+  swri_image_util
   tf 
   geometry_msgs
   propbot_common_msgs
