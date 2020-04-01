@@ -14,7 +14,7 @@
     <param name="use_gui" value="true" />
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find propbot_viz)/rviz/model.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find propbot_rviz)/rviz/model.rviz" />
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 </launch>

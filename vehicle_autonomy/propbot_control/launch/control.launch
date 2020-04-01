@@ -106,6 +106,9 @@
       <arg name="allow_no_texture_points" value="false" />
     </include>
   </group>
+  <!-- Launch filter remove pointclouds on the ground -->
+  <include file="$(find propbot_control)/launch/remove_ground.launch"/>
+
 
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find propbot_control)/config/control.yaml" />
