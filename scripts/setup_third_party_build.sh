@@ -1,23 +1,20 @@
 #!/bin/bash
 
-# Build an Optimized Google Cartographer for ROS
+# This script sets up a workspace for building various
+# third party dependencies for Propbot
 #
-# This script sets up an catkin workspace to build cartographer
-# and some of its immediate dependencies. The main goal is to optimize
-# cartographer for the local machine.
+# You should have two workspaces. One for third party
+# the other one for propbot's own source.
 #
-# To use this you should have a cartographer workspace and a propbot
-# workspace. The propbot workspace should extend the cartographer space.
-#
-# # Build Cartographer
-# ./setup_cartographer_build.sh cartographer_ws
-# cd cartographer_ws
+# # Build Third Party
+# ./setup_third_party.sh propbot_3pp_ws
+# cd propbot_3pp_ws
 # catkin build
 # cd ..
 #
 # # Build Propbot
 # cd propbot_ws
-# catkin config --extend ../cartographer_ws/devel
+# catkin config --extend ../propbot_3pp_ws/devel
 # catkin build
 # cd ..
 
@@ -163,8 +160,8 @@ _untar_into_dir "$CERES_VERSION" "$CERES_DIR" --strip-components=1
 _check_run cp "$SCRIPT_DIR/ceres-solver.xml" "$CERES_DIR/package.xml"
 
 # ==== Google Cartographer ====
-#CARTOGRAPHER_VERSION=bcd5486025df4f601c3977c44a5e00e9c80b4975
-CARTOGRAPHER_VERSION=master
+CARTOGRAPHER_VERSION=54db377ccb5690db8b54c55018c47af84401a6be
+#CARTOGRAPHER_VERSION=master
 CARTOGRAPHER_URL=https://github.com/Conhokis/cartographer
 CARTOGRAPHER_DIR=src/cartographer
 
@@ -172,13 +169,35 @@ echo "Downloading Cartographer..."
 _clone_repo "$CARTOGRAPHER_URL" "$CARTOGRAPHER_DIR" "$CARTOGRAPHER_VERSION"
 
 # ==== Google Cartographer ROS ====
-#CARTOGRAPHER_ROS_VERSION=1de03b3d32b9e4e5bc86aa9bfca948e592efd10d
-CARTOGRAPHER_ROS_VERSION=master
+CARTOGRAPHER_ROS_VERSION=1de03b3d32b9e4e5bc86aa9bfca948e592efd10d
+#CARTOGRAPHER_ROS_VERSION=master
 CARTOGRAPHER_ROS_URL=https://github.com/googlecartographer/cartographer_ros
 CARTOGRAPHER_ROS_DIR=src/cartographer_ros
 
 echo "Downloading Cartographer ROS..."
 _clone_repo "$CARTOGRAPHER_ROS_URL" "$CARTOGRAPHER_ROS_DIR" "$CARTOGRAPHER_ROS_VERSION"
+
+# ==== cv_bridge (non-broken version) ====
+# Note that this is not the offical repository but a fork which fixed the opencv dependency
+CV_BRIDGE_URL=https://github.com/BrutusTT/vision_opencv
+CV_BRIDGE_DIR=src/vision_opencv
+CV_BRIDGE_VERSION=8e01b44c5c1c0003dc91273076f8ca7feb9a8025
+
+echo "Downloading cv_bridge"
+_clone_repo "$CV_BRIDGE_URL" "$CV_BRIDGE_DIR" "$CV_BRIDGE_VERSION"
+
+if [ -d "$CV_BRIDGE_DIR/opencv_tests" ]; then
+    # Disable the tests cus they take far too long to build and run
+    touch "$CV_BRIDGE_DIR/opencv_tests/CATKIN_IGNORE" || true
+fi
+
+# ==== Darknet/YOLO ====
+DARKNET_VERSION=8d2584874a282a55875966ccfad4b9f80acab5c3
+DARKNET_URL=https://github.com/leggedrobotics/darknet_ros
+DARKNET_DIR=src/darknet_ros
+
+echo "Downloading Darknet ROS"
+_clone_repo "$DARKNET_URL" "$DARKNET_DIR" "$DARKNET_VERSION"
 
 echo "Initializing Workspace"
 _check_run catkin init
@@ -218,7 +237,8 @@ if ! dpkg -l "${extra_apt_packages[@]}" > /dev/null; then
     _check_run sudo apt-get install "${extra_apt_packages[@]}"
 fi
 
-_check_run rosdep install --os=ubuntu:bionic --from-paths src --ignore-src
+# Install apt dependencies from package.xmls from each package
+_check_run rosdep install --os=ubuntu:bionic --from-paths src --ignore-src -y
 
 _check_run catkin config --cmake-args "${cmake_args[@]}"
 
