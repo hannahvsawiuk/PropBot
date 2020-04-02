@@ -12,6 +12,17 @@
     <arg name="rgbd_camera_enabled" default="$(arg rgbd_camera_enabled)" />
   </include>
 
+
+  <!-- launch ground removal filter for lidar -->
+  <include if="$(arg laser_enabled)" file="$(find propbot_perception)/launch/remove_ground.launch">
+    <arg name="input_source" value="/velodyne" />
+    <arg name="voxel_leaf_size" value="1" />
+    <arg name="seg_distance_threshold" value="0.7"/>
+    <arg name="seg_normal_distance_weight" value="0.1"/>
+    <arg name="normal_radius_search" value="2"/>
+    <arg name="seg_optimize_coefficients" default="true"/>
+  </include>
+
   <!-- Load rgbd_camera_paramters -->
   <group if="$(arg rgbd_camera_enabled)" ns="camera">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
@@ -105,9 +116,14 @@
       <arg name="unite_imu_method" value="none" /> <!-- Options are: [none, copy, linear_interpolation] -->
       <arg name="allow_no_texture_points" value="false" />
     </include>
+
+
+    <!-- launch ground removal filter for camera -->
+    <include file="$(find propbot_perception)/launch/remove_ground.launch">
+      <arg name="input_source" value="/camera/depth" />
+    </include>
   </group>
-  <!-- Launch filter remove pointclouds on the ground -->
-  <include file="$(find propbot_control)/launch/remove_ground.launch"/>
+
 
 
   <!-- Load controller configuration -->

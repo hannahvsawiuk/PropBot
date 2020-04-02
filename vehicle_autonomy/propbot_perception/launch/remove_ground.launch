@@ -1,0 +1,88 @@
+<launch>
+  <arg name="input_source" default="/camera/depth"/>
+  <arg name="voxel_leaf_size" default="0.01"/>
+  <arg name="seg_distance_threshold" default="0.5"/>
+  <arg name="seg_normal_distance_weight" default="0.3"/>
+  <arg name="normal_radius_search" default="0.02"/>
+  <arg name="seg_optimize_coefficients" default="false"/>
+
+
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
+    <remap from="~input" to="$(arg input_source)/points" />
+    <remap from="~output" to="$(arg input_source)/remove_ground/voxel_grid/output" />
+    <rosparam>
+      filter_field_name: y
+      filter_limit_min: 2
+      filter_limit_max: 0
+      <!-- filter limits have no effect -->
+      filter_limit_negative: True
+    </rosparam>
+
+    <rosparam param="leaf_size" subst_value="True">$(arg voxel_leaf_size)</rosparam>
+  </node>
+
+  <!-- Estimate point normals -->
+  <node pkg="nodelet" type="nodelet" name="normal_estimation" args="load pcl/NormalEstimation pcl_manager" output="screen">
+    <remap from="~input" to="$(arg input_source)/remove_ground/voxel_grid/output" />
+    <remap from="~output" to="$(arg input_source)/remove_ground/normal_estimation/output" />
+    <rosparam>
+      <!-- # - Mandatory parameters -->
+      k_search: 0
+      radius_search: 0.015
+      <!-- # Set the spatial locator. Possible values are: 0 (ANN), 1 (FLANN), 2 (organized) -->
+      spatial_locator: 0
+    </rosparam>
+    <rosparam param="radius_search" subst_value="True">$(arg normal_radius_search)</rosparam>
+  </node>
+
+  <!-- Segment the table plane -->
+  <node pkg="nodelet" type="nodelet" name="planar_segmentation" args="load pcl/SACSegmentationFromNormals pcl_manager" output="screen">
+    <remap from="~input"   to="$(arg input_source)/remove_ground/voxel_grid/output" />
+    <remap from="~normals" to="$(arg input_source)/remove_ground/normal_estimation/output" />
+    <remap from="~inliers" to="$(arg input_source)/remove_ground/planar_segmentation/inliers" />
+    <rosparam>
+      <!-- # -[ Mandatory parameters
+      # model_type:
+      # 0: SACMODEL_PLANE
+      # 1: SACMODEL_LINE
+      # 2: SACMODEL_CIRCLE2D
+      # 3: SACMODEL_CIRCLE3D
+      # 4: SACMODEL_SPHERE
+      # 5: SACMODEL_CYLINDER
+      # 6: SACMODEL_CONE
+      # 7: SACMODEL_TORUS
+      # 8: SACMODEL_PARALLEL_LINE
+      # 9: SACMODEL_PERPENDICULAR_PLANE
+      # 10: SACMODEL_PARALLEL_LINES
+      # 11: SACMODEL_NORMAL_PLANE
+      # 12: SACMODEL_NORMAL_SPHERE
+      # 13: SACMODEL_REGISTRATION
+      # 14: SACMODEL_REGISTRATION_2D
+      # 15: SACMODEL_PARALLEL_PLANE
+      # 16: SACMODEL_NORMAL_PARALLEL_PLANE
+      # 17: SACMODEL_STICK -->
+
+      <!-- remove plane normal to y axis (axis pointing downwards from camera) -->
+      axis: [0.0,1.0,0.0]
+      model_type: 11
+      max_iterations: 100
+      method_type: 0
+      eps_angle: 0.09
+    </rosparam>
+    <rosparam param="distance_threshold" subst_value="True">$(arg seg_distance_threshold)</rosparam>
+    <rosparam param="normal_distance_weight" subst_value="True">$(arg seg_normal_distance_weight)</rosparam>
+    <rosparam param="optimize_coefficients" subst_value="True">$(arg seg_optimize_coefficients)</rosparam>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="extract_plane_indices" args="load pcl/ExtractIndices pcl_manager" output="screen">
+    <remap from="~input"   to="$(arg input_source)/remove_ground/voxel_grid/output" />
+    <remap from="~indices" to="$(arg input_source)/remove_ground/planar_segmentation/inliers" />
+    <remap from="~output" to="$(arg input_source)/remove_ground/points" />
+    <rosparam>
+      negative: true
+    </rosparam>
+  </node>
+</launch>
