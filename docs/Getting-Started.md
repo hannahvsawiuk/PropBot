@@ -52,21 +52,27 @@ You should see an output similar to this:
 If you do not, there may have been an issue installing catkin. To resolve this, run the following command and try the version check command again:
 
 ```bash
-sudo apt-get install ros-kinetic-catkin python-catkin-tools
+sudo apt-get install ros-melodic-catkin python-catkin-tools python-rosdep
+```
+
+Since ROS was not previously installed, initialize `rosdep` as well.
+```bash
+sudo rosdep init
+rosdep update
 ```
 
 ### Create the workspaces
 
-#### Cartographer workspace
+#### Third Party Packages
 
-In your home directory, make the cartographer workspace directory
+In your home directory, make the third party packages workspace directory
 
 ```bash
 cd ~/
-mkdir cartographer_ws
+mkdir propbot_3pp_ws
 ```
 
-#### Propbot workspace
+#### Propbot
 
 In your home directory, make the `propbot` workspace directory
 
@@ -84,33 +90,28 @@ cd src
 git clone https://github.com/hannahvsawiuk/PropBot.git
 ```
 
-### Build an Optimized Google Cartographer for ROS
+### Build Third Party Packages
 
-Now that ROS has been installed, we need to start by building Google Cartographer for our application. Cartographer is a system that provides real-time simultaneous localization and mapping (SLAM) in 2D and 3D across multiple platforms and sensor configurations.
+Now that ROS has been installed, we need to start by building the third party packages.
 
-**Cartographer documentation:**
+#### Setup the workspace
 
-- General information: https://google-cartographer.readthedocs.io/en/latest/
-- Integration with ROS: https://google-cartographer-ros.readthedocs.io/en/latest/
-
-#### Run the custom Cartographer setup script
-
-The script to setup the custom version of Cartographer is in `vehicle_autonomy/scripts`. To run the setup for the `cartographer_ws`, run the following command:
+The script to setup the workspace is in `scripts`. To run the setup:
 
 ```bash
-~/propbot_ws/src/PropBot/vehicle_autonomy/scripts/setup_cartographer_build.sh ~/cartographer_ws
+~/propbot_ws/src/PropBot/scripts/setup_third_party_build.sh ~/propbot_3pp_ws
 ```
 
 If everything runs smoothly, you should see the following when the process finishes
 
 ![cartographer_setup](graphics/cartographer_setup_success.png)
 
-#### Build the Cartographer workspace
+#### Build
 
 Run the following to initialize and build the workspace
 
 ```bash
-cd ~/cartographer_ws
+cd ~/propbot_3pp_ws
 catkin build
 ```
 
@@ -120,19 +121,19 @@ This will take some time (up to **30 minutes**), so please be patient. If the bu
 
 ### Setup the Propbot Workspace
 
-Now that the custom Cartographer version has been built, it will be extended with the Propbot packages.
+Now that the third party packages has been built, it will be extended with the Propbot packages.
 
-#### Make Propbot an extension of Cartographer
+#### Make Propbot an extension of Third Party
 
-To initialize the workspace and indicate that `propbot_ws` will be an extension of `cartographer_ws`, run the following commands
+To initialize the workspace and indicate that `propbot_ws` will be an extension of `propbot_3pp_ws`, run the following commands
 
 ```bash
 cd ~/propbot_ws
 catkin init
-catkin config --extend ../cartographer_ws/devel
+catkin config --extend ../propbot_3pp_ws/devel
 ```
 
-The `--extend` argument explicitly sets the workspace you want to extend. In this case, we want the packages in propbot to extend the custom cartographer setup.
+The `--extend` argument explicitly sets the workspace you want to extend. In this case, we want the packages in propbot to extend the third party packages.
 
 For more information on `catkin config`, see here: https://catkin-tools.readthedocs.io/en/latest/verbs/catkin_config.html
 
@@ -144,7 +145,7 @@ To ensure that everything runs smoothly, the dependencies specified by the Propb
 
 ```bash
 cd ~/propbot_ws
-rosdep install --from-paths src --ignore-src
+rosdep install --from-paths ~/propbot_3pp_ws/src src --ignore-src -y
 ```
 
 **Alternative Distros**
@@ -152,7 +153,7 @@ If you are not using Ubuntu, the `--os` argument is needed, e.g. `--os=ubuntu:bi
 
 ```bash
 cd ~/propbot_ws
-rosdep install --os=<distro info> --from-paths src --ignore-src
+rosdep install --os=<distro info> --from-paths ~/propbot_3pp_ws/src src --ignore-src -y
 ```
 
 ##### A note on rosdep
