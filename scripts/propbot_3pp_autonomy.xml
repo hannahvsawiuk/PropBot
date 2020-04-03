@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<package format="2">
+  <name>propbot_3pp_autonomy</name>
+  <version>1.0.0</version>
+  <license>GPLv3</license>
+  <description>Propbot Autonomy Dependencies Metapackage</description>
+
+  <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
+  <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
+  <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
+  <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
+  <maintainer email="jackguo380p@gmail.com">Jack Guo</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>cartographer_ros</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<package format="2">
+  <name>propbot_3pp_mapviz</name>
+  <version>1.0.0</version>
+  <license>GPLv3</license>
+  <description>Propbot Mapviz Dependencies Metapackage</description>
+
+  <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
+  <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
+  <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
+  <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
+  <maintainer email="jackguo380p@gmail.com">Jack Guo</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>swri_image_util</exec_depend>
+  <exec_depend>swri_route_util</exec_depend>
+  <exec_depend>swri_transform_util</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>
