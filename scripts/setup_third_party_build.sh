@@ -177,11 +177,20 @@ CARTOGRAPHER_ROS_DIR=src/cartographer_ros
 echo "Downloading Cartographer ROS..."
 _clone_repo "$CARTOGRAPHER_ROS_URL" "$CARTOGRAPHER_ROS_DIR" "$CARTOGRAPHER_ROS_VERSION"
 
+# ==== OpenCV 3.4.9 ====
+OPENCV_URL=https://github.com/opencv/opencv/archive/3.4.9.tar.gz
+OPENCV_DIR=src/libopencv-dev
+OPENCV_VERSION=opencv-3.4.9.tar.gz
+
+_download_file "$OPENCV_URL" "$OPENCV_VERSION"
+_untar_into_dir "$OPENCV_VERSION" "$OPENCV_DIR" --strip-components=1
+_check_run cp "$SCRIPT_DIR/opencv.xml" "$OPENCV_DIR/package.xml"
+
 # ==== cv_bridge (non-broken version) ====
 # Note that this is not the offical repository but a fork which fixed the opencv dependency
-CV_BRIDGE_URL=https://github.com/BrutusTT/vision_opencv
+CV_BRIDGE_URL=https://github.com/ros-perception/vision_opencv
 CV_BRIDGE_DIR=src/vision_opencv
-CV_BRIDGE_VERSION=8e01b44c5c1c0003dc91273076f8ca7feb9a8025
+CV_BRIDGE_VERSION=578af4d6c7846876b3fc64512b1cc92a54894483
 
 echo "Downloading cv_bridge"
 _clone_repo "$CV_BRIDGE_URL" "$CV_BRIDGE_DIR" "$CV_BRIDGE_VERSION"
@@ -191,13 +200,33 @@ if [ -d "$CV_BRIDGE_DIR/opencv_tests" ]; then
     touch "$CV_BRIDGE_DIR/opencv_tests/CATKIN_IGNORE" || true
 fi
 
+# ==== SWRI stuff for mapviz ====
+SWRI_URL=https://github.com/swri-robotics/marti_common
+SWRI_DIR=src/marti_common
+SWRI_VERSION=d4d21cef492e9554b0904c77266c17bee2fd43ca
+
+echo "Downloading SWRI marti common"
+_clone_repo "$SWRI_URL" "$SWRI_DIR" "$SWRI_VERSION"
+
 # ==== Darknet/YOLO ====
-DARKNET_VERSION=8d2584874a282a55875966ccfad4b9f80acab5c3
-DARKNET_URL=https://github.com/leggedrobotics/darknet_ros
-DARKNET_DIR=src/darknet_ros
+#DARKNET_VERSION=8d2584874a282a55875966ccfad4b9f80acab5c3
+#DARKNET_URL=https://github.com/leggedrobotics/darknet_ros
+#DARKNET_DIR=src/darknet_ros
 
 echo "Downloading Darknet ROS"
-_clone_repo "$DARKNET_URL" "$DARKNET_DIR" "$DARKNET_VERSION"
+#_clone_repo "$DARKNET_URL" "$DARKNET_DIR" "$DARKNET_VERSION"
+
+# ==== Propbot 3pp Autonomy ====
+PROPBOT_3PP_AUTONOMY_DIR=src/propbot_3pp_autonomy
+mkdir -p "$PROPBOT_3PP_AUTONOMY_DIR"
+
+_check_run cp "$SCRIPT_DIR/propbot_3pp_autonomy.xml" "$PROPBOT_3PP_AUTONOMY_DIR/package.xml"
+
+# ==== Propbot 3pp Autonomy ====
+PROPBOT_3PP_MAPVIZ_DIR=src/propbot_3pp_mapviz
+mkdir -p "$PROPBOT_3PP_MAPVIZ_DIR"
+
+_check_run cp "$SCRIPT_DIR/propbot_3pp_mapviz.xml" "$PROPBOT_3PP_MAPVIZ_DIR/package.xml"
 
 echo "Initializing Workspace"
 _check_run catkin init
@@ -231,6 +260,13 @@ fi
 extra_apt_packages=(
     libatlas-base-dev
     libsuitesparse-dev
+    libdc1394-22-dev
+    libjpeg-dev
+    libtbb2
+    libtbb-dev
+    libjpeg-dev
+    libpng-dev
+    libtiff-dev
 )
 
 if ! dpkg -l "${extra_apt_packages[@]}" > /dev/null; then
@@ -242,4 +278,17 @@ _check_run rosdep install --os=ubuntu:bionic --from-paths src --ignore-src -y
 
 _check_run catkin config --cmake-args "${cmake_args[@]}"
 
-echo "Everything is done. To build, run: catkin build in $WORKSPACE_ROOT"
+cat <<EOF
+Everything is done. Go into $WORKSPACE_ROOT to build.
+
+To build everything:
+\$ catkin build
+
+To build only mapviz/desktop dependencies:
+\$ catkin build propbot_3pp_mapviz
+
+To build only autonomy/tx1 dependencies:
+\$ catkin build propbot_3pp_autonomy
+
+EOF
+
