@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>propbot_autonomy_vehicle_interface</name>
+  <name>propbot_autonomy_interface</name>
   <version>0.0.1</version>
-  <description>Hardware drivers for propbot</description>
+  <description>Communication channel between Arduino and ROS computer via UART</description>
   
   <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
   <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
