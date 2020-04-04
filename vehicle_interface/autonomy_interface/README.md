@@ -1,21 +1,13 @@
 # PropBot
 
-Using the following commands to install Arduino Rosserial Library:
+An I2C library is necessary for this project.
 
-$ sudo apt-get install ros-melodic-rosserial-arduino ros-melodic- rosserial-embeddedlinux ros-melodic-rosserial-windows ros-melodic- rosserial-server ros-melodic-rosserial-python
+Please download the SoftI2CMaster.h from the following github link: https://github.com/felias-fogg/SoftI2CMaster
 
-$ cd ~/catkin_ws/src/
+And install the library onto Arduino IDE.
 
-$ git clone https://github.com/ros-drivers/rosserial.git
+For how to install library on Arduino IDE: https://www.arduino.cc/en/Guide/Libraries
 
-$ cd ~/catkin_ws/
-
-$ catkin_make
-
-Download Arduino IDE
-
-$ cd ~/Arduino/libraries/
-
-$ rosrun rosserial_arduino make_libraries.py
+Please also download UCMotor.h library file and UCMotor.cpp file from https://github.com/UCTRONICS/Smart-Robot-Car-Arduino/tree/master/UCTRONICS_Smart_Robot_Car
 
 
