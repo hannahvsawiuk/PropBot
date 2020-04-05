@@ -27,7 +27,6 @@
   <run_depend>teleop_twist_joy</run_depend>
   <run_depend>twist_mux</run_depend>
   <run_depend>realsense2_camera</run_depend>
-  <run_depend>pointcloud_to_laserscan</run_depend>
 
   <export>
   </export>

@@ -39,7 +39,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
             target_frame: base_link 
             tolerance: 1.0
             min_height: 0.05
-            max_height: 2
+            max_height: 1.5
 
             angle_min: -3.1415926535897931
             angle_max: 3.1415926535897931
@@ -68,7 +68,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
             target_frame: base_link 
             tolerance: 1.0
             min_height: 0.05
-            max_height: 2
+            max_height: 1.5
 
             angle_min: -0.602 # -34.5*M_PI/180.0
             angle_max: 0.602 # 34.5*M_PI/180.0
