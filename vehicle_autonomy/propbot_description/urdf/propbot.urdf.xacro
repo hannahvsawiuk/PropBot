@@ -2,7 +2,7 @@
 <!--
 Software License Agreement (BSD)
 
-\file      propbot.urdf.xacro
+\file      propbot-model.urdf.xacro
 \authors   Paul Bovbel <pbovbel@clearpathrobotics.com>, Devon Ash <dash@clearpathrobotics.com>
 \copyright Copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
 
@@ -23,6 +23,12 @@ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTE
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
+
+<!-- NOTES
+==============================================================================================================
+* All values are in metric (m, kg)
+* Specific robot structure values extracted from URDF exported from Solidworks
+-->
 <robot name="propbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:arg name="laser_enabled" default="false" />
@@ -33,14 +39,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0)" />
   <xacro:arg name="rgbd_camera_rpy" default="$(optenv PROPBOT_REALSENSE_RPY 0 0.18 3.14)" />
 
-  <xacro:property name="propbot_front_bumper_extend" value="$(optenv PROPBOT_FRONT_BUMPER_EXTEND 0)" />
-  <xacro:property name="propbot_rear_bumper_extend" value="$(optenv PROPBOT_REAR_BUMPER_EXTEND 0)" />
-
   <xacro:arg name="robot_namespace" default="/" />
   <xacro:arg name="spawn_lat" default="49.9" />
   <xacro:arg name="spawn_long" default="8.9" />
-
-
 
   <!-- Included URDF/XACRO Files -->
   <xacro:include filename="$(find propbot_description)/urdf/decorations.urdf.xacro" />
@@ -49,34 +50,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:include filename="$(find propbot_description)/urdf/accessories/sensor_arch.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/VLP-16_mount.urdf.xacro"/>
 
+  <!-- Define Constant(s) -->
   <xacro:property name="M_PI" value="3.14159"/>
 
-  <!-- Base Size -->
-  <xacro:property name="base_x_size" value="0.98740000" />
-  <xacro:property name="base_y_size" value="0.57090000" />
-  <xacro:property name="base_z_size" value="0.24750000" />
+  <!-- Wheel Properties -->
+  <xacro:property name="wheel_radius" value="0.127" />
 
   <!-- Wheel Mounting Positions -->
-  <xacro:property name="wheelbase" value="0.5120" />
-  <xacro:property name="track" value="0.5708" />
-  <xacro:property name="wheel_vertical_offset" value="0.03282" />
+  <xacro:property name="wheel_to_wheel" value="0.400" /> <!-- distance between wheel axles -->
+  <xacro:property name="track" value="0.9198" /> <!-- y wheel distance, wheel central point to central point -->
+  <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
 
-  <!-- Wheel Properties -->
-  <xacro:property name="wheel_length" value="0.1143" />
-  <xacro:property name="wheel_radius" value="0.1651" />
+  <!-- Base Size -->
+  <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
+  <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
+  <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
+
 
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 ${base_z_size}" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://propbot_description/meshes/base_link.dae" />
+        <mesh filename="package://propbot_description/meshes/propbot_base_link.STL" />
       </geometry>
     </visual>
     <collision>
-      <origin xyz="${( propbot_front_bumper_extend - propbot_rear_bumper_extend ) / 2.0} 0 ${base_z_size/4}" rpy="0 0 0" />
+      <origin xyz="0 0 ${base_z_size/4}" rpy="0 0 0" />
       <geometry>
-        <box size="${ base_x_size + propbot_front_bumper_extend + propbot_rear_bumper_extend } ${base_y_size} ${base_z_size/2}"/>
+        <box size="${base_x_size} ${base_y_size} ${base_z_size/2}"/>
       </geometry>
     </collision>
     <collision>
@@ -96,12 +98,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <child link="base_footprint" />
   </joint>
 
-  <!-- Interial link stores the robot's inertial information -->
+  <!-- Interial link stores the robot's inertial information 
+       For this case, the mass, origin, and inertia values of the main chassis is used
+  -->
   <link name="inertial_link">
     <inertial>
-      <mass value="46.034" />
-      <origin xyz="-0.00065 -0.085 0.062" />
-      <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296" />
+      <mass value="19.52246" />
+      <origin xyz="-0.004962 0.106799 0.42243" />
+      <inertia ixx="0.42226" ixy="0.00028" ixz="-0.00012" iyy="0.46973" iyz="0.000170" izz="0.16238" />
     </inertial>
   </link>
 
@@ -124,16 +128,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Propbot wheel macros -->
   <xacro:propbot_wheel wheel_prefix="front_left">
-    <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${track/2} ${wheel_to_wheel + wheel_radius/4 + 0.011} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="front_right">
-    <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
+  </xacro:propbot_wheel>
+  <xacro:propbot_wheel wheel_prefix="middle_left">
+    <origin xyz="${track/2} 0 ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
+  </xacro:propbot_wheel>
+  <xacro:propbot_wheel wheel_prefix="middle_right">
+    <origin xyz="${-track/2} 0 ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_left">
-    <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_decorate />

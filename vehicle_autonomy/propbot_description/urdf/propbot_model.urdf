@@ -161,7 +161,7 @@
       effort="0"
       velocity="0" />
   </joint>
-  <!-- <link
+  <link
     name="base_to_right_middle_wheel">
     <inertial>
       <origin
@@ -450,5 +450,5 @@
       upper="0"
       effort="0"
       velocity="0" />
-  </joint> -->
+  </joint>
 </robot>
