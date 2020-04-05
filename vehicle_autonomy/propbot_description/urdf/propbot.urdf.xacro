@@ -60,6 +60,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="wheel_to_wheel" value="0.400" /> <!-- distance between wheel axles -->
   <xacro:property name="track" value="0.9198" /> <!-- y wheel distance, wheel central point to central point -->
   <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
+  <xacro:property name="wheel_central_offset" value="0.0533" /> <!-- offset from the center -->
 
   <!-- Base Size -->
   <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
@@ -128,22 +129,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Propbot wheel macros -->
   <xacro:propbot_wheel wheel_prefix="front_left">
-    <origin xyz="${track/2} ${wheel_to_wheel + wheel_radius/4 + 0.011} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
+    <origin xyz="${track/2} ${wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="front_right">
-    <origin xyz="${-track/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_left">
-    <origin xyz="${track/2} 0 ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
+    <origin xyz="${track/2} ${wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_right">
-    <origin xyz="${-track/2} 0 ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_left">
-    <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
+    <origin xyz="${track/2} ${-wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${-track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${-wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_decorate />
