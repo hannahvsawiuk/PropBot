@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- switch between tiny and regular YOLO -->
+  <arg name="yolo_use_tiny" default="false" />
+
+  <!-- Run the Darknet Node which publishes bounding boxes -->
+  <!-- Use YOLOv3 -->
+  <arg name="network_param_file"
+    default="$(find propbot_object_detection)/config/yolov3.yaml"
+    unless="$(arg yolo_use_tiny)"
+  />
+
+  <!-- Use YOLOv3 Tiny -->
+  <arg name="network_param_file"
+    default="$(find propbot_object_detection)/config/yolov3-tiny.yaml"
+    if="$(arg yolo_use_tiny)"
+  />
+
+  <!-- misc configuration paramters -->
+  <arg name="ros_param_file"
+    default="$(find propbot_object_detection)/config/darknet.yaml"
+  />
+
+  <!-- The topic which the image is published on -->
+  <arg name="image" default="camera/rgb/image_raw" />
+
+  <!-- Include main launch file -->
+  <include file="$(find darknet_ros)/launch/darknet_ros.launch">
+    <arg name="network_param_file"    value="$(arg network_param_file)"/>
+    <arg name="ros_param_file" value="$(arg ros_param_file)"/>
+    <arg name="image" value="$(arg image)" />
+  </include>
+
+  <!-- People publisher TODO -->
+  <!--<node name="publish_people_node" type="publish_people" pkg="propbot_object_detection" output="screen">
+    <rosparam>
+      frame_id: odom
+    </rosparam>
+    <remap from="/slam/pose" to="/slam/odom/pose" />
+  </node>-->
+</launch>

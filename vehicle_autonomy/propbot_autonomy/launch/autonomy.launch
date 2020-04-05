@@ -26,6 +26,8 @@
 
     <!--- Launch Mission Execution -->
     <include file="$(find propbot_mission)/launch/execute_mission.launch" />
-  </group>
 
+    <!--- Launch Object Detection -->
+    <include file="$(find propbot_object_detection)/launch/detect_objects.launch" />
+  </group>
 </launch>

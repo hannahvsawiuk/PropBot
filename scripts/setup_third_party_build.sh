@@ -212,14 +212,14 @@ _clone_repo "$SWRI_URL" "$SWRI_DIR" "$SWRI_VERSION"
 # Note that both of these are forks of darknet and darknet_ros
 # to fix compatibility with the version of OpenCV we are using
 
-DARKNET_ROS_VERSION=41ab78f4cbb806e81a9c3f41b3dd4a850cd9dd12
+DARKNET_ROS_VERSION=00e0f2f849c7f5af5a400a19fb5ec6cb68d748df
 DARKNET_ROS_URL=https://github.com/jackguo380/darknet_ros
 DARKNET_ROS_DIR=src/darknet_ros
 
 echo "Downloading Darknet ROS"
 _clone_repo "$DARKNET_ROS_URL" "$DARKNET_ROS_DIR" "$DARKNET_ROS_VERSION"
 
-DARKNET_VERSION=f9f8b16aab01c9c2027e58205a706626d7b12ef8
+DARKNET_VERSION=93875bb29e5b6e016caa1d3d50de562669044339
 DARKNET_URL=https://github.com/jackguo380/darknet
 DARKNET_DIR=src/darknet_ros/darknet
 

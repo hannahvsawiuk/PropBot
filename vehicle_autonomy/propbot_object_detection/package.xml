@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>propbot_object_detection</name>
+  <version>0.1.0</version>
+  <description>Propbot Object Detection</description>
+
+  <maintainer email="divyabudihal@gmail.com">Divya Budihal</maintainer>
+  <maintainer email="nancyhong321@gmail.com">Nancy Hong</maintainer>
+  <maintainer email="hannahvsawiuk@gmail.com">Hannah Sawiuk</maintainer>
+  <maintainer email="jerryli20160808@gmail.com">Jerry Li</maintainer>
+  <maintainer email="jackguo380@gmail.com">Jack Guo</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>darknet_ros_msgs</build_depend>
+  <build_depend>people_msgs</build_depend>
+
+  <exec_depend>darknet_ros</exec_depend>
+
+  <export>
+  </export>
+</package>
