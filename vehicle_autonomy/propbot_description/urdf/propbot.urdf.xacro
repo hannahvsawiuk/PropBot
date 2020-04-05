@@ -58,7 +58,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Wheel Mounting Positions -->
   <xacro:property name="wheel_to_wheel" value="0.400" /> <!-- distance between wheel axles -->
-  <xacro:property name="center_to_middle_wheel" value="0.400" /> <!-- x distance from origin to middle wheel center -->
   <xacro:property name="track" value="0.9198" /> <!-- y wheel distance, wheel central point to central point -->
   <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
 
@@ -121,22 +120,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Propbot wheel macros -->
   <xacro:propbot_wheel wheel_prefix="front_left">
-    <origin xyz="${wheel_to_wheel + center_to_middle_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${wheel_to_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="front_right">
-    <origin xyz="${wheel_to_wheel + center_to_middle_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${wheel_to_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_left">
-    <origin xyz="${center_to_middle_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="0 ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_right">
-    <origin xyz="${center_to_middle_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="0 ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_left">
-    <origin xyz="${center_to_middle_wheel - wheel_to_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-wheel_to_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${center_to_middle_wheel - wheel_to_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-wheel_to_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_decorate />
