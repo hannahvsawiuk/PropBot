@@ -14,10 +14,10 @@ TebLocalPlannerROS:
       
   # Trajectory
     
-  teb_autosize: True
+  teb_autosize: true
   dt_ref: 0.3
   dt_hysteresis: 0.1
-  global_plan_overwrite_orientation: True
+  global_plan_overwrite_orientation: true
   max_global_plan_lookahead_dist: 3.0
   feasibility_check_no_poses: 5
   allow_init_with_backwards_motion: false  # Forward motion only to start
@@ -37,24 +37,24 @@ TebLocalPlannerROS:
       
   xy_goal_tolerance: 0.2
   yaw_goal_tolerance: 0.25
-  free_goal_vel: False
+  free_goal_vel: false
       
   # Obstacles
       
   min_obstacle_dist: 1.0
-  include_costmap_obstacles: True
+  include_costmap_obstacles: true
   costmap_obstacles_behind_robot_dist: 1.0
   obstacle_poses_affected: 30
   costmap_converter_plugin: ""
-  costmap_converter_spin_thread: True
+  costmap_converter_spin_thread: true
   costmap_converter_rate: 5
 
   # Optimization
       
   no_inner_iterations: 5
   no_outer_iterations: 4
-  optimization_activate: True
-  optimization_verbose: False
+  optimization_activate: true
+  optimization_verbose: false
   penalty_epsilon: 0.1
   weight_max_vel_x: 2
   weight_max_vel_theta: 1
@@ -66,8 +66,8 @@ TebLocalPlannerROS:
   weight_optimaltime: 1
   weight_obstacle: 50
   weight_dynamic_obstacle: 10 # not in use yet
-  alternative_time_cost: False # not in use yet
+  alternative_time_cost: false # not in use yet
 
   # Homotopy Class Planner
 
-  enable_homotopy_class_planning: False  # Save processing power by making this false
+  enable_homotopy_class_planning: false  # Save processing power by making this false
