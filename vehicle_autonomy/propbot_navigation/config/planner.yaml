@@ -71,4 +71,3 @@ TebLocalPlannerROS:
   # Homotopy Class Planner
 
   enable_homotopy_class_planning: False  # Save processing power by making this false
-  
