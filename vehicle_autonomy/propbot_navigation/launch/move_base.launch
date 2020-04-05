@@ -90,7 +90,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
     <param name="base_global_planner" value="$(arg base_global_planner)"/>
     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>  
-    <rosparam file="$(find propbot_navigation)/config/planners.yaml" command="load"/>
+    <rosparam file="$(find propbot_navigation)/config/planner.yaml" command="load"/>
 
     <!-- observation sources located in costmap_common.yaml -->
     <rosparam file="$(find propbot_navigation)/config/costmap_common.yaml" command="load" ns="global_costmap" />
