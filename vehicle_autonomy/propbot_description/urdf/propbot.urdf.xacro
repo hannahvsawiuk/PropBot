@@ -24,7 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<!-- NOTE: all values are metric -->
+<!-- NOTES
+==============================================================================================================
+* All values are in metric (m, kg)
+* Specific robot structure values extracted from URDF exported from Solidworks
+-->
 <robot name="propbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:arg name="laser_enabled" default="false" />
@@ -46,25 +50,27 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:include filename="$(find propbot_description)/urdf/accessories/sensor_arch.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/VLP-16_mount.urdf.xacro"/>
 
+  <!-- Define Constant(s) -->
   <xacro:property name="M_PI" value="3.14159"/>
 
   <!-- Wheel Properties -->
   <xacro:property name="wheel_radius" value="0.127" />
-
-  <!-- Base Size -->
-  <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
-  <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
-  <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
 
   <!-- Wheel Mounting Positions -->
   <xacro:property name="wheel_to_wheel" value="0.400" /> <!-- distance between wheel axles -->
   <xacro:property name="track" value="0.9198" /> <!-- y wheel distance, wheel central point to central point -->
   <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
 
+  <!-- Base Size -->
+  <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
+  <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
+  <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
+
+
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 ${base_z_size}" rpy="0 0 0" />
       <geometry>
         <mesh filename="package://propbot_description/meshes/propbot_base_link.STL" />
       </geometry>
@@ -92,12 +98,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <child link="base_footprint" />
   </joint>
 
-  <!-- Interial link stores the robot's inertial information -->
+  <!-- Interial link stores the robot's inertial information 
+       For this case, the mass, origin, and inertia values of the main chassis is used
+  -->
   <link name="inertial_link">
     <inertial>
-      <mass value="46.034" />
-      <origin xyz="-0.00065 -0.085 0.062" />
-      <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296" />
+      <mass value="19.52246" />
+      <origin xyz="-0.004962 0.106799 0.42243" />
+      <inertia ixx="0.42226" ixy="0.00028" ixz="-0.00012" iyy="0.46973" iyz="0.000170" izz="0.16238" />
     </inertial>
   </link>
 
@@ -120,22 +128,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Propbot wheel macros -->
   <xacro:propbot_wheel wheel_prefix="front_left">
-    <origin xyz="${wheel_to_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${track/2} ${wheel_to_wheel + wheel_radius/4 + 0.011} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="front_right">
-    <origin xyz="${wheel_to_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_left">
-    <origin xyz="0 ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${track/2} 0 ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="middle_right">
-    <origin xyz="0 ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} 0 ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_left">
-    <origin xyz="${-wheel_to_wheel} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${-wheel_to_wheel} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    <origin xyz="${-track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_decorate />
