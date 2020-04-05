@@ -28,20 +28,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 	<xacro:macro name="propbot_wheel" params="wheel_prefix *joint_pose">
 		<link name="${wheel_prefix}_wheel_link">
 			<inertial>
-				<mass value="2.637" />
+				<mass value="2.96542" />
 				<origin xyz="0 0 0" />
-				<inertia  ixx="0.02467" ixy="0" ixz="0" iyy="0.04411" iyz="0" izz="0.02467" />
+				<inertia 
+				  ixx="0.01875" ixy="1.054410E-15" ixz="6.83081E-07"
+				  iyy="0.01012" iyz="-4.64239E-08" izz="0.01012" />
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
-					<mesh filename="package://propbot_description/meshes/wheel.dae" />
+					<mesh filename="package://propbot_model/meshes/propbot_wheel.STL" />>
 				</geometry>
 			</visual>
 			<collision>
 				<origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
 				<geometry>
-					<cylinder length="${wheel_length}" radius="${wheel_radius}" />
+					<mesh filename="package://propbot_model/meshes/propbot_wheel.STL" />
 				</geometry>
 			</collision>
 		</link>
