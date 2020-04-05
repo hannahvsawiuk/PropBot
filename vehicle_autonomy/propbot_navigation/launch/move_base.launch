@@ -26,6 +26,66 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCL
 
   <arg name="base_global_planner" default="navfn/NavfnROS"/>
   <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
+  <arg name="laser_enabled" default="$(optenv PROPBOT_VLP-16_ENABLED false)" />
+  <arg name="rgbd_camera_enabled" default="$(optenv PROPBOT_REALSENSE_ENABLED false)" />
+
+  <!-- convert lidar pointcloud to laser scan for costmap input -->
+  <group if="$(arg laser_enabled)">
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="lidar_pc_to_ls" output="screen">
+        <remap from="cloud_in" to="velodyne/points"/>
+        <remap from="scan" to="velodyne/scan"/>
+        <rosparam>
+        <!-- Leave empty to output scan in the pointcloud frame -->
+            target_frame: base_link 
+            tolerance: 1.0
+            min_height: 0.05
+            max_height: 2
+
+            angle_min: -3.1415926535897931
+            angle_max: 3.1415926535897931
+            angle_increment: 0.005 # M_PI/360.0
+            scan_time: 0.3333
+            range_min: 0.45
+            range_max: 15
+            use_inf: true
+  <!-- 
+            Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            0 : Detect number of cores
+            1 : Single threaded
+            2->inf : Parallelism level -->
+            concurrency_level: 1
+        </rosparam>
+      </node>
+  </group>
+
+  <!-- convert rgbd camera point cloud to laser scan for costmap input -->
+  <group if="$(arg rgbd_camera_enabled)">
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="rgdb_camera_pc_to_ls" output="screen">
+        <remap from="cloud_in" to="camera/depth/points"/>
+        <remap from="scan" to="camera/scan"/>
+        <rosparam>
+        <!-- Leave empty to output scan in the pointcloud frame -->
+            target_frame: base_link 
+            tolerance: 1.0
+            min_height: 0.05
+            max_height: 2
+
+            angle_min: -0.602 # -34.5*M_PI/180.0
+            angle_max: 0.602 # 34.5*M_PI/180.0
+            angle_increment: 0.005 # M_PI/360.0
+            scan_time: 0.3333
+            range_min: 0.45
+            range_max: 8
+            use_inf: true
+<!-- 
+            Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            0 : Detect number of cores
+            1 : Single threaded
+            2->inf : Parallelism level -->
+            concurrency_level: 1
+        </rosparam>
+    </node>
+  </group>
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 

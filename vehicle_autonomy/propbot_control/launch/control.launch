@@ -12,34 +12,6 @@
     <arg name="rgbd_camera_enabled" default="$(arg rgbd_camera_enabled)" />
   </include>
 
-  <group if="$(arg laser_enabled)">
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="lidar_pc_to_ls" output="screen">
-        <remap from="cloud_in" to="velodyne/points"/>
-        <remap from="scan" to="velodyne/scan"/>
-        <rosparam>
-        <!-- Leave empty to output scan in the pointcloud frame -->
-            target_frame: base_link 
-            tolerance: 1.0
-            min_height: 0.02
-            max_height: 2
-
-            angle_min: -3.1415926535897931
-            angle_max: 3.1415926535897931
-            angle_increment: 0.005 # M_PI/360.0
-            scan_time: 0.3333
-            range_min: 0.45
-            range_max: 15
-            use_inf: true
-  <!-- 
-            Concurrency level, affects number of pointclouds queued for processing and number of threads used
-            0 : Detect number of cores
-            1 : Single threaded
-            2->inf : Parallelism level -->
-            concurrency_level: 1
-        </rosparam>
-      </node>
-  </group>
-
   <!-- Load rgbd_camera_paramters -->
   <group if="$(arg rgbd_camera_enabled)" ns="camera">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
@@ -134,31 +106,6 @@
       <arg name="allow_no_texture_points" value="false" />
     </include>
 
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="rgdb_camera_pc_to_ls" output="screen">
-        <remap from="cloud_in" to="depth/points"/>
-        <remap from="scan" to="scan"/>
-        <rosparam>
-        <!-- Leave empty to output scan in the pointcloud frame -->
-            target_frame: base_link 
-            tolerance: 1.0
-            min_height: 0.05
-            max_height: 2
-
-            angle_min: -0.602 # -34.5*M_PI/180.0
-            angle_max: 0.602 # 34.5*M_PI/180.0
-            angle_increment: 0.005 # M_PI/360.0
-            scan_time: 0.3333
-            range_min: 0.45
-            range_max: 8
-            use_inf: true
-<!-- 
-            Concurrency level, affects number of pointclouds queued for processing and number of threads used
-            0 : Detect number of cores
-            1 : Single threaded
-            2->inf : Parallelism level -->
-            concurrency_level: 1
-        </rosparam>
-    </node>
   </group>
 
   <!-- Load controller configuration -->
