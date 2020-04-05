@@ -2,6 +2,8 @@ global_frame: odom
 rolling_window: true
 width: 10
 height: 10
+update_frequency: 5.0
+publish_frequency: 5.0
 
 plugins:
   - {name: obstacle_layer,                 type: "costmap_2d::ObstacleLayer"}
