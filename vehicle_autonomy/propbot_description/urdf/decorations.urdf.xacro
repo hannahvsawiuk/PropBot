@@ -43,6 +43,27 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <child link="chassis_link" />
     </joint>
 
+    <xacro:if value="$(optenv PROPBOT_TOP_PLATE_ENABLED true)">
+      <!-- Spawn "invisible" the top plate -->
+      <link name="top_plate_link">
+        <visual>
+          <origin xyz="0 0 ${top_plate_height}" rpy="0 0 0" />
+          <geometry>
+            <box size="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="wheel_material">
+				    <color rgba="0.25 0.25 0.75 0" />
+      		</material>
+        </visual>
+      </link>
+      <!-- Attach top plate to chassis -->
+      <joint name="top_plate_chassis_joint" type="fixed">
+        <parent link="chassis_link" />
+        <child link="top_plate_link"/>
+        <origin xyz="0 ${top_plate_front - base_y_size/8} 0.001" rpy="0 0 0"/>
+      </joint>
+    </xacro:if>
+
   </xacro:macro>
 
 </robot>
