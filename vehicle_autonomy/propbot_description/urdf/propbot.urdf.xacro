@@ -2,7 +2,7 @@
 <!--
 Software License Agreement (BSD)
 
-\file      propbot-model.urdf.xacro
+\file      propbot.urdf.xacro
 \authors   Paul Bovbel <pbovbel@clearpathrobotics.com>, Devon Ash <dash@clearpathrobotics.com>
 \copyright Copyright (c) 2015, Clearpath Robotics, Inc., All rights reserved.
 
@@ -67,6 +67,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
   <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
 
+  <!-- Sensor Mounting Values -->
+  <xacro:property name="top_plate_height" value="${0.24845 + wheel_radius}" /> <!-- height from the ground to the top plate-->
+  <xacro:property name="top_plate_front" value="${base_x_size/2}" /> <!-- distance from the origin to the front of the robot-->
 
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
@@ -163,7 +166,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:if value="$(arg rgbd_camera_enabled)">
 
     <xacro:sensor_arch prefix="" parent="top_plate_link">
-      <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
+      <origin xyz="0 0 0" rpy="0 0 -${M_PI}"/>
     </xacro:sensor_arch>
     <joint name="rgbd_camera_frame_joint" type="fixed">
       <origin xyz="$(arg rgbd_camera_xyz)" rpy="$(arg rgbd_camera_rpy)" />
