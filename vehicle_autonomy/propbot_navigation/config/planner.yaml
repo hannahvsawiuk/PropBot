@@ -6,7 +6,8 @@ NavfnROS:
   default_tolerance: 0.3 # A tolerance on the goal point for the planner.
 
 DWAPlannerROS:
-  yaw_goal_tolerance: 0.25
-  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 3.14
+  xy_goal_tolerance: 0.5
+  forward_point_distance: 0
 
   holonomic_robot: false
