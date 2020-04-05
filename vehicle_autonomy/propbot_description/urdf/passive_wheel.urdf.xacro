@@ -23,9 +23,9 @@ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTE
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="propbot_wheel">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="propbot_passive_wheel">
 
-	<xacro:macro name="propbot_wheel" params="wheel_prefix *joint_pose">
+	<xacro:macro name="propbot_passive_wheel" params="wheel_prefix *joint_pose">
 		<link name="${wheel_prefix}_wheel_link">
 			<!-- Following values extracted from URDF exported from Solidworks -->
 			<inertial>

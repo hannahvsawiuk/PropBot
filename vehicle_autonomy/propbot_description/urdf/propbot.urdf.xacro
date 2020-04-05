@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 <robot name="propbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:arg name="laser_enabled" default="false" />
-  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 0.00635)" />
+  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 1.4)" />
   <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0.0 0.0 0.0)" />
 
   <xacro:arg name="rgbd_camera_enabled" default="false" />
@@ -46,6 +46,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <!-- Included URDF/XACRO Files -->
   <xacro:include filename="$(find propbot_description)/urdf/decorations.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/wheel.urdf.xacro" />
+  <xacro:include filename="$(find propbot_description)/urdf/passive_wheel.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/accessories/realsense_d435.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/sensor_arch.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/VLP-16_mount.urdf.xacro"/>
@@ -54,6 +55,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="M_PI" value="3.14159"/>
 
   <!-- Wheel Properties -->
+  <xacro:property name="wheel_length" value="0.08975" />
   <xacro:property name="wheel_radius" value="0.127" />
 
   <!-- Wheel Mounting Positions -->
@@ -131,22 +133,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   </gazebo>
 
   <!-- Propbot wheel macros -->
-  <xacro:propbot_wheel wheel_prefix="front_left">
+  <xacro:propbot_wheel wheel_prefix="front_right">
     <origin xyz="${track/2} ${wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="front_right">
+  <xacro:propbot_wheel wheel_prefix="front_left">
     <origin xyz="${-track/2} ${wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="middle_left">
+  <xacro:propbot_passive_wheel wheel_prefix="middle_right">
     <origin xyz="${track/2} ${wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
-  </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="middle_right">
+  </xacro:propbot_passive_wheel>
+  <xacro:propbot_passive_wheel wheel_prefix="middle_left">
     <origin xyz="${-track/2} ${wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
-  </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="rear_left">
+  </xacro:propbot_passive_wheel>
+  <xacro:propbot_wheel wheel_prefix="rear_right">
     <origin xyz="${track/2} ${-wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 ${M_PI} 0" />
   </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="rear_right">
+  <xacro:propbot_wheel wheel_prefix="rear_left">
     <origin xyz="${-track/2} ${-wheel_to_wheel + wheel_central_offset} ${wheel_vertical_offset}" rpy="0 0 0" />
   </xacro:propbot_wheel>
 
