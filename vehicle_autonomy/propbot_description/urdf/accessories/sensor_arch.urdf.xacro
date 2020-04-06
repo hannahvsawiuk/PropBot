@@ -8,13 +8,18 @@
              <origin xyz="0 0 0" rpy="0 0 0"/>
              <visual>
                  <geometry>
-                     <mesh filename="package://propbot_description/meshes/accessories/${size}_mm_sensor_arch.dae" />
+                     <!-- <mesh filename="package://propbot_description/meshes/accessories/${size}_mm_sensor_arch.dae" /> -->
+                     <cylinder radius="0.01" length="0.45"/>
                  </geometry>
+                 <material name="black">
+                    <color rgba="0.1 0.1 0.1 1" />
+				 </material>
              </visual>
              <collision>
                  <origin xyz="0 0 0" rpy="0 0 0"/>
                  <geometry>
-                     <mesh filename="package://propbot_description/meshes/accessories/${size}_mm_sensor_arch.dae" />
+                     <cylinder radius="0.01" length="0.45"/>
+                     <!-- <mesh filename="package://propbot_description/meshes/accessories/${size}_mm_sensor_arch.dae" /> -->
                  </geometry>
              </collision>
         </link>

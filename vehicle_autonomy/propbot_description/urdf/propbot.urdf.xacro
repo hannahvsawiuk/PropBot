@@ -68,7 +68,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0 0 0)" />
 
   <xacro:arg name="rgbd_camera_enabled" default="false" />
-  <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0)" />
+  <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0.225)" />
   <xacro:arg name="rgbd_camera_rpy" default="$(optenv PROPBOT_REALSENSE_RPY 0 0.18 0)" />
 
   <!-- 
@@ -271,7 +271,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:if value="$(arg rgbd_camera_enabled)">
 
     <xacro:sensor_arch prefix="" parent="top_plate_link">
-      <origin xyz="${base_x_size/2 - 0.05} ${-base_y_size/2 + 0.035} 0.89" rpy="0 0 0"/>
+      <origin xyz="${base_x_size/2 - 0.05} ${-base_y_size/2 + 0.025} 0.6" rpy="0 0 0"/>
     </xacro:sensor_arch>
 
     <realsense_d435 name="camera" parent="sensor_arch_mount_link">
