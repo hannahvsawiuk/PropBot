@@ -84,5 +84,6 @@ void MissionCommandInterface::SendMissionCommand(
       break;
     case command::MISSION_END:
       mission_handler_->End();
+      mission_handler_.reset(nullptr);
   }
 }
