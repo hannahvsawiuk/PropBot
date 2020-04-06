@@ -154,11 +154,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <xacro:sensor_arch prefix="" parent="top_plate_link">
       <origin xyz="-0.35 0 0.51" rpy="0 0 -3.14"/>
     </xacro:sensor_arch>
-    <joint name="rgbd_camera_frame_joint" type="fixed">
-      <origin xyz="$(arg rgbd_camera_xyz)" rpy="$(arg rgbd_camera_rpy)" />
-      <parent link="sensor_arch_mount_link"/>
-      <child link="camera_link"/>
-    </joint>
 
     <realsense_d435 name="camera" parent="sensor_arch_mount_link">
       <origin xyz="$(arg rgbd_camera_xyz)" rpy="$(arg rgbd_camera_rpy)" robot_namespace="$(arg robot_namespace)"/>
