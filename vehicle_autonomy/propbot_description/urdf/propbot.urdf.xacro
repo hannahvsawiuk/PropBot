@@ -101,6 +101,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     </collision>
   </link>
 
+  <!-- Set base_link colour in Gazebo -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
   <!-- Base footprint is on the ground under the robot -->
   <link name="base_footprint"/>
 

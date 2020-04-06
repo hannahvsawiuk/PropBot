@@ -37,6 +37,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       </visual>
     </link>
 
+    <!-- Set chassis colour in Gazebo -->
+    <gazebo reference="chassis_link">
+      <material>Gazebo/Red</material>
+    </gazebo>
+
     <!-- Attach chassis to the robot -->
     <joint name="chassis_joint" type="fixed">
       <parent link="base_link" />
