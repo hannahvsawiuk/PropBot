@@ -25,12 +25,34 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 -->
 
 <!-- NOTES
-==============================================================================================================
+
 * All values are in metric (m, kg)
 * Specific robot structure values extracted from URDF exported from Solidworks
+
 -->
 <robot name="propbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <!-- 
+  ***********************************************************************************************
+  Default Spawn Settings
+  ***********************************************************************************************
+  -->
+  <xacro:arg name="robot_namespace" default="/" />
+  <xacro:arg name="spawn_lat" default="49.9" />
+  <xacro:arg name="spawn_long" default="8.9" />
+
+  <!-- 
+  ***********************************************************************************************
+  Misc. Constants
+  ***********************************************************************************************
+  -->
+  <xacro:property name="M_PI" value="3.14159"/>
+
+  <!-- 
+  ***********************************************************************************************
+  Laser and Camera Args
+  ***********************************************************************************************
+  -->
   <xacro:arg name="laser_enabled" default="false" />
   <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 0.75)" />
   <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0.0 0.0 0.0)" />
@@ -39,32 +61,58 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0)" />
   <xacro:arg name="rgbd_camera_rpy" default="$(optenv PROPBOT_REALSENSE_RPY 0 0.18 3.14)" />
 
-  <xacro:arg name="robot_namespace" default="/" />
-  <xacro:arg name="spawn_lat" default="49.9" />
-  <xacro:arg name="spawn_long" default="8.9" />
-
-  <!-- Included URDF/XACRO Files -->
+  <!-- 
+  ***********************************************************************************************
+  Included URDF/XACRO Files 
+  ***********************************************************************************************
+  -->
   <xacro:include filename="$(find propbot_description)/urdf/decorations.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/wheel.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/passive_wheel.urdf.xacro" />
   <xacro:include filename="$(find propbot_description)/urdf/accessories/realsense_d435.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/sensor_arch.urdf.xacro"/>
   <xacro:include filename="$(find propbot_description)/urdf/accessories/VLP-16_mount.urdf.xacro"/>
-
-  <!-- Define Constant(s) -->
-  <xacro:property name="M_PI" value="3.14159"/>
-
-  <!-- Inertia and Mass Scaling -->
-  <xacro:property name="robot_mass" value="82"/>          <!-- Approximate robot mass is approx 82kg, SolidWorks model incorrect -->
-  <xacro:property name="wheel_mass" value="2.96542"/>     <!-- Wheel mass as reported by SW -->
-  <!-- <xacro:property name="chassis_mass" value="19.52246"/>   -->
-  <!-- Chassis mass as reported by SW -->
-  <xacro:property name="chassis_mass" value="70.00"/>
-  <!-- <xacro:property name="msf" value="${robot_mass/(chassis_mass + 6*wheel_mass)}"/>   -->
-  <!-- Mass scale factor: use to scale masses and inertial values -->
-  <xacro:property name="msf" value="1"/> 
-  <!-- Mass scale factor: use to scale masses and inertial values -->
   
+  <!-- 
+  ***********************************************************************************************
+  Mass and Inertial Values and Scaling
+  ***********************************************************************************************
+  Values as reported by SolidWorks
+  -->
+  <!-- Approximate REAL robot mass -->
+  <xacro:property name="robot_mass" value="70.0"/>   
+
+  <!-- SW reported mass values -->
+  <xacro:property name="base_link_mass" value="0.96268" />
+  <xacro:property name="chassis_mass" value="19.52246"/>  
+  <xacro:property name="wheel_mass" value="2.96542"/>  
+
+  <!-- Base link inertia-->
+  <xacro:property name="base_ixx" value="0.083320" />
+  <xacro:property name="base_ixy" value="-1.882647E-14" />
+  <xacro:property name="base_ixz" value="2.527076E-19" />
+  <xacro:property name="base_iyy" value="0.003905" />
+  <xacro:property name="base_iyz" value="7.039418E-19" />
+  <xacro:property name="base_izz" value="0.087218" />
+
+   <!-- Chassis link inertia-->
+  <xacro:property name="chassis_ixx" value="0.42226" />
+  <xacro:property name="chassis_ixy" value="0.00028" />
+  <xacro:property name="chassis_ixz" value="-0.00012" />
+  <xacro:property name="chassis_iyy" value="0.46973" />
+  <xacro:property name="chassis_iyz" value="0.00017" />
+  <xacro:property name="chassis_izz" value="0.16238" />
+
+  <!-- Robot frame mass scale factor: use to scale chassis and base link masses and inertial values -->
+  <xacro:property name="frame_msf" value="${robot_mass/chassis_mass}" />  
+  <!-- Wheel mass scale factor: use to scale wheel masses and inertial values -->
+  <xacro:property name="wheel_msf" value="1" />
+
+  <!-- 
+  ***********************************************************************************************
+  Wheel Properties and Mounting Specifications 
+  ***********************************************************************************************
+  -->
   <!-- Wheel Properties -->
   <xacro:property name="wheel_length" value="0.08975" />
   <xacro:property name="wheel_radius" value="0.127" />
@@ -75,15 +123,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
   <xacro:property name="wheel_central_offset" value="0.0533" /> <!-- offset from the center -->
 
-  <!-- Base Size -->
+  <!-- 
+  ***********************************************************************************************
+  Base Size Specifications
+  ***********************************************************************************************
+  The "shadow" of the robot
+  -->
   <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
   <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
   <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
 
-  <!-- Sensor Mounting Values -->
+  <!-- 
+  ***********************************************************************************************
+  Sensor Mounting Specifications
+  ***********************************************************************************************
+  -->
   <xacro:property name="top_plate_height" value="${0.24845 + wheel_radius}" /> <!-- height from the ground to the top plate -->
   <xacro:property name="top_plate_front" value="${base_x_size/2}" /> <!-- distance from the origin to the front of the robot -->
 
+  <!-- 
+  ***********************************************************************************************
+  Linking and Joint Specification
+  ***********************************************************************************************
+  The various links and joints are created and put together
+  -->
+
+  <!-- 
+  Base Link
+  ======================================================================
+  -->
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
     <visual>
@@ -114,15 +182,23 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <child link="base_footprint" />
   </joint>
 
-  <!-- Interial link stores the robot's inertial information 
-       For this case, the mass, origin, and inertia values of the main chassis is used
+  <!-- 
+  Inertial Link
+  ======================================================================
+  Interial link stores the robot's inertial information 
+  For this case, the mass, origin, and inertia values of the main chassis is used
   -->
   <link name="inertial_link">
     <inertial>
-      <mass value="${chassis_mass*msf}"/>
+      <mass value="${(chassis_mass + base_link_mass) * frame_msf}"/>
       <origin xyz="-0.004962 0.10679 0.42243" rpy = "${-M_PI/2} ${-M_PI/2} 0" />
-      <inertia ixx="${0.42226*msf}" ixy="${0.00028*msf}" ixz="${-0.00012*msf}" 
-               iyy="${0.46973*msf}" iyz="${0.00017*msf}" izz="${0.16238*msf}" />
+      <inertia 
+        ixx="${(base_ixx + chassis_ixx) * frame_msf}" 
+        ixy="${(base_ixy + chassis_ixy) * frame_msf}" 
+        ixz="${(base_ixz + chassis_ixz) * frame_msf}" 
+        iyy="${(base_iyy + chassis_iyy) * frame_msf}" 
+        iyz="${(base_iyz + chassis_iyz) * frame_msf}" 
+        izz="${(base_izz + chassis_izz) * frame_msf}" />
     </inertial>
   </link>
 
@@ -132,8 +208,12 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <child link="inertial_link" />
   </joint>
 
-  <!-- IMU Link is the standard mounting position for the UM6 IMU.-->
-  <!-- Can be modified with environment variables in /etc/ros/setup.bash -->
+  <!-- 
+  IMU Link
+  ======================================================================
+  IMU Link is the standard mounting position for the UM6 IMU.
+  Can be modified with environment variables in /etc/ros/setup.bash 
+  -->
   <link name="imu_link"/>
   <joint name="imu_joint" type="fixed">
     <origin xyz="$(optenv PROPBOT_IMU_XYZ 0.19 0 0.149)" rpy="$(optenv PROPBOT_IMU_RPY 0 -1.5708 3.1416)" />
@@ -143,7 +223,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <gazebo reference="imu_link">
   </gazebo>
 
-  <!-- Propbot wheel macros -->
+  <!-- 
+  Wheels
+  ======================================================================
+  -->
+  <!-- Right -->
+  <xacro:propbot_wheel wheel_prefix="front_right">
+    <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+  </xacro:propbot_wheel>
+  <xacro:propbot_wheel wheel_prefix="rear_right">
+    <origin xyz="${-track/2 + (2/3)*wheel_radius} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+  </xacro:propbot_wheel>
+  <!-- Left -->
   <xacro:propbot_wheel wheel_prefix="front_left">
     <origin xyz="${track/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
@@ -151,6 +242,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <origin xyz="${-track/2 + (2/3)*wheel_radius} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
 
+  <!-- Middle (passives) -->
   <xacro:propbot_passive_wheel wheel_prefix="left">
     <origin xyz="${wheel_radius/3} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
@@ -158,15 +250,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <origin xyz="${wheel_radius/3} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
 
-  <xacro:propbot_wheel wheel_prefix="front_right">
-    <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
-  </xacro:propbot_wheel>
-  <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${-track/2 + (2/3)*wheel_radius} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
-  </xacro:propbot_wheel>
-
+  <!-- Decorate the robot -->
   <xacro:propbot_decorate />
 
+  <!-- 
+  Laser and Camera
+  ======================================================================
+  -->
   <xacro:if value="$(arg laser_enabled)">
 
     <VLP-16_mount prefix="base" />
@@ -189,12 +279,19 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
      </realsense_d435>
   </xacro:if>
 
+  <!-- 
+  ***********************************************************************************************
+  Gazebo Specifications
+  ***********************************************************************************************
+  -->
+  <!-- Motion controller -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>$(arg robot_namespace)</robotNamespace>
     </plugin>
   </gazebo>
 
+  <!-- IMU controller -->
   <gazebo>
     <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
       <robotNamespace>$(arg robot_namespace)</robotNamespace>
@@ -210,6 +307,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     </plugin>
   </gazebo>
 
+  <!-- GPS controller -->
   <gazebo>
     <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
       <robotNamespace>$(arg robot_namespace)</robotNamespace>

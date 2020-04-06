@@ -52,7 +52,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <!-- Spawn "invisible" the top plate -->
       <link name="top_plate_link">
         <visual>
-          <origin xyz="${base_x_size/2} ${base_y_size/2} ${top_plate_height}" rpy="0 0 ${-M_PI/2}" />
+          <origin xyz="${base_x_size/2} 0 ${top_plate_height}" rpy="0 0 0" />
           <geometry>
             <box size="0.2 0.1 0.005"/>
           </geometry>
