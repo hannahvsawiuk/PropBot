@@ -57,16 +57,26 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
+        base_footprint:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        chassis_link:
+        base_laser:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_bumper_link:
+        base_laser_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        chassis_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -85,11 +95,10 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        rear_bumper_link:
+        inertial_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -100,12 +109,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        top_plate_link:
+        middle_left_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        user_rail_link:
+        middle_right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        top_plate_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

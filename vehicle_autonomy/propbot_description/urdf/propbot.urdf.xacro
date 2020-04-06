@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 <robot name="propbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:arg name="laser_enabled" default="false" />
-  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 1.4)" />
+  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 0)" />
   <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0.0 0.0 0.0)" />
 
   <xacro:arg name="rgbd_camera_enabled" default="false" />
@@ -76,8 +76,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
 
   <!-- Sensor Mounting Values -->
-  <xacro:property name="top_plate_height" value="${0.24845 + wheel_radius}" /> <!-- height from the ground to the top plate-->
-  <xacro:property name="top_plate_front" value="${base_x_size/2}" /> <!-- distance from the origin to the front of the robot-->
+  <xacro:property name="top_plate_height" value="${0.24845 + wheel_radius}" /> <!-- height from the ground to the top plate -->
+  <xacro:property name="top_plate_front" value="${base_x_size/2}" /> <!-- distance from the origin to the front of the robot -->
 
   <!-- Base link is the center of the robot's bottom plate -->
   <link name="base_link">
@@ -88,13 +88,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 ${wheel_central_offset} ${base_z_size/4}" rpy="0 0 0" />
+      <origin xyz="0 ${wheel_central_offset + wheel_length/2} ${base_z_size/4}" rpy="0 0 0" />
       <geometry>
         <box size="${base_x_size} ${base_y_size} ${base_z_size/2}"/>
       </geometry>
     </collision>
     <collision>
-      <origin xyz="0 ${wheel_central_offset} ${base_z_size*3/4-0.01}" rpy="0 0 0" />
+      <origin xyz="0 ${wheel_central_offset + wheel_length/2} ${base_z_size*3/4-0.01}" rpy="0 0 0" />
       <geometry>
         <box size="${base_x_size*4/5} ${base_y_size} ${base_z_size/2-0.02}"/>
       </geometry>

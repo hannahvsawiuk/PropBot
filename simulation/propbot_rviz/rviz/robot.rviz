@@ -80,7 +80,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        front_bumper_link:
+        chassis_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -103,11 +103,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        rear_bumper_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         rear_left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -118,17 +113,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        top_chassis_link:
+        middle_left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         top_plate_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        user_rail_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
