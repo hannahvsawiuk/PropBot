@@ -146,15 +146,17 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:propbot_wheel wheel_prefix="rear_left">
     <origin xyz="${-track/2 + wheel_radius/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
-  <xacro:propbot_passive_wheel wheel_prefix="middle_left">
-    <origin xyz="0 ${wheel_to_wheel + wheel_radius/2} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+
+  <xacro:propbot_passive_wheel wheel_prefix="left">
+    <origin xyz="0 ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
+  <xacro:propbot_passive_wheel wheel_prefix="right">
+    <origin xyz="0 ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+  </xacro:propbot_passive_wheel>
+
   <xacro:propbot_wheel wheel_prefix="front_right">
     <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
-  <xacro:propbot_passive_wheel wheel_prefix="middle_right">
-    <origin xyz="0 ${-wheel_to_wheel + wheel_radius/2} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
-  </xacro:propbot_passive_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
     <origin xyz="${-track/2 + wheel_radius/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
