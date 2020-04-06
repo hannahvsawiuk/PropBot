@@ -57,9 +57,13 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <!-- Inertia and Mass Scaling -->
   <xacro:property name="robot_mass" value="82"/>          <!-- Approximate robot mass is approx 82kg, SolidWorks model incorrect -->
   <xacro:property name="wheel_mass" value="2.96542"/>     <!-- Wheel mass as reported by SW -->
-  <xacro:property name="chassis_mass" value="19.52246"/>  <!-- Chassis mass as reported by SW -->
-  <xacro:property name="msf" value="${robot_mass/(chassis_mass + 6*wheel_mass)}"/>  <!-- Mass scale factor: use to scale masses and inertial values -->
-  <!-- <xacro:property name="msf" value="1"/> Mass scale factor: use to scale masses and inertial values -->
+  <!-- <xacro:property name="chassis_mass" value="19.52246"/>   -->
+  <!-- Chassis mass as reported by SW -->
+  <xacro:property name="chassis_mass" value="70.00"/>
+  <!-- <xacro:property name="msf" value="${robot_mass/(chassis_mass + 6*wheel_mass)}"/>   -->
+  <!-- Mass scale factor: use to scale masses and inertial values -->
+  <xacro:property name="msf" value="1"/> 
+  <!-- Mass scale factor: use to scale masses and inertial values -->
   
   <!-- Wheel Properties -->
   <xacro:property name="wheel_length" value="0.08975" />
@@ -144,21 +148,21 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <origin xyz="${track/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_left">
-    <origin xyz="${-track/2 + wheel_radius/2} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="${-track/2 + (2/3)*wheel_radius} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_passive_wheel wheel_prefix="left">
-    <origin xyz="0 ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="${wheel_radius/3} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
   <xacro:propbot_passive_wheel wheel_prefix="right">
-    <origin xyz="0 ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="${wheel_radius/3} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
 
   <xacro:propbot_wheel wheel_prefix="front_right">
     <origin xyz="${track/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
   <xacro:propbot_wheel wheel_prefix="rear_right">
-    <origin xyz="${-track/2 + wheel_radius/2} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="${-track/2 + (2/3)*wheel_radius} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_wheel>
 
   <xacro:propbot_decorate />
