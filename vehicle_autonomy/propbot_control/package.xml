@@ -24,7 +24,6 @@
   <run_depend>rostopic</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>controller_manager</run_depend>
-  <run_depend>teleop_twist_joy</run_depend>
   <run_depend>twist_mux</run_depend>
   <run_depend>realsense2_camera</run_depend>
 

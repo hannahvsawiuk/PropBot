@@ -30,7 +30,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <!-- Spawn Propbot chassis -->
     <link name="chassis_link">
       <visual>
-        <origin xyz="0 ${base_x_size/2} ${2*wheel_vertical_offset - base_z_size}" rpy="${M_PI/2} 0 0" />
+        <origin xyz="${base_x_size/2} 0 ${2*wheel_vertical_offset - base_z_size}" rpy="${M_PI/2} 0 ${-M_PI/2}" />
         <geometry>
           <mesh filename="package://propbot_description/meshes/propbot_chassis.STL" />
         </geometry>
@@ -52,7 +52,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <!-- Spawn "invisible" the top plate -->
       <link name="top_plate_link">
         <visual>
-          <origin xyz="0 0 ${top_plate_height}" rpy="0 0 0" />
+          <origin xyz="0 0 ${top_plate_height}" rpy="0 0 ${-M_PI/2}" />
           <geometry>
             <box size="0.001 0.001 0.001"/>
           </geometry>

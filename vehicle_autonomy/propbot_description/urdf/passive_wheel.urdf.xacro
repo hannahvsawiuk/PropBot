@@ -29,9 +29,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 		<link name="${wheel_prefix}_wheel_link">
 			<!-- Following values extracted from URDF exported from Solidworks -->
 			<inertial>
-				<mass value="2.96542" />
+				<mass value="${wheel_mass*msf}" />
 				<origin xyz="0 0 0" />
-				<inertia  ixx="0.01875" ixy="1.054410E-15" ixz="6.83081E-07" iyy="0.01012" iyz="-4.64239E-08" izz="0.01012" />
+				<inertia  ixx="${0.01875*msf}" ixy="${1.054410E-15*msf}" ixz="${6.83081E-07*msf}" 
+				          iyy="${0.01012*msf}" iyz="${-4.64239E-08*msf}" izz="${0.01012*msf}" />
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
@@ -51,29 +52,21 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 		</link>
 
 		<gazebo reference="${wheel_prefix}_wheel_link">
-			<mu1 value="1.0"/>
-			<mu2 value="1.0"/>
+			<mu1 value="100.0"/>
+			<mu2 value="100.0"/>
 			<kp value="10000000.0" />
 			<kd value="1.0" />
 			<fdir1 value="1 0 0"/>
+      		<material>Gazebo/Black</material>
 		</gazebo>
 
-		<joint name="${wheel_prefix}_wheel" type="continuous">
+		<joint name="${wheel_prefix}_wheel" type="fixed">
 			<parent link="base_link"/>
 			<child link="${wheel_prefix}_wheel_link"/>
 			<xacro:insert_block name="joint_pose"/>
-			<axis xyz="1 0 0" rpy="0 0 0" />
+			<axis xyz="-1 0 0" rpy="0 0 0" />
+			<dynamics damping="0.0" friction="0.0"/>
 		</joint>
-
-		<transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission">
-			<type>transmission_interface/SimpleTransmission</type>
-			<actuator name="${wheel_prefix}_wheel_motor">
-				<mechanicalReduction>1</mechanicalReduction>
-			</actuator>
-			<joint name="${wheel_prefix}_wheel">
-				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-			</joint>
-		</transmission>
 
 	</xacro:macro>
 </robot>
