@@ -43,6 +43,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- 
   ***********************************************************************************************
+  Base Size Specifications
+  ***********************************************************************************************
+  The "shadow" of the robot
+  -->
+  <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
+  <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
+  <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
+
+  <!-- 
+  ***********************************************************************************************
   Misc. Constants
   ***********************************************************************************************
   -->
@@ -54,11 +64,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   ***********************************************************************************************
   -->
   <xacro:arg name="laser_enabled" default="false" />
-  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.2206 0.0 0.75)" />
-  <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0.0 0.0 0.0)" />
+  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.02 ${-base_y_size/4 + 0.035} 0.925)" />
+  <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0 0 0)" />
 
   <xacro:arg name="rgbd_camera_enabled" default="false" />
-  <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0)" />
+  <xacro:arg name="rgbd_camera_xyz" default="$(optenv PROPBOT_REALSENSE_XYZ 0 0 0.95)" />
   <xacro:arg name="rgbd_camera_rpy" default="$(optenv PROPBOT_REALSENSE_RPY 0 0.18 3.14)" />
 
   <!-- 
@@ -122,16 +132,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="track" value="0.9198" /> <!-- y wheel distance, wheel central point to central point -->
   <xacro:property name="wheel_vertical_offset" value="${wheel_radius}" /> <!-- axle to ground distance -->
   <xacro:property name="wheel_central_offset" value="0.0533" /> <!-- offset from the center -->
-
-  <!-- 
-  ***********************************************************************************************
-  Base Size Specifications
-  ***********************************************************************************************
-  The "shadow" of the robot
-  -->
-  <xacro:property name="base_x_size" value="0.9820" /> <!-- x is front to back -->
-  <xacro:property name="base_y_size" value="0.8278" /> <!-- y is side to side -->
-  <xacro:property name="base_z_size" value="0.1369" /> <!-- height of the bottom battery plate from the ground -->
 
   <!-- 
   ***********************************************************************************************
