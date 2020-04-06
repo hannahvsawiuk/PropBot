@@ -4,10 +4,6 @@
 
 #include <darknet_ros_msgs/BoundingBox.h>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
 #include <vector>
 #include <algorithm>
 #include <numeric>
@@ -32,8 +28,8 @@ std::pair<float, float> findLaserDepthMinMax(
         const sensor_msgs::LaserScanConstPtr& laser,
         float angle_left, float angle_right)
 {
-    ROS_INFO_STREAM("Find Angles: " << angle_left << ", " << angle_right <<
-            " from " << laser->angle_min << ", " << laser->angle_max);
+    //ROS_INFO_STREAM("Find Angles: " << angle_left << ", " << angle_right <<
+    //        " from " << laser->angle_min << ", " << laser->angle_max);
 
     float left_from_min = angle_left - laser->angle_min;
     if (left_from_min < 0.0)
@@ -49,9 +45,6 @@ std::pair<float, float> findLaserDepthMinMax(
 
     size_t s_idx = std::floor(left_from_min / laser->angle_increment);
     size_t e_idx = std::ceil(right_from_min / laser->angle_increment) + 1;
-
-    ROS_INFO_STREAM("Indices: " << s_idx << ", " << e_idx <<
-            ", size: " << laser->ranges.size());
 
     if (s_idx >= laser->ranges.size())
         s_idx -= laser->ranges.size();
