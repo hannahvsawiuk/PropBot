@@ -19,6 +19,7 @@
 #include <unordered_set>
 #include <utility>
 #include <functional>
+#include <deque>
 
 class BoundingBoxTransformer
 {
@@ -54,9 +55,9 @@ private:
   const ros::Duration tf_timeout_;
   image_geometry::PinholeCameraModel pinhole_camera_;
   tf::TransformListener tf_listener_;
-  sensor_msgs::LaserScanConstPtr last_laser_;
+  std::deque<sensor_msgs::LaserScanConstPtr> last_lasers_;
 
-  bool getCameraTfTo(const std::string& frame, tf::StampedTransform transform);
+  static constexpr int NUM_LASER_SCANS = 32;
 
-  std::pair<float, float> findLaserDepthMinMax(float angle_min, float angle_max);
+  std::optional<sensor_msgs::LaserScanConstPtr> findLaserScanForTime(ros::Time t);
 };

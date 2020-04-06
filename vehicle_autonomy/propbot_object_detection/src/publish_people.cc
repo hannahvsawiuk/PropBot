@@ -151,7 +151,8 @@ int main(int argc, char** argv)
       }
     }
 
-    marker_pub.publish(marker_arr);
+    if (!marker_arr.markers.empty())
+      marker_pub.publish(marker_arr);
   };
 
   BoundingBoxTransformer bbTransformer(people_frame, bbCallback, filter_classes,

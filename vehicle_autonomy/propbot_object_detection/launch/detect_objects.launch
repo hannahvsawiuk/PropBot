@@ -25,12 +25,12 @@
   <arg name="image_topic" default="/camera/rgb/image_raw" />
 
   <!-- laser topic which has laser scans -->
-  <arg name="laser_topic" default="/scan" />
+  <arg name="laser_topic" default="/velodyne/scan" />
 
   <!-- The topic which the people are published on -->
   <arg name="people_topic" default="/people" />
   <!-- The frame which the people are in -->
-  <arg name="people_frame" default="map" />
+  <arg name="people_frame" default="base_link" />
 
   <!-- Include main launch file -->
   <include file="$(find darknet_ros)/launch/darknet_ros.launch">

@@ -11,32 +11,32 @@
 #include <limits>
 #include <cassert>
 
-std::pair<float, float> BoundingBoxTransformer::findLaserDepthMinMax(
+namespace
+{
+std::pair<float, float> findLaserDepthMinMax(
+        const sensor_msgs::LaserScanConstPtr& laser,
         float angle_min, float angle_max)
 {
-    // Narrow the bounding box a little to try to remove extreme values
-    // this is a crappy hack and should be fixed with proper filtering
-    angle_min += 0.04;
-    angle_max -= 0.04;
-
-    if (angle_max < angle_min)
-        angle_max = angle_min;
-
     std::vector<float> found_ranges;
 
     float sum = 0.0;
     float min = std::numeric_limits<float>::max();
     float max = 0.0;
     size_t count = 0;
-    for (int i = 0; i < last_laser_->ranges.size(); i++) {
-        float range = last_laser_->ranges[i];
-        if (range < last_laser_->range_min || last_laser_->range_max < range)
+    for (int i = 0; i < laser->ranges.size(); i++) {
+        float range = laser->ranges[i];
+        if (range < laser->range_min || laser->range_max < range)
             continue;
 
-        float angle = last_laser_->angle_min + i * last_laser_->angle_increment;
-        if (angle_min <= angle && angle <= angle_max) {
+        float min = angle_min <= angle_max ? angle_min : angle_max;
+        float max = angle_min <= angle_max ? angle_max : angle_min;
+
+        float angle = laser->angle_min + i * laser->angle_increment;
+        if ((angle_min <= angle_max) ? (min <= angle && angle <= max)
+                : (min <= angle || max <= angle)) {
             sum += range;
             count++;
+            found_ranges.push_back(range);
 
             if (range < min)
                 min = range;
@@ -46,22 +46,30 @@ std::pair<float, float> BoundingBoxTransformer::findLaserDepthMinMax(
         }
     }
 
-    if (count > 0) {
-        float average = sum / count;
-        // TODO: some kind of heuristics to filter our extreme values
-        //
-        // currently fixed to 1m in diameter since we are detecting people
-        return {average - 0.5, average + 0.5};
+    std::sort(found_ranges.begin(), found_ranges.end());
+
+    if (found_ranges.size() > 0) {
+        int upper_idx;
+        // FIXME: better heuristics for determining the min/max
+        for(upper_idx = 0; upper_idx < found_ranges.size() - 1; upper_idx++) {
+            if (found_ranges[upper_idx + 1] - found_ranges[0] > 1.0)
+                break;
+        }
+
+        if (upper_idx != 0)
+            return {found_ranges[0], found_ranges[upper_idx]};
+        else
+            return {found_ranges[0], found_ranges[0] + 1.0};
     } else {
         return {-1.0, -1.0};
     }
+}
 }
 
 void BoundingBoxTransformer::handleCameraImage(
         const sensor_msgs::ImageConstPtr& image_msg,
         const sensor_msgs::CameraInfoConstPtr& cam_info_msg)
 {
-    ROS_INFO_STREAM_THROTTLE(1, "Received Camera Image");
     // Update our camera model from this image
     pinhole_camera_.fromCameraInfo(cam_info_msg);
 }
@@ -74,14 +82,25 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         return;
     }
 
-    if (!last_laser_) {
+    auto opt_laser = findLaserScanForTime(pinhole_camera_.stamp());
+    if (!opt_laser) {
         ROS_WARN_STREAM_THROTTLE(1, "Waiting for Laser Scan");
         return;
     }
 
-    tf::StampedTransform camera_to_laser;
-    if (!getCameraTfTo(last_laser_->header.frame_id, camera_to_laser))
+    const auto& laser = *opt_laser;
+
+    const std::string& laser_frame = laser->header.frame_id;
+    try {
+        // Find the transform
+        tf_listener_.waitForTransform(laser_frame,
+                pinhole_camera_.tfFrame(),
+                pinhole_camera_.stamp(),
+                tf_timeout_);
+    } catch (const tf::TransformException& ex) {
+        ROS_WARN_STREAM("Failed to get transform from camera to laser: " << ex.what());
         return;
+    }
 
     auto& bb_vec = bb_msg->bounding_boxes;
 
@@ -91,11 +110,23 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         auto cvRay = pinhole_camera_.projectPixelTo3dRay(cv::Point2d(x, y));
 
         // Rays originate from the camera origin, no offset needed
-        tf::Vector3 ray(cvRay.x, cvRay.y, cvRay.z);
-        ray.normalize();
-        ray *= ray_length_;
+        tf::Vector3 ptN(cvRay.x, cvRay.y, cvRay.z);
+        ptN.normalize();
 
-        return camera_to_laser * ray;
+        geometry_msgs::PointStamped pt;
+
+        pt.header.frame_id = pinhole_camera_.tfFrame();
+        pt.header.stamp = pinhole_camera_.stamp();
+        pt.point.x = ptN.x() * ray_length_;
+        pt.point.y = ptN.y() * ray_length_;
+        pt.point.z = ptN.z() * ray_length_;
+
+        geometry_msgs::PointStamped pt_out;
+
+        tf_listener_.transformPoint(laser_frame, pt, pt_out);
+
+        tf::Vector3 transformedPt(pt_out.point.x, pt_out.point.y, pt_out.point.z);
+        return transformedPt;
     };
 
     const ros::Time bbTime = bb_msg->header.stamp;
@@ -105,17 +136,26 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         if (bb.probability < min_prob_ || classes_.count(bb.Class) != 1)
             continue;
 
-        tf::Vector3 topLeft = projectPt(bb.xmin, bb.ymin);
-        tf::Vector3 bottomLeft = projectPt(bb.xmin, bb.ymax);
-        tf::Vector3 topRight = projectPt(bb.xmax, bb.ymin);
-        tf::Vector3 bottomRight = projectPt(bb.xmax, bb.ymax);
+        tf::Vector3 topLeft;
+        tf::Vector3 bottomLeft;
+        tf::Vector3 topRight;
+        tf::Vector3 bottomRight;
+        try {
+            topLeft = projectPt(bb.xmin, bb.ymin);
+            bottomLeft = projectPt(bb.xmin, bb.ymax);
+            topRight = projectPt(bb.xmax, bb.ymin);
+            bottomRight = projectPt(bb.xmax, bb.ymax);
+        } catch (const tf::TransformException& ex) {
+            ROS_WARN_STREAM("Failed to transform from camera to laser: " << ex.what());
+            return;
+        }
 
         // Laser angles are counter clockwise from x-axis
         const tf::Vector3 x_axis = tf::Vector3(1, 0, 0);
-        float topLeftAngle = topLeft.angle(x_axis);
-        float bottomLeftAngle = bottomLeft.angle(x_axis);
-        float topRightAngle = topRight.angle(x_axis);
-        float bottomRightAngle = bottomRight.angle(x_axis);
+        float topLeftAngle = tf::Vector3(topLeft.x(), topLeft.y(), 0).angle(x_axis);
+        float bottomLeftAngle = tf::Vector3(bottomLeft.x(), bottomLeft.y(), 0).angle(x_axis);
+        float topRightAngle = tf::Vector3(topRight.x(), topRight.y(), 0).angle(x_axis);
+        float bottomRightAngle = tf::Vector3(bottomRight.x(), bottomRight.y(), 0).angle(x_axis);
 
         tf::Vector3 left;
         float leftAngle;
@@ -139,9 +179,7 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         }
         right.normalize();
 
-        assert(leftAngle < rightAngle);
-
-        auto [min, max] = findLaserDepthMinMax(leftAngle, rightAngle);
+        auto [min, max] = findLaserDepthMinMax(laser, leftAngle - 0.2, rightAngle + 0.2);
         if (min < 0.0 || max < 0.0) {
             ROS_WARN_STREAM_THROTTLE(1.0, "Could not find depth for " <<
                     bb.Class << " " << bb.id);
@@ -170,36 +208,28 @@ void BoundingBoxTransformer::handleBoundingBoxes(
 void BoundingBoxTransformer::handleLaserScan(
         const sensor_msgs::LaserScanConstPtr& laser_msg)
 {
-    last_laser_ = laser_msg;
+    if (last_lasers_.size() >= NUM_LASER_SCANS)
+        last_lasers_.pop_back();
+
+    last_lasers_.push_front(laser_msg);
 
     // FIXME: need a second transform when they aren't equal...
-    if (last_laser_->header.frame_id != people_frame_) {
+    if (laser_msg->header.frame_id != people_frame_) {
         ROS_ERROR_STREAM_THROTTLE(1.0, "Laser frame (" <<
-                last_laser_->header.frame_id <<
+                laser_msg->header.frame_id <<
                 ") is different from people frame (" <<
                 people_frame_ << ')');
     }
 }
 
-bool BoundingBoxTransformer::getCameraTfTo(
-        const std::string& frame, tf::StampedTransform transform)
+std::optional<sensor_msgs::LaserScanConstPtr> BoundingBoxTransformer::findLaserScanForTime(ros::Time t)
 {
-    try {
-        // Find the transform
-        tf_listener_.waitForTransform(frame,
-                pinhole_camera_.tfFrame(),
-                pinhole_camera_.stamp(),
-                tf_timeout_);
-        tf_listener_.lookupTransform(frame,
-                pinhole_camera_.tfFrame(),
-                pinhole_camera_.stamp(),
-                transform);
-        return true;
-    } catch (const tf::TransformException& ex) {
-        ROS_WARN_STREAM("Failed to get transform from camera to " << frame <<
-                ": " << ex.what());
+    double timeout = tf_timeout_.toSec();
+    for (const auto& laser : last_lasers_) {
+        if (std::abs((laser->header.stamp - t).toSec()) < timeout)
+            return laser;
     }
 
-    return false;
+    return {};
 }
 
