@@ -25,8 +25,19 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 -->
 <robot name="propbot_decorations" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <!-- 
+  ***********************************************************************************************
+  Propbot Decoration
+  ***********************************************************************************************
+  The chassis and sensors are considered "decorations" on the base_link. A macro is defined below
+  to execute this decoration in one step in `propbot.urdf.xacro`
+  -->
   <xacro:macro name="propbot_decorate">
 
+    <!-- 
+    Chassis
+    ======================================================================
+    -->
     <!-- Spawn Propbot chassis -->
     <link name="chassis_link">
       <visual>
@@ -48,13 +59,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       <child link="chassis_link" />
     </joint>
 
+    <!-- 
+    Top plate
+    ======================================================================
+    A tiny plate use to link the sensors to the robot
+    -->
     <xacro:if value="$(optenv PROPBOT_TOP_PLATE_ENABLED true)">
-      <!-- Spawn "invisible" the top plate -->
+      <!-- Spawn the top plate -->
       <link name="top_plate_link">
         <visual>
-          <origin xyz="${base_x_size/2} 0 ${top_plate_height}" rpy="0 0 0" />
+          <origin xyz="${base_x_size/2} ${-base_y_size/2 + 0.027} ${top_plate_height}" rpy="0 0 0" />
           <geometry>
-            <box size="0.2 0.1 0.005"/>
+            <box size="0.01 0.01 0.001"/>
           </geometry>
           <material name="wheel_material">
 				    <color rgba="0.25 0.25 0.75 0" />
