@@ -6,7 +6,6 @@
   <arg name="rgbd_camera_enabled" default="true" />
 
   <group ns="$(arg robot_namespace)">
-
     <!--- Launch controller -->
     <include file="$(find propbot_control)/launch/control.launch">
       <arg name="laser_enabled" value="$(arg laser_enabled)"/>
@@ -20,7 +19,10 @@
     <include file="$(find propbot_slam)/launch/slam.launch" />
 
     <!--- Launch Move Base -->
-    <include file="$(find propbot_navigation)/launch/move_base.launch" />
+    <include file="$(find propbot_navigation)/launch/move_base.launch">
+      <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+      <arg name="rgbd_camera_enabled" value="$(arg rgbd_camera_enabled)"/>
+    </include>
 
     <!--- Launch Mission Execution -->
     <include file="$(find propbot_mission)/launch/execute_mission.launch" />

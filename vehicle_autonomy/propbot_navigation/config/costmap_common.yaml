@@ -15,24 +15,24 @@ static_layer:
     subscribe_to_updates: true
 
 obstacle_layer:
-    observation_sources: camera 3d_lidar 
+    observation_sources: rgbd_camera_scan lidar_scan
+    rgbd_camera_scan: {
+        data_type: LaserScan, 
+        clearing: true, 
+        marking: true, 
+        topic: camera/scan, 
+        obstacle_range: 5,
+        raytrace_range: 5,
+        inf_is_valid: true }
 
-    camera: {
-        data_type: PointCloud2,
+    lidar_scan: {
+        data_type: LaserScan, 
         clearing: true, 
         marking: true, 
-        topic: /camera/depth/points, 
-        min_obstacle_height: 0.2,
-        obstacle_range: 5.5,
-        raytrace_range: 6.0}
-    3d_lidar: {
-        data_type: PointCloud2,
-        clearing: true, 
-        marking: true, 
-        topic: /velodyne/points, 
-        min_obstacle_height: 0.2,
-        obstacle_range: 10,
-        raytrace_range: 20}
+        topic: velodyne/scan, 
+        obstacle_range: 5,
+        raytrace_range: 10,
+        inf_is_valid: true }
 
 inflation_layer:
     inflation_radius: 1.0
