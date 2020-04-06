@@ -30,7 +30,7 @@
   <!-- The topic which the people are published on -->
   <arg name="people_topic" default="/people" />
   <!-- The frame which the people are in -->
-  <arg name="people_frame" default="base_link" />
+  <arg name="people_frame" default="map" />
 
   <!-- Include main launch file -->
   <include file="$(find darknet_ros)/launch/darknet_ros.launch">
@@ -51,8 +51,6 @@
     <!-- Ray length used to estimate bounding boxes (in meters) -->
     <rosparam param="ray_length">1000.0</rosparam>
     <!-- Expected framerate of the camera -->
-    <rosparam param="camera_frame_rate">30.0</rosparam>
-    <!-- Yolo -->
-    <rosparam param="camera_frame_rate">30.0</rosparam>
+    <rosparam param="camera_frame_rate">13.0</rosparam>
   </node>
 </launch>

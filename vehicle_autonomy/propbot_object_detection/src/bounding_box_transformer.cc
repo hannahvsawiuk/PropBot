@@ -4,36 +4,73 @@
 
 #include <darknet_ros_msgs/BoundingBox.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+
 #include <vector>
 #include <algorithm>
 #include <numeric>
 #include <utility>
 #include <limits>
 #include <cassert>
+#include <cmath>
 
 namespace
 {
+float planeAngleFromXAxisSigned(tf::Vector3 vector)
+{
+    tf::Vector3 v(vector.x(), vector.y(), 0.0);
+
+    if (v.y() >= 0.0)
+        return v.angle(tf::Vector3(1.0, 0.0, 0.0));
+    else
+        return -v.angle(tf::Vector3(1.0, 0.0, 0.0));
+}
+
 std::pair<float, float> findLaserDepthMinMax(
         const sensor_msgs::LaserScanConstPtr& laser,
-        float angle_min, float angle_max)
+        float angle_left, float angle_right)
 {
+    ROS_INFO_STREAM("Find Angles: " << angle_left << ", " << angle_right <<
+            " from " << laser->angle_min << ", " << laser->angle_max);
+
+    float left_from_min = angle_left - laser->angle_min;
+    if (left_from_min < 0.0)
+        left_from_min = 0.0;
+    if (left_from_min > (laser->angle_max - laser->angle_min))
+        left_from_min = (laser->angle_max - laser->angle_min);
+
+    float right_from_min = angle_right - laser->angle_min;
+    if (right_from_min < 0.0)
+        right_from_min = 0.0;
+    if (right_from_min > (laser->angle_max - laser->angle_min))
+        right_from_min = (laser->angle_max - laser->angle_min);
+
+    size_t s_idx = std::floor(left_from_min / laser->angle_increment);
+    size_t e_idx = std::ceil(right_from_min / laser->angle_increment) + 1;
+
+    ROS_INFO_STREAM("Indices: " << s_idx << ", " << e_idx <<
+            ", size: " << laser->ranges.size());
+
+    if (s_idx >= laser->ranges.size())
+        s_idx -= laser->ranges.size();
+
+    if (e_idx >= laser->ranges.size())
+        e_idx -= laser->ranges.size();
+
+    assert(s_idx < laser->ranges.size());
+    assert(e_idx < laser->ranges.size());
+
     std::vector<float> found_ranges;
 
     float sum = 0.0;
     float min = std::numeric_limits<float>::max();
     float max = 0.0;
     size_t count = 0;
-    for (int i = 0; i < laser->ranges.size(); i++) {
+    for (size_t i = s_idx; i != e_idx; i = (i < laser->ranges.size() - 1) ? i + 1 : 0) {
         float range = laser->ranges[i];
-        if (range < laser->range_min || laser->range_max < range)
-            continue;
-
-        float min = angle_min <= angle_max ? angle_min : angle_max;
-        float max = angle_min <= angle_max ? angle_max : angle_min;
-
-        float angle = laser->angle_min + i * laser->angle_increment;
-        if ((angle_min <= angle_max) ? (min <= angle && angle <= max)
-                : (min <= angle || max <= angle)) {
+        if (laser->range_min <= range && range < laser->range_max) {
             sum += range;
             count++;
             found_ranges.push_back(range);
@@ -49,17 +86,28 @@ std::pair<float, float> findLaserDepthMinMax(
     std::sort(found_ranges.begin(), found_ranges.end());
 
     if (found_ranges.size() > 0) {
-        int upper_idx;
-        // FIXME: better heuristics for determining the min/max
-        for(upper_idx = 0; upper_idx < found_ranges.size() - 1; upper_idx++) {
-            if (found_ranges[upper_idx + 1] - found_ranges[0] > 1.0)
-                break;
+        std::vector<int> groups;
+        groups.push_back(0);
+
+        // Group nearby depths together since they are likely
+        // to be from the same object
+        for (size_t i = 1; i < found_ranges.size(); i++) {
+            if (found_ranges[i] - found_ranges[groups.back()] > 1.0)
+                groups.push_back(i);
         }
 
-        if (upper_idx != 0)
-            return {found_ranges[0], found_ranges[upper_idx]};
-        else
-            return {found_ranges[0], found_ranges[0] + 1.0};
+        if (groups.size() >= 2) {
+        //if (groups.size() >= 3) {
+        //    // Some foreground obstruction then target then background
+        //    // this may not work correctly when there are multiple obstructions.
+        //    return {found_ranges[groups[1]], found_ranges[groups[2] - 1]};
+        //} else if (groups.size() == 2) {
+            // Target is in the foreground, remove the background
+            return {found_ranges.front(), found_ranges[groups[1] - 1]};
+        } else {
+            // Target is the only thing seen (not too likely)
+            return {found_ranges.front(), found_ranges.back()};
+        }
     } else {
         return {-1.0, -1.0};
     }
@@ -70,6 +118,8 @@ void BoundingBoxTransformer::handleCameraImage(
         const sensor_msgs::ImageConstPtr& image_msg,
         const sensor_msgs::CameraInfoConstPtr& cam_info_msg)
 {
+    last_image_time_ = image_msg->header.stamp;
+
     // Update our camera model from this image
     pinhole_camera_.fromCameraInfo(cam_info_msg);
 }
@@ -82,7 +132,11 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         return;
     }
 
-    auto opt_laser = findLaserScanForTime(pinhole_camera_.stamp());
+    if (!camera_to_laser_) {
+        ROS_WARN_STREAM_THROTTLE(1, "Waiting for Laser Transform");
+    }
+
+    auto opt_laser = findLaserScanForTime(last_image_time_);
     if (!opt_laser) {
         ROS_WARN_STREAM_THROTTLE(1, "Waiting for Laser Scan");
         return;
@@ -90,56 +144,28 @@ void BoundingBoxTransformer::handleBoundingBoxes(
 
     const auto& laser = *opt_laser;
 
-    const std::string& laser_frame = laser->header.frame_id;
-    try {
-        // Find the transform
-        tf_listener_.waitForTransform(laser_frame,
-                pinhole_camera_.tfFrame(),
-                pinhole_camera_.stamp(),
-                tf_timeout_);
-    } catch (const tf::TransformException& ex) {
-        ROS_WARN_STREAM("Failed to get transform from camera to laser: " << ex.what());
-        return;
-    }
-
-    auto& bb_vec = bb_msg->bounding_boxes;
-
     // Find a 3D point (in the laser frame) corresponding to the pixel
     // this is done by extending the ray from camera to pixel out to ray length
-    auto projectPt = [&](int x, int y) -> tf::Vector3 {
+    auto projectPt = [&](int x, int y) -> tf::Point {
         auto cvRay = pinhole_camera_.projectPixelTo3dRay(cv::Point2d(x, y));
 
         // Rays originate from the camera origin, no offset needed
-        tf::Vector3 ptN(cvRay.x, cvRay.y, cvRay.z);
-        ptN.normalize();
+        tf::Point pt = tf::Vector3(cvRay.x, cvRay.y, cvRay.z).normalized() * ray_length_;
 
-        geometry_msgs::PointStamped pt;
+        tf::Point transformedPt = *camera_to_laser_ * pt;
 
-        pt.header.frame_id = pinhole_camera_.tfFrame();
-        pt.header.stamp = pinhole_camera_.stamp();
-        pt.point.x = ptN.x() * ray_length_;
-        pt.point.y = ptN.y() * ray_length_;
-        pt.point.z = ptN.z() * ray_length_;
-
-        geometry_msgs::PointStamped pt_out;
-
-        tf_listener_.transformPoint(laser_frame, pt, pt_out);
-
-        tf::Vector3 transformedPt(pt_out.point.x, pt_out.point.y, pt_out.point.z);
         return transformedPt;
     };
 
-    const ros::Time bbTime = bb_msg->header.stamp;
-
     std::vector<BoundingCylinder> bbCylinders;
-    for (const auto& bb : bb_vec) {
+    for (const auto& bb : bb_msg->bounding_boxes) {
         if (bb.probability < min_prob_ || classes_.count(bb.Class) != 1)
             continue;
 
-        tf::Vector3 topLeft;
-        tf::Vector3 bottomLeft;
-        tf::Vector3 topRight;
-        tf::Vector3 bottomRight;
+        tf::Point topLeft;
+        tf::Point bottomLeft;
+        tf::Point topRight;
+        tf::Point bottomRight;
         try {
             topLeft = projectPt(bb.xmin, bb.ymin);
             bottomLeft = projectPt(bb.xmin, bb.ymax);
@@ -150,16 +176,17 @@ void BoundingBoxTransformer::handleBoundingBoxes(
             return;
         }
 
-        // Laser angles are counter clockwise from x-axis
+        // Laser angle from X axis, note that angles to the right are negative
         const tf::Vector3 x_axis = tf::Vector3(1, 0, 0);
-        float topLeftAngle = tf::Vector3(topLeft.x(), topLeft.y(), 0).angle(x_axis);
-        float bottomLeftAngle = tf::Vector3(bottomLeft.x(), bottomLeft.y(), 0).angle(x_axis);
-        float topRightAngle = tf::Vector3(topRight.x(), topRight.y(), 0).angle(x_axis);
-        float bottomRightAngle = tf::Vector3(bottomRight.x(), bottomRight.y(), 0).angle(x_axis);
+        float topLeftAngle = planeAngleFromXAxisSigned(topLeft);
+        float bottomLeftAngle = planeAngleFromXAxisSigned(bottomLeft);
+        float topRightAngle = planeAngleFromXAxisSigned(topRight);
+        float bottomRightAngle = planeAngleFromXAxisSigned(bottomRight);
 
+        // Use the most left angle
         tf::Vector3 left;
         float leftAngle;
-        if (topLeftAngle < bottomLeftAngle) {
+        if (topLeftAngle > bottomLeftAngle) {
             left = {topLeft.x(), topLeft.y(), 0};
             leftAngle = topLeftAngle;
         } else {
@@ -168,9 +195,10 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         }
         left.normalize();
 
+        // Use the most right angle
         tf::Vector3 right;
         float rightAngle;
-        if (topRightAngle > bottomRightAngle) {
+        if (topRightAngle < bottomRightAngle) {
             right = {topRight.x(), topRight.y(), 0};
             rightAngle = topRightAngle;
         } else {
@@ -199,7 +227,27 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         auto diameter = std::max<tfScalar>(max - min, left.distance(right));
         tf::Vector3 center = (right - left) / 2 + left + tf::Vector3(0, 0, middleZ);
 
-        bbCylinders.emplace_back(bb.Class, bb.id, bbTime, center, diameter / 2, height);
+        bbCylinders.emplace_back(bb.Class, bb.id, bb_msg->header.stamp,
+                center, diameter / 2, height);
+    }
+
+    tf::StampedTransform laser_to_person;
+    try {
+        tf_listener_.lookupTransform(people_frame_, laser->header.frame_id,
+                last_image_time_, laser_to_person);
+    } catch (const tf::TransformException& ex) {
+        ROS_WARN_STREAM("Failed to transform from laser to person: " << ex.what());
+        try {
+            tf_listener_.lookupTransform(people_frame_, laser->header.frame_id,
+                    ros::Time(0), laser_to_person);
+        } catch (const tf::TransformException& ex) {
+            ROS_WARN_STREAM("Failed to transform from laser to person: " << ex.what());
+            return;
+        }
+    }
+
+    for (auto& bbCylinder : bbCylinders)  {
+        bbCylinder.center = laser_to_person * bbCylinder.center;
     }
 
     callback_(bbCylinders);
@@ -208,28 +256,40 @@ void BoundingBoxTransformer::handleBoundingBoxes(
 void BoundingBoxTransformer::handleLaserScan(
         const sensor_msgs::LaserScanConstPtr& laser_msg)
 {
+    // This transform should be constant since they are both mounted to the robot
+    if (!camera_to_laser_) {
+        tf::StampedTransform cam_to_laser;
+        try {
+            tf_listener_.lookupTransform(laser_msg->header.frame_id,
+                    pinhole_camera_.tfFrame(), ros::Time(0), cam_to_laser);
+            camera_to_laser_ = cam_to_laser;
+        } catch (const tf::TransformException& ex) {
+            ROS_WARN_STREAM("Failed to transform from camera to laser: " << ex.what());
+        }
+    }
+
     if (last_lasers_.size() >= NUM_LASER_SCANS)
         last_lasers_.pop_back();
 
     last_lasers_.push_front(laser_msg);
-
-    // FIXME: need a second transform when they aren't equal...
-    if (laser_msg->header.frame_id != people_frame_) {
-        ROS_ERROR_STREAM_THROTTLE(1.0, "Laser frame (" <<
-                laser_msg->header.frame_id <<
-                ") is different from people frame (" <<
-                people_frame_ << ')');
-    }
 }
 
 std::optional<sensor_msgs::LaserScanConstPtr> BoundingBoxTransformer::findLaserScanForTime(ros::Time t)
 {
     double timeout = tf_timeout_.toSec();
+    double bestDiff = std::numeric_limits<double>::max();
+    const sensor_msgs::LaserScanConstPtr* bestScan = nullptr;
     for (const auto& laser : last_lasers_) {
-        if (std::abs((laser->header.stamp - t).toSec()) < timeout)
-            return laser;
+        double diff = std::abs((laser->header.stamp - t).toSec());
+        if (diff < bestDiff) {
+            bestDiff = diff;
+            bestScan = &laser;
+        }
     }
 
-    return {};
+    if (bestScan != nullptr && bestDiff < timeout)
+        return *bestScan;
+    else
+        return {};
 }
 

@@ -2,7 +2,7 @@
 
 #include <ros/ros.h>
 
-#include <tf/LinearMath/Vector3.h>
+#include <tf/transform_datatypes.h>
 
 #include <string>
 
@@ -16,12 +16,12 @@ struct BoundingCylinder
   std::string objectClass;
   int id;
   ros::Time creationTime;
-  tf::Vector3 center;
+  tf::Point center;
   tfScalar radius;
   tfScalar height;
 
   BoundingCylinder(std::string objectClass, int id, ros::Time creationTime,
-      tf::Vector3 center, tfScalar radius, tfScalar height)
+      tf::Point center, tfScalar radius, tfScalar height)
     : objectClass(objectClass)
     , id(id)
     , creationTime(creationTime)

@@ -102,12 +102,35 @@ int main(int argc, char** argv)
   ros::Publisher marker_pub = node_handle.advertise<visualization_msgs::MarkerArray>(
       marker_topic, 10);
 
+  {
+    visualization_msgs::MarkerArray marker_arr;
+    // Clear dead markers from last run
+    visualization_msgs::Marker marker;
+    marker.header.frame_id = people_frame;
+    marker.header.stamp = ros::Time::now();
+    marker.ns = "propbot_object_detection";
+    marker.action = visualization_msgs::Marker::DELETEALL;
+    marker_arr.markers.push_back(marker);
+    marker_pub.publish(marker_arr);
+  }
+
   std::unordered_map<int, BoundingCylinder> allBBs;
   auto bbCallback = [&](std::vector<BoundingCylinder> cylinders) {
     visualization_msgs::MarkerArray marker_arr;
 
     ros::Time now = ros::Time::now();
     for (auto& cylinder : cylinders) {
+      auto prev = allBBs.find(cylinder.id);
+
+      if (prev != allBBs.end()) {
+        double dist = prev->second.center.distance(cylinder.center);
+        ros::Duration time = cylinder.creationTime - prev->second.creationTime;
+        // Filter out "teleportation"/high speed movement of the subject
+        if (dist / std::abs(time.toSec()) > 5.0) {
+          continue;
+        }
+      }
+
       visualization_msgs::Marker marker;
       marker.header.frame_id = people_frame;
       marker.header.stamp = now;
@@ -134,26 +157,36 @@ int main(int argc, char** argv)
       allBBs.insert_or_assign(cylinder.id, std::move(cylinder));
     }
 
-    for (auto it = allBBs.begin(); it != allBBs.end();) {
-      if (now - it->second.creationTime > ros::Duration(1.0)) {
-        visualization_msgs::Marker marker;
-        marker.header.frame_id = people_frame;
-        marker.header.stamp = now;
-        marker.ns = "propbot_object_detection";
-        marker.id = it->second.id;
-        marker.type = visualization_msgs::Marker::CYLINDER;
-        marker.action = visualization_msgs::Marker::DELETE;
-        marker_arr.markers.push_back(marker);
-
-        it = allBBs.erase(it);
-      } else {
-        it++;
-      }
-    }
-
     if (!marker_arr.markers.empty())
       marker_pub.publish(marker_arr);
   };
+
+  // Clear out dead bounding boxes every so often
+  ros::Timer clear_timer = node_handle.createTimer(ros::Duration(0.5),
+      [&](const auto&)
+      {
+        visualization_msgs::MarkerArray marker_arr;
+        ros::Time now = ros::Time::now();
+        for (auto it = allBBs.begin(); it != allBBs.end();) {
+          if (now - it->second.creationTime > ros::Duration(0.5)) {
+            visualization_msgs::Marker marker;
+            marker.header.frame_id = people_frame;
+            marker.header.stamp = now;
+            marker.ns = "propbot_object_detection";
+            marker.id = it->second.id;
+            marker.type = visualization_msgs::Marker::CYLINDER;
+            marker.action = visualization_msgs::Marker::DELETE;
+            marker_arr.markers.push_back(marker);
+
+            it = allBBs.erase(it);
+          } else {
+            it++;
+          }
+        }
+
+        if (!marker_arr.markers.empty())
+          marker_pub.publish(marker_arr);
+      });
 
   BoundingBoxTransformer bbTransformer(people_frame, bbCallback, filter_classes,
       min_probability, ray_length, ros::Duration(1.0 / camera_frame_rate));

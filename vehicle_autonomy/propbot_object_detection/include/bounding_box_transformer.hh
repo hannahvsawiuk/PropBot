@@ -55,9 +55,11 @@ private:
   const ros::Duration tf_timeout_;
   image_geometry::PinholeCameraModel pinhole_camera_;
   tf::TransformListener tf_listener_;
+  std::optional<tf::StampedTransform> camera_to_laser_;
   std::deque<sensor_msgs::LaserScanConstPtr> last_lasers_;
+  ros::Time last_image_time_;
 
-  static constexpr int NUM_LASER_SCANS = 32;
+  static constexpr int NUM_LASER_SCANS = 16;
 
   std::optional<sensor_msgs::LaserScanConstPtr> findLaserScanForTime(ros::Time t);
 };
