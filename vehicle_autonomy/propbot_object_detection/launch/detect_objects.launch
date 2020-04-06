@@ -22,20 +22,37 @@
   />
 
   <!-- The topic which the image is published on -->
-  <arg name="image" default="camera/rgb/image_raw" />
+  <arg name="image_topic" default="/camera/rgb/image_raw" />
+
+  <!-- laser topic which has laser scans -->
+  <arg name="laser_topic" default="/scan" />
+
+  <!-- The topic which the people are published on -->
+  <arg name="people_topic" default="/people" />
+  <!-- The frame which the people are in -->
+  <arg name="people_frame" default="map" />
 
   <!-- Include main launch file -->
   <include file="$(find darknet_ros)/launch/darknet_ros.launch">
     <arg name="network_param_file"    value="$(arg network_param_file)"/>
     <arg name="ros_param_file" value="$(arg ros_param_file)"/>
-    <arg name="image" value="$(arg image)" />
+    <arg name="image" value="$(arg image_topic)" />
   </include>
 
   <!-- People publisher TODO -->
-  <!--<node name="publish_people_node" type="publish_people" pkg="propbot_object_detection" output="screen">
-    <rosparam>
-      frame_id: odom
-    </rosparam>
-    <remap from="/slam/pose" to="/slam/odom/pose" />
-  </node>-->
+  <node name="publish_people_node" type="publish_people" pkg="propbot_object_detection" output="screen">
+    <rosparam param="bb_topic">/darknet_ros/bounding_boxes</rosparam>
+    <rosparam param="marker_topic">/propbot_object_detection/markers</rosparam>
+    <rosparam param="camera_topic" subst_value="True">$(arg image_topic)</rosparam>
+    <rosparam param="laser_topic" subst_value="True">$(arg laser_topic)</rosparam>
+    <rosparam param="people_topic" subst_value="True">$(arg people_topic)</rosparam>
+    <rosparam param="people_frame" subst_value="True">$(arg people_frame)</rosparam>
+
+    <!-- Ray length used to estimate bounding boxes (in meters) -->
+    <rosparam param="ray_length">1000.0</rosparam>
+    <!-- Expected framerate of the camera -->
+    <rosparam param="camera_frame_rate">30.0</rosparam>
+    <!-- Yolo -->
+    <rosparam param="camera_frame_rate">30.0</rosparam>
+  </node>
 </launch>

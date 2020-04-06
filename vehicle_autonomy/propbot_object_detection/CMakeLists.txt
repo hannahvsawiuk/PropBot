@@ -5,14 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  tf
-  roslib
   roslaunch
-  geometry_msgs
-  darknet_ros_msgs
+  roscpp
+  roslib
+  std_msgs
   people_msgs
+  geometry_msgs
+  sensor_msgs
+  darknet_ros_msgs
+  visualization_msgs
+  tf
+  image_geometry
+  image_transport
+  cv_bridge
+  propbot_util
 )
 
 catkin_package()
@@ -21,9 +27,11 @@ roslaunch_add_file_check(launch)
 
 add_executable(publish_people
   src/publish_people.cc
+  src/bounding_box_transformer.cc
 )
 
 target_include_directories(publish_people PUBLIC
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
