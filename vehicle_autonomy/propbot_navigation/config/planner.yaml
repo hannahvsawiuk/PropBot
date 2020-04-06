@@ -6,8 +6,16 @@ NavfnROS:
   default_tolerance: 0.3 # A tolerance on the goal point for the planner.
 
 DWAPlannerROS:
+<<<<<<< HEAD
   yaw_goal_tolerance: 3.14
   xy_goal_tolerance: 0.5
   forward_point_distance: 0
+=======
+  yaw_goal_tolerance: 0.25
+  xy_goal_tolerance: 0.2
+  max_vel_x: 20.0
+  max_rot_vel: 10.0
+  acc_lim_x: 20.0
+>>>>>>> 6ca78df... Adds speed limits to control and planner
 
   holonomic_robot: false
