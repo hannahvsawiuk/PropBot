@@ -1,9 +1,14 @@
 controller_frequency: 5.0
 recovery_behaviour_enabled: true
 
-NavfnROS:
-  allow_unknown: true # Specifies whether or not to allow navfn to create plans that traverse unknown space.
-  default_tolerance: 0.3 # A tolerance on the goal point for the planner.
+GlobalPlanner:
+  allow_unknown: true  # Specifies whether or not to allow navfn to create plans that traverse unknown space.
+  default_tolerance: 0.3  # A tolerance on the goal point for the planner.
+  use_dijkstra: false  # Use A* instead of Djikstra.
+  use_grid_path: true  # Use grid path path instead of gradient descent because it works better with the ROS A* implementation
+  use_quadratic: true  # Use a quadratic approximation of the potential
+  orientation_mode: 0   # No orientation filter because we do not care about the robot's orientation during path traversal.
+  lethal_cost: 210  # Set lethal cost to much lower than the costmap lethal cost of 253 to produce routes far from obstacles
 
 TebLocalPlannerROS:
 

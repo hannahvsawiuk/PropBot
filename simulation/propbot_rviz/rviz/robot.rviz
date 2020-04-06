@@ -387,7 +387,7 @@ Visualization Manager:
           Radius: 0.0299999993
           Shaft Diameter: 0.100000001
           Shaft Length: 0.100000001
-          Topic: /move_base/NavfnROS/plan
+          Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
           Value: true
         - Alpha: 1
