@@ -25,183 +25,63 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 -->
 <robot name="propbot_decorations" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <!-- 
+  ***********************************************************************************************
+  Propbot Decoration
+  ***********************************************************************************************
+  The chassis and sensors are considered "decorations" on the base_link. A macro is defined below
+  to execute this decoration in one step in `propbot.urdf.xacro`
+  -->
   <xacro:macro name="propbot_decorate">
 
-    <xacro:property name="propbot_front_bumper_extend" value="$(optenv PROPBOT_FRONT_BUMPER_EXTEND 0)" />
-    <xacro:property name="propbot_rear_bumper_extend" value="$(optenv PROPBOT_REAR_BUMPER_EXTEND 0)" />
-
+    <!-- 
+    Chassis
+    ======================================================================
+    -->
     <!-- Spawn Propbot chassis -->
-    <link name="top_chassis_link">
+    <link name="chassis_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="${base_x_size/2} 0 ${2*wheel_vertical_offset - base_z_size}" rpy="${M_PI/2} 0 ${-M_PI/2}" />
         <geometry>
-          <mesh filename="package://propbot_description/meshes/top_chassis.dae" />
+          <mesh filename="package://propbot_description/meshes/propbot_chassis.STL" />
         </geometry>
       </visual>
     </link>
+
+    <!-- Set chassis colour in Gazebo -->
+    <gazebo reference="chassis_link">
+      <material>Gazebo/Red</material>
+    </gazebo>
 
     <!-- Attach chassis to the robot -->
-    <joint name="top_chassis_joint" type="fixed">
+    <joint name="chassis_joint" type="fixed">
       <parent link="base_link" />
-      <child link="top_chassis_link" />
+      <child link="chassis_link" />
     </joint>
 
-    <xacro:if value="$(optenv PROPBOT_USER_RAIL_ENABLED true)">
-      <!-- Spawn user rails -->
-      <link name="user_rail_link">
-        <visual>
-          <geometry>
-            <mesh filename="package://propbot_description/meshes/user_rail.dae" />
-          </geometry>
-        </visual>
-      </link>
-
-      <!-- Attach user rails to base link -->
-      <joint name="user_rail" type="fixed">
-        <origin xyz="0.272 0 0.245" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child link="user_rail_link" />
-      </joint>
-    </xacro:if>
-
-    <!-- Spawn front bumper link -->
-    <link name="front_bumper_link">
+    <!-- 
+    Top plate
+    ======================================================================
+    A tiny plate use to link the sensors to the robot
+    -->
+    <!-- Spawn the top plate -->
+    <link name="top_plate_link">
       <visual>
+        <origin xyz="${base_x_size/2} ${-base_y_size/2 + 0.027} ${top_plate_height}" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://propbot_description/meshes/bumper.dae" />
+          <box size="0.01 0.01 0.001"/>
         </geometry>
+        <material name="wheel_material">
+          <color rgba="0.25 0.25 0.75 0" />
+        </material>
       </visual>
     </link>
-
-    <!-- Attach front bumper -->
-    <joint name="front_bumper" type="fixed">
-      <origin xyz="${0.48 + propbot_front_bumper_extend} 0 0.091" rpy="0 0 0" />
-      <parent link="base_link" />
-      <child link="front_bumper_link" />
+    <!-- Attach top plate to chassis -->
+    <joint name="top_plate_chassis_joint" type="fixed">
+      <parent link="chassis_link" />
+      <child link="top_plate_link"/>
+      <origin xyz="0 ${top_plate_front - base_y_size/8} 0.001" rpy="0 0 0"/>
     </joint>
-
-    <xacro:if value="${propbot_front_bumper_extend}">
-      <link name="front_bumper_extension_link">
-          <visual>
-              <geometry>
-                  <mesh filename="package://propbot_description/meshes/bumper_extension.dae" />
-              </geometry>
-          </visual>
-      </link>
-
-      <joint name="front_bumper_extension" type="fixed">
-        <origin xyz="${0.48 + propbot_front_bumper_extend} 0 0.091" rpy="0 0 0" />
-        <parent link="base_link" />
-        <child link="front_bumper_extension_link" />
-      </joint>
-    </xacro:if>
-
-    <!-- Spawn rear bumper link -->
-    <link name="rear_bumper_link">
-      <visual>
-        <geometry>
-          <mesh filename="package://propbot_description/meshes/bumper.dae" />
-        </geometry>
-      </visual>
-    </link>
-
-    <!-- Attach rear bumper -->
-    <joint name="rear_bumper" type="fixed">
-      <origin xyz="${-0.48 - propbot_rear_bumper_extend} 0 0.091" rpy="0 0 ${M_PI}" />
-      <parent link="base_link" />
-      <child link="rear_bumper_link" />
-    </joint>
-
-    <xacro:if value="${propbot_rear_bumper_extend}">
-      <link name="rear_bumper_extension_link">
-          <visual>
-              <geometry>
-                  <mesh filename="package://propbot_description/meshes/bumper_extension.dae" />
-              </geometry>
-          </visual>
-      </link>
-
-      <joint name="rear_bumper_extension" type="fixed">
-        <origin xyz="${-0.48 - propbot_rear_bumper_extend} 0 0.091" rpy="0 0 ${M_PI}" />
-        <parent link="base_link" />
-        <child link="rear_bumper_extension_link" />
-      </joint>
-    </xacro:if>
-
-    <xacro:if value="$(optenv PROPBOT_TOP_PLATE_ENABLED true)">
-      <!-- Spawn the top plate -->
-      <xacro:if value="$(optenv PROPBOT_LARGE_TOP_PLATE false)">
-        <link name="top_plate_link">
-          <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-              <mesh filename="package://propbot_description/meshes/large_top_plate.dae" />
-            </geometry>
-          </visual>
-          <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-              <mesh filename="package://propbot_description/meshes/large_top_plate_collision.stl" />
-            </geometry>
-          </collision>
-        </link>
-        <!-- Attach top plate -->
-        <joint name="top_plate_joint" type="fixed">
-          <parent link="base_link" />
-          <child link="top_plate_link"/>
-          <origin xyz="0.0812 0 0.225" rpy="0 0 0"/>
-        </joint>
-        <!-- Top plate front link -->
-        <joint name="top_plate_front_joint" type="fixed">
-          <parent link="top_plate_link" />
-          <child link="top_plate_front_link"/>
-          <origin xyz="0.4125 0 0.00672" rpy="0 0 0"/>
-        </joint>
-        <!-- Top plate rear link-->
-        <joint name="top_plate_rear_joint" type="fixed">
-          <parent link="top_plate_link" />
-          <child link="top_plate_rear_link"/>
-          <origin xyz="-0.4125 0 0.00672" rpy="0 0 0"/>
-        </joint>
-      </xacro:if>
-
-      <xacro:unless value="$(optenv PROPBOT_LARGE_TOP_PLATE false)">
-        <link name="top_plate_link">
-          <visual>
-            <origin xyz="0 0 0" rpy="0 0 0" />
-            <geometry>
-              <mesh filename="package://propbot_description/meshes/top_plate.dae" />
-            </geometry>
-          </visual>
-          <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-              <mesh filename="package://propbot_description/meshes/top_plate.stl" />
-            </geometry>
-          </collision>
-        </link>
-        <!-- Attach top plate -->
-        <joint name="top_plate_joint" type="fixed">
-          <parent link="base_link" />
-          <child link="top_plate_link"/>
-          <origin xyz="0.0812 0 0.245" rpy="0 0 0"/>
-        </joint>
-        <!-- Top plate front link -->
-        <joint name="top_plate_front_joint" type="fixed">
-          <parent link="top_plate_link" />
-          <child link="top_plate_front_link"/>
-          <origin xyz="0.36367 0 0.00639" rpy="0 0 0"/>
-        </joint>
-        <!-- Top plate rear link-->
-        <joint name="top_plate_rear_joint" type="fixed">
-          <parent link="top_plate_link" />
-          <child link="top_plate_rear_link"/>
-          <origin xyz="-0.36633 0 0.00639" rpy="0 0 0"/>
-        </joint>
-      </xacro:unless>
-      <link name="top_plate_front_link"/>
-      <link name="top_plate_rear_link"/>
-    </xacro:if>
 
   </xacro:macro>
 
