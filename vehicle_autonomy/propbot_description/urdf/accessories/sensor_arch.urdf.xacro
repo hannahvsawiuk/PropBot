@@ -31,6 +31,10 @@
              <child link="${prefix}sensor_arch_mount_link"/>
         </joint>
 
+        <gazebo reference="${prefix}sensor_arch_mount_link">
+			<material>Gazebo/Black</material>
+		</gazebo>
+
     </xacro:macro>
 
 </robot>
