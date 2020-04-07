@@ -64,7 +64,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   ***********************************************************************************************
   -->
   <xacro:arg name="laser_enabled" default="false" />
-  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.02 ${-base_y_size/4 + 0.035} 0.925)" />
+  <xacro:arg name="laser_xyz" default="$(optenv PROPBOT_VLP-16_XYZ 0.08 ${-base_y_size/2 + 0.0516/2} 0.925)" /> <!-- note: base_y_size/2 + lidar radius -->
   <xacro:arg name="laser_rpy" default="$(optenv PROPBOT_VLP-16_RPY 0 0 0)" />
 
   <xacro:arg name="rgbd_camera_enabled" default="false" />
