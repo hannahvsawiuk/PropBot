@@ -99,18 +99,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Base link inertia-->
   <xacro:property name="base_ixx" value="0.083320" />
-  <xacro:property name="base_ixy" value="-1.882647E-14" />
-  <xacro:property name="base_ixz" value="2.527076E-19" />
+  <xacro:property name="base_ixy" value="0" />
+  <xacro:property name="base_ixz" value="0" />
   <xacro:property name="base_iyy" value="0.003905" />
-  <xacro:property name="base_iyz" value="7.039418E-19" />
+  <xacro:property name="base_iyz" value="0" />
   <xacro:property name="base_izz" value="0.087218" />
 
    <!-- Chassis link inertia-->
   <xacro:property name="chassis_ixx" value="0.42226" />
   <xacro:property name="chassis_ixy" value="0.00028" />
-  <xacro:property name="chassis_ixz" value="-0.00012" />
+  <xacro:property name="chassis_ixz" value="0" />
   <xacro:property name="chassis_iyy" value="0.46973" />
-  <xacro:property name="chassis_iyz" value="0.00017" />
+  <xacro:property name="chassis_iyz" value="0" />
   <xacro:property name="chassis_izz" value="0.16238" />
 
   <!-- Robot frame mass scale factor: use to scale chassis and base link masses and inertial values -->
