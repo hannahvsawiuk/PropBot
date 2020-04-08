@@ -114,7 +114,8 @@ void BoundingBoxTransformer::handleCameraImage(
     last_image_time_ = image_msg->header.stamp;
 
     // Update our camera model from this image
-    pinhole_camera_.fromCameraInfo(cam_info_msg);
+    if (!pinhole_camera_.initialized())
+        pinhole_camera_.fromCameraInfo(cam_info_msg);
 }
 
 void BoundingBoxTransformer::handleBoundingBoxes(
@@ -155,22 +156,12 @@ void BoundingBoxTransformer::handleBoundingBoxes(
         if (bb.probability < min_prob_ || classes_.count(bb.Class) != 1)
             continue;
 
-        tf::Point topLeft;
-        tf::Point bottomLeft;
-        tf::Point topRight;
-        tf::Point bottomRight;
-        try {
-            topLeft = projectPt(bb.xmin, bb.ymin);
-            bottomLeft = projectPt(bb.xmin, bb.ymax);
-            topRight = projectPt(bb.xmax, bb.ymin);
-            bottomRight = projectPt(bb.xmax, bb.ymax);
-        } catch (const tf::TransformException& ex) {
-            ROS_WARN_STREAM("Failed to transform from camera to laser: " << ex.what());
-            return;
-        }
+        tf::Point topLeft = projectPt(bb.xmin, bb.ymin);
+        tf::Point bottomLeft = projectPt(bb.xmin, bb.ymax);
+        tf::Point topRight = projectPt(bb.xmax, bb.ymin);
+        tf::Point bottomRight = projectPt(bb.xmax, bb.ymax);
 
         // Laser angle from X axis, note that angles to the right are negative
-        const tf::Vector3 x_axis = tf::Vector3(1, 0, 0);
         float topLeftAngle = planeAngleFromXAxisSigned(topLeft);
         float bottomLeftAngle = planeAngleFromXAxisSigned(bottomLeft);
         float topRightAngle = planeAngleFromXAxisSigned(topRight);
@@ -249,6 +240,11 @@ void BoundingBoxTransformer::handleBoundingBoxes(
 void BoundingBoxTransformer::handleLaserScan(
         const sensor_msgs::LaserScanConstPtr& laser_msg)
 {
+    if (!pinhole_camera_.initialized()) {
+        ROS_WARN_STREAM_THROTTLE(1, "Waiting for Camera Initialization");
+        return;
+    }
+
     // This transform should be constant since they are both mounted to the robot
     if (!camera_to_laser_) {
         tf::StampedTransform cam_to_laser;
