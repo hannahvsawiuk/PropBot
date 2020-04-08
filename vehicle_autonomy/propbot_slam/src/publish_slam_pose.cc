@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
       node_handle.advertise<geometry_msgs::PoseWithCovarianceStamped>(
           "/slam/pose", 100);
 
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(50);
 
   // Declare transform listener
   tf::TransformListener transform_listener;
