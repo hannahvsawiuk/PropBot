@@ -107,7 +107,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
    <!-- Chassis link inertia-->
   <xacro:property name="chassis_ixx" value="0.42226" />
-  <xacro:property name="chassis_ixy" value="0" />
+  <xacro:property name="chassis_ixy" value="0.00028" />
   <xacro:property name="chassis_ixz" value="0" />
   <xacro:property name="chassis_iyy" value="0.46973" />
   <xacro:property name="chassis_iyz" value="0" />
@@ -191,7 +191,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <link name="inertial_link">
     <inertial>
       <mass value="${(chassis_mass + base_link_mass) * frame_msf}"/>
-      <origin xyz="0.027 0.01 0.42243" rpy = "${-M_PI/2} ${-M_PI/2} 0" />
+      <origin xyz="0.027 -0.01 0.42243" rpy = "${-M_PI/2} ${-M_PI/2} 0" />
       <inertia 
         ixx="${(base_ixx + chassis_ixx) * frame_msf}" 
         ixy="${(base_ixy + chassis_ixy) * frame_msf}" 
