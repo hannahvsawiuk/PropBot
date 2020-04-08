@@ -116,7 +116,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <!-- Robot frame mass scale factor: use to scale chassis and base link masses and inertial values -->
   <xacro:property name="frame_msf" value="${robot_mass/chassis_mass}" />  
   <!-- Wheel mass scale factor: use to scale wheel masses and inertial values -->
-  <xacro:property name="wheel_msf" value="${1}" />
+  <xacro:property name="wheel_msf" value="1" />
 
   <!-- 
   ***********************************************************************************************
@@ -244,10 +244,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
   <!-- Middle (passives) -->
   <xacro:propbot_passive_wheel wheel_prefix="left">
-    <origin xyz="${wheel_radius/4} ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="0.027 ${wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
   <xacro:propbot_passive_wheel wheel_prefix="right">
-    <origin xyz="${wheel_radius/4} ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
+    <origin xyz="$0.027 ${-wheel_to_wheel} ${wheel_vertical_offset}" rpy="0 0 ${-M_PI/2}" />
   </xacro:propbot_passive_wheel>
 
   <!-- Decorate the robot -->
