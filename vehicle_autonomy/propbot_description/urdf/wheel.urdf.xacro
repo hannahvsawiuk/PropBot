@@ -31,20 +31,25 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 			<inertial>
 				<mass value="${wheel_mass * wheel_msf}" />
 				<origin xyz="0 0 0" />
-				<inertia  ixx="${0.01875 * wheel_msf}" ixy="${1.054410E-15 * wheel_msf}" ixz="${6.83081E-07 * wheel_msf}" 
-				          iyy="${0.01012 * wheel_msf}" iyz="${-4.64239E-08 * wheel_msf}" izz="${0.01012 * wheel_msf}" />
+				<inertia  
+					ixx="${0.01875 * wheel_msf}" 
+					ixy="${0 * wheel_msf}" 
+					ixz="${0 * wheel_msf}" 
+					iyy="${0.01012 * wheel_msf}" 
+					iyz="${0 * wheel_msf}" 
+					izz="${0.01012 * wheel_msf}" />
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
-					<mesh filename="package://propbot_description/meshes/propbot_wheel.STL" />>
+					<mesh filename="package://propbot_description/meshes/propbot_wheel.STL" />
 				</geometry>
 				<material name="wheel_material">
 				  <color rgba="0.109804 0.109804 0.109804 1" />
       			</material>
 			</visual>
 			<collision>
-				<origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+				<origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
 					<cylinder length="${wheel_length}" radius="${wheel_radius}" />
 				</geometry>
