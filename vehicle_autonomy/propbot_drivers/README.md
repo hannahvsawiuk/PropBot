@@ -25,3 +25,5 @@ $ rostopic echo /gps/fix
 ## More Information
 
 For more information, please refer to https://github.com/KumarRobotics/ublox.git
+
+That git link is got from http://wiki.ros.org/ublox on ROS Wiki
