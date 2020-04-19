@@ -97,7 +97,15 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="chassis_mass" value="19.52246"/>  
   <xacro:property name="wheel_mass" value="2.96542"/>  
 
-  <!-- Base link inertia-->
+  <!-- Base link inertia
+  Ixx = m(y^2 + z^2)
+  Iyy = m(x^2 + z^2)
+  Izz = m(x^2 + y^2)
+
+  Ixy = Iyx = -mxy
+  Ixz = Izx = -mxz
+  Iyz = Izy = -myz
+  -->
   <xacro:property name="base_ixx" value="0.083320" />
   <xacro:property name="base_ixy" value="0" />
   <xacro:property name="base_ixz" value="0" />
@@ -117,6 +125,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:property name="frame_msf" value="${robot_mass/chassis_mass}" />  
   <!-- Wheel mass scale factor: use to scale wheel masses and inertial values -->
   <xacro:property name="wheel_msf" value="1" />
+  <!-- Mass of the base link and frame -->
+  <xacro:property name="inertial_mass" value="${(base_link_mass + chassis_mass) * frame_msf}" />  
 
   <!-- 
   ***********************************************************************************************
@@ -190,16 +200,16 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   -->
   <link name="inertial_link">
     <inertial>
-      <mass value="${(chassis_mass + base_link_mass) * frame_msf}"/>
-      <origin xyz="0.027 -0.01 0.42243" rpy = "${-M_PI/2} ${-M_PI/2} 0" />
+      <mass value="${inertial_mass}"/>
+      <origin xyz="0 0 ${base_z_size}" rpy = "${-M_PI/2} ${-M_PI/2} 0" />
       <inertia 
-        ixx="${(base_ixx + chassis_ixx) * frame_msf}" 
-        ixy="${(base_ixy + chassis_ixy) * frame_msf}" 
-        ixz="${(base_ixz + chassis_ixz) * frame_msf}" 
-        iyy="${(base_iyy + chassis_iyy) * frame_msf}" 
-        iyz="${(base_iyz + chassis_iyz) * frame_msf}" 
-        izz="${(base_izz + chassis_izz) * frame_msf}" />
-    </inertial>
+        ixx="${(0 + base_z_size^2) * inertial_mass}" 
+        ixy="${-1 * 0 * 0 * inertial_mass}" 
+        ixz="${-1 * 0 * base_z_size * inertial_mass}" 
+        iyy="${(0 + base_z_size^2) * inertial_mass}" 
+        iyz="${-1 * 0  * base_z_size * inertial_mass}" 
+        izz="${(0 + 0) * inertial_mass}" />
+    </inertial> 
   </link>
 
   <joint name="inertial_joint" type="fixed">
