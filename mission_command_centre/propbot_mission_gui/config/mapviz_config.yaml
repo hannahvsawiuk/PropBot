@@ -1,0 +1,42 @@
+capture_directory: ~
+fixed_frame: map
+target_frame: <none>
+fix_orientation: false
+rotate_90: false
+enable_antialiasing: true
+show_displays: true
+show_status_bar: true
+show_capture_tools: true
+window_width: 1853
+window_height: 1025
+view_scale: 2.72034
+offset_x: -780.7376
+offset_y: -315.5594
+use_latest_transforms: true
+background: "#a0a0a4"
+displays:
+  - type: mapviz_plugins/tile_map
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      custom_sources:
+        []
+      bing_api_key: ""
+      source: Stamen (terrain)
+  - type: mapviz_plugins/plan_mission
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      color: "#00ff00"
+      start_from_vehicle: false
+  - type: mapviz_plugins/navsat
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      color: "#cc0000"
+      draw_style: points
+      position_tolerance: 0
+      buffer_size: 99999999
