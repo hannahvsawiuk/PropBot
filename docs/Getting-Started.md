@@ -206,7 +206,22 @@ For more information on catkin workspace mechanics, see here: https://catkin-too
 
 ## Running the Demos
 
-These instructions describe how to set-up and run an autonomous waypoint mission using Propbot. If you are executing the mission in simulation follow the additional instructions for _Setting up the simulation computer_. 
+These instructions describe how to set-up and run an autonomous waypoint mission using Propbot. If you are not executing the mission in simulation, skip the instructions for _Setting up the simulation computer_. 
+
+
+### Setting up communication between multiple machines
+
+In order to set up the mission command centre to communicate with the vehicle autonomy computer, perform the following steps:
+
+1. Make sure both the mission command centre computer and vehicle autonomy computer are on the same network. Do a simple ping test to 
+make sure they can communicate with each other.
+2. On the vehicle autonomy computer, run: `export ROS_MASTER_URI=http://propbot@vehicle_autonomy_computer:11311`.
+3. On the vehicle autonomy computer, run: `roscore`.
+4. On the mission command centre computer, run: `export ROS_MASTER_URI=http://propbot@vehicle_autonomy_computer:11311`.
+
+Make sure the export command is either in run in every terminal used.
+
+Repeat steps all of the above steps to set up communication between the simulation computer and vehicle autonomy computer. 
 
 ### Setting up the simulation computer
 
@@ -279,19 +294,4 @@ Configure and command a mission using the _plan_mission_ section of the control 
 
 ![mapviz_waypoint](graphics/mapviz_waypoint.png) 
 
-
-
-### Setting up communication between multiple machines
-
-In order to set up the mission command centre to communicate with the vehicle autonomy computer, perform the following steps:
-
-1. Make sure both the mission command centre computer and vehicle autonomy computer are on the same network. Do a simple ping test to 
-make sure they can communicate with each other.
-2. On the vehicle autonomy computer, run: `export ROS_MASTER_URI=http://propbot@vehicle_autonomy_computer:11311`.
-3. On the vehicle autonomy computer, run: `roscore`.
-4. On the mission command centre computer, run: `export ROS_MASTER_URI=http://propbot@vehicle_autonomy_computer:11311`.
-
-Make sure the export command is either in run in every terminal used.
-
-Repeat steps all of the above steps to set up communication between the simulation computer and vehicle autonomy computer. 
 
