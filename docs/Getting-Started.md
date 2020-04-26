@@ -19,7 +19,6 @@
       - [A note on rosdep](#a-note-on-rosdep)
     + [Build the mapviz plugins](#build-the-mapviz-plugins)
     + [Build the workspace](#build-the-workspace)
-- [Running the Demos](#running-the-demos)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -202,6 +201,3 @@ Now your `propbot_ws` directory should have the following structure
 
 For more information on catkin workspace mechanics, see here: https://catkin-tools.readthedocs.io/en/latest/mechanics.html
 
----
-
-## Running the Demos
