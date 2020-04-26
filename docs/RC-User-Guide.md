@@ -2,7 +2,7 @@
 
 ---
 
-![flysky](graphics/flysky-fs-t6.jpeg)
+![flysky](graphics/flysky-fs-t6.jpeg =250x250)
 
 The FS-T6is a six-channel transmitter with two joysticks and four programmable switches. This provides a joystick foreach set of wheels and programmable switches for a remote kill switch and a autonomy to manual mode switch. The figure below demonstrates how the four functions mentioned above are distributed on the transmitter. The remote controller receiver is FS-R6B, which is a six-channel receiver.
 
