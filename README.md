@@ -1,6 +1,6 @@
 # PropBot: An autonomous mobile outdoor robot for data collection
 
-**All of the information you need is in the sections our wiki.**
+**All of the information you need is in the sections of our [wiki](https://github.com/hannahvsawiuk/PropBot/wiki).**
 
 ## Brief Description of Propbot
 
