@@ -3477,25 +3477,50 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
       </animation>
       <script>
         <trajectory id="0" type="walking">
+          <!-- Waypoint 1 -->
           <waypoint>
             <time>0</time>
-            <pose>-2 2 0 0 0 -1.57</pose>
-          </waypoint>
-          <waypoint>
-            <time>2</time>
-            <pose>-2 -2 0 0 0 -1.57</pose>
-          </waypoint>
-          <waypoint>
-            <time>2.5</time>
-            <pose>-2 -2 0 0 0 1.57</pose>
-          </waypoint>
-          <waypoint>
-            <time>7</time>
             <pose>-2 2 0 0 0 1.57</pose>
           </waypoint>
           <waypoint>
-            <time>7.5</time>
-            <pose>-2 2 0 0 0 -1.57</pose>
+            <time>0.5</time>
+            <pose>-2 2 0 0 0 3.14</pose>
+          </waypoint>
+
+          <!-- Waypoint 2 -->
+          <waypoint>
+            <time>4</time>
+            <pose>-6 2 0 0 0 3.14</pose>
+          </waypoint>
+          <waypoint>
+            <time>4.5</time>
+            <pose>-6 2 0 0 0 -1.57</pose>
+          </waypoint>
+
+          <!-- Waypoint 3 -->
+          <waypoint>
+            <time>11</time>
+            <pose>-6 -4 0 0 0 -1.57</pose>
+          </waypoint>
+          <waypoint>
+            <time>11.5</time>
+            <pose>-6 -4 0 0 0 0.785</pose>
+          </waypoint>
+
+          <!-- Waypoint 4 -->
+          <waypoint>
+            <time>18</time>
+            <pose>-2 -2 0 0 0 0.785</pose>
+          </waypoint>
+          <waypoint>
+            <time>20</time>
+            <pose>-2 -2 0 0 0 1.57</pose>
+          </waypoint>
+
+          <!-- Return -->
+          <waypoint>
+            <time>23.5</time>
+            <pose>-2 2 0 0 0 1.57</pose>
           </waypoint>
         </trajectory>
       </script>

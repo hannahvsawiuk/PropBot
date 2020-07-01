@@ -23,6 +23,7 @@
   <run_depend>propbot_state_estimation</run_depend>
   <run_depend>propbot_mission</run_depend>
   <run_depend>propbot_slam</run_depend>
+  <run_depend>propbot_object_detection</run_depend>
 
   <export>
   </export>

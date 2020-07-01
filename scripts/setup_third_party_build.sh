@@ -209,12 +209,22 @@ echo "Downloading SWRI marti common"
 _clone_repo "$SWRI_URL" "$SWRI_DIR" "$SWRI_VERSION"
 
 # ==== Darknet/YOLO ====
-#DARKNET_VERSION=8d2584874a282a55875966ccfad4b9f80acab5c3
-#DARKNET_URL=https://github.com/leggedrobotics/darknet_ros
-#DARKNET_DIR=src/darknet_ros
+# Note that both of these are forks of darknet and darknet_ros
+# to fix compatibility with the version of OpenCV we are using
+
+DARKNET_ROS_VERSION=00e0f2f849c7f5af5a400a19fb5ec6cb68d748df
+DARKNET_ROS_URL=https://github.com/jackguo380/darknet_ros
+DARKNET_ROS_DIR=src/darknet_ros
 
 echo "Downloading Darknet ROS"
-#_clone_repo "$DARKNET_URL" "$DARKNET_DIR" "$DARKNET_VERSION"
+_clone_repo "$DARKNET_ROS_URL" "$DARKNET_ROS_DIR" "$DARKNET_ROS_VERSION"
+
+DARKNET_VERSION=93875bb29e5b6e016caa1d3d50de562669044339
+DARKNET_URL=https://github.com/jackguo380/darknet
+DARKNET_DIR=src/darknet_ros/darknet
+
+echo "Downloading Darknet"
+_clone_repo "$DARKNET_URL" "$DARKNET_DIR" "$DARKNET_VERSION"
 
 # ==== Propbot 3pp Autonomy ====
 PROPBOT_3PP_AUTONOMY_DIR=src/propbot_3pp_autonomy
@@ -238,6 +248,9 @@ cmake_args=(
     #-DCMAKE_CXX_FLAGS=-march=native
     # Use -O3 and NDEBUG (CMake's default) or use package maintainer's recommended flags
     -DCMAKE_BUILD_TYPE=Release
+
+    # Disable testing for most packages
+    -DCATKIN_ENABLE_TESTING=OFF
 
     # Disable ceres solver's tests and examples
     -DBUILD_TESTING=OFF
