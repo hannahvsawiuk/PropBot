@@ -76,7 +76,7 @@
       <background>0.7 0.7 0.7 1</background>
     </scene>
     <model name='ubc_campus_structures'>
-      <pose frame=''>0 0 0.001 0 -0 0</pose>
+      <pose frame=''>0 0 0.001 0 -0 -1.57079632679</pose>
       <static>1</static>
       <link name='link'>
         <visual name='top_visual'>
@@ -87,7 +87,7 @@
           </geometry>
         </visual>
         <collision name='ubc'>
-          <pose frame=''>0 0 0.001 0 -0 0</pose>
+          <pose frame=''>0 0 0.001 0 -0 -1.57079632679</pose>
           <geometry>
             <mesh>
               <uri>file://student_union.dae</uri>
@@ -2560,10 +2560,10 @@
         </link>
       </model>
       <model name='ubc_campus_structures'>
-        <pose frame=''>0 0 0.001 0 -0 0</pose>
+        <pose frame=''>0 0 0.001 0 -0 -1.57079632679</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>0 0 0.001 0 -0 0</pose>
+          <pose frame=''>0 0 0.001 0 -0 -1.57079632679</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
